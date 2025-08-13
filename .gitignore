@@ -1,0 +1,4 @@
+.idea
+node_modules
+.vite
+__pychache__

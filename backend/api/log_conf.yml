@@ -1,0 +1,26 @@
+version: 1
+disable_existing_loggers: False
+
+formatters:
+  default:
+    format: "%(asctime)s | %(levelname)s | %(name)s | %(message)s"
+    datefmt: "%Y-%m-%d %H:%M:%S"
+  colored:
+    "()": uvicorn.logging.ColourizedFormatter
+    format: "%(asctime)s | %(levelprefix)s | %(name)s | %(message)s"
+    datefmt: "%Y-%m-%d %H:%M:%S"
+
+handlers:
+  default:
+    class: logging.StreamHandler
+    formatter: colored
+    stream: ext://sys.stdout
+
+loggers:
+  uvicorn:
+    handlers: [default]
+    level: INFO
+
+#root:
+#  handlers: [default]
+#  level: INFO

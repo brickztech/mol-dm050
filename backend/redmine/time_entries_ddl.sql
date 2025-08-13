@@ -1,0 +1,16 @@
+These are the fields of time_entries table:
+	id serial4 NOT NULL,
+	project_id int4 NOT NULL,
+	user_id int4 NOT NULL,
+	issue_id int4 NULL,
+	hours float8 NOT NULL,
+	"comments" varchar(1024) NULL,
+	activity_id int4 NOT NULL,
+	spent_on date NOT NULL,
+	tyear int4 NOT NULL,
+	tmonth int4 NOT NULL,
+	tweek int4 NOT NULL,
+	created_on timestamp NOT NULL,
+	updated_on timestamp NOT NULL,
+	author_id int4 NULL,
+	CONSTRAINT time_entries_pkey PRIMARY KEY (id)

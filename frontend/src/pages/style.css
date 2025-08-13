@@ -1,0 +1,92 @@
+.container {
+    overflow: auto;
+    width: 100%;
+}
+
+.container table {
+    height: 100%;
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+    border-spacing: 1px;
+    text-align: left;
+    border: 0px;
+}
+
+.container caption {
+    caption-side: top;
+    text-align: left;
+}
+
+.container th {
+    color: #ffffff;
+    padding: 5px;
+    border-top: 0px;
+    border-left: 0px;
+    border-right: 0px;
+}
+
+.container tr:first-child {
+    width: 100px;
+}
+
+.container td {
+    /*border-bottom: 1px solid #676767; */
+    padding: 5px;
+    border-top: 0px;
+    border-left: 0px;
+    border-right: 0px;
+}
+.container tr {
+    border-bottom: 1px solid #4a4a4a;
+    border-top: 0px;
+    border-left: 0px;
+    border-right: 0px;
+}
+.user-bubble, .assistant-bubble {
+    background-color: #535353;
+    color: white;
+}
+.assistant-bubble table {
+    background: #23272f;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+    border-radius: 10px;
+    overflow: hidden;
+    width: 100%;
+    border: 0px;
+}
+
+.assistant-bubble th {
+    background: linear-gradient(90deg, #3a3f51 0%, #23272f 100%);
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    font-size: 1.05em;
+    border: 0px;
+    color: #e0e6f0;
+}
+
+.assistant-bubble tr {
+    transition: background 0.2s;
+    border: 0px;
+}
+
+.assistant-bubble tr:hover {
+    background: #2d3240;
+}
+
+.assistant-bubble td {
+    background: rgba(255,255,255,0.01);
+    border-bottom: 1px solid #353a4a;
+    color: #e0e6f0;
+    font-size: 1em;
+    border: 0px;
+}
+
+.assistant-bubble caption {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #4a90e2;
+    padding: 10px 0;
+    letter-spacing: 0.03em;
+}
+
