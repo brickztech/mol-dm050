@@ -1,0 +1,8 @@
+version: '3.5'
+
+services:
+    backend:
+        build: 
+            context: ../../
+            dockerfile: docker/dev/Dockerfile
+        image: ${BACKEND_IMAGE_NAME}:dev

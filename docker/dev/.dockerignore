@@ -1,0 +1,11 @@
+**/node_modules
+**/.dockerignore
+**/.gitignore
+**/Dockerfile
+**/__pycache__
+**/.idea
+**/.venv
+**/.sass-cache
+**/.git
+**/data
+doc
