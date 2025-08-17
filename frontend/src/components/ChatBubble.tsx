@@ -117,7 +117,6 @@ export default function ChatBubble({
       markdown.includes("* ")) &&
     isHtml(markdown) === false;
   const parsedTable = !isUser && parseMarkdownTable(markdown);
-  console.log("Parsed table:", markdown);
   return (
     <motion.div
       style={{ maxWidth: "85%" }}
@@ -142,6 +141,7 @@ export default function ChatBubble({
               : "rgba(0, 40, 71, 0.5)",
             color: "#ececec",
             borderRadius: 3,
+
             boxShadow: "0 2px 16px 0 rgba(30,30,50,0.10)",
             fontSize: "1.11rem",
             lineHeight: 1.65,
@@ -154,9 +154,11 @@ export default function ChatBubble({
           <Box
             className="copy-btn"
             sx={{
-              position: "absolute",
+              position: "relative",
               top: 10,
               right: 15,
+              padding: 0.5,
+              margin:3,
               opacity: 0,
               transition: "opacity 0.18s",
               display: "flex",
