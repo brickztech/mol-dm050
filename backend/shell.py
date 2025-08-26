@@ -1,7 +1,6 @@
 from typing import List
 
-from api import generate_numbers
-from langutils import LangUtils, build_query, build_explanation_question
+from langutils.open_ai import LangUtils, build_query
 from redmine.context import init_context
 
 print("=" * 10)
@@ -18,17 +17,13 @@ if __name__ == "__main__":
         if user_input == "exit":
             break
         try:
-            response_iterator = lang_utils.call_chat(build_query(user_input))
+            response_iterator = lang_utils.call_chat(build_query(user_input), None)
             response: str = "".join(response_iterator)
-            if not response == LangUtils.unknown_context_response:
-                lang_utils.process_response(response,True)
-            else:
-                print("Context explanation call...")
-                response_iterator = lang_utils.call_chat(build_explanation_question(user_input))
-                lang_utils.process_response("".join(response_iterator),True)
+            # if not response == LangUtils.unknown_context_response:
+            #     # lang_utils.process_response(response, True)
+            # else:
+            #     print("Context explanation call...")
+            #     # response_iterator = lang_utils.call_chat(build_explanation_question(user_input))
+            #     # lang_utils.process_response("".join(response_iterator), True)
         except Exception as e:
             print("Error execute", e)
-
-
-
-

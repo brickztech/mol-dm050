@@ -3,3 +3,4 @@ node_modules
 .vite
 __pychache__
 .env
+backend/.zed
