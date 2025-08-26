@@ -1,11 +1,13 @@
+import os
 from datetime import datetime
 
 import pandas as pd
-import os
 
-from langutils import ExecutionContext, LangUtils
-import os
+from langutils.context import ExecutionContext
+from langutils.open_ai import LangUtils
+
 pd.options.display.max_columns = None
+
 
 class RedmineContext(ExecutionContext):
     def __init__(self, variables: dict):
@@ -84,34 +86,32 @@ class RedmineContext(ExecutionContext):
         self.variables['first_day_last_year'] = first_day_last_year
         first_day_last_month = datetime(today.year, today.month - 1 if today.month > 1 else 12, 1)
         self.variables['first_day_of_last_month'] = first_day_last_month
-        all_project = projects.merge(members, left_on='id', right_on='project_id').merge(users, left_on='user_id',
-                                                                                         right_on='id')
 
 
 def init_context() -> RedmineContext:
     context = RedmineContext(dict())
     LangUtils.system_instruction_for_query = f"""
-        You are a programmer working on reporting tasks. 
+        You are a programmer working on reporting tasks.
         The reports all come from a database realized as a collection of pandas dataframes.
         {context.get_domain_description()}
         When you need information about all the available tables in the database use the "get_tables" function.
-        When you need information about a particular table in the database use the "describe_table" function.  
+        When you need information about a particular table in the database use the "describe_table" function.
         This function will return the table structure and the connections to other tables.
         When this function return "unknown" text it means that the table is not known, it is not in the database.
-        If you don't have information about a particular table, don't try to guess or generate something. Return back a response which says that you don't know that object. 
+        If you don't have information about a particular table, don't try to guess or generate something. Return back a response which says that you don't know that object.
         When you are asked to execute a query, you have to use the "execute_query" function.
         "execute_query" function takes panda queries as text input and executes them on the database. The query has to save the output to "result_table" variable. The result will be returned as tab separated table.
         Consider that the user interface is in Hungarian and it is a HTML interface. Format the output to HTML or keep the original formatting received by the tools if it is in HTML format.
         If you are returning images returned it in the following format: (attachment://<name of the picture>)
     """
-    LangUtils.prompt_prefix_for_query = f"""
-        The question is the following: 
+
+    LangUtils.prompt_prefix_for_query = """
+        The question is the following:
     """
     context.validate()
 
     return context
 
+
 # removed hints
 # When you are indexing columns never use the table name for prefix. For example instead of felhasznalok.firstname use firstname or instead of 'projektek.name' user name.
-
-
