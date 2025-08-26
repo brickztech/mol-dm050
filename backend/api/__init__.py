@@ -1,3 +1,7 @@
+from loguru import logger
+
+import logging
+import os
 import time
 from typing import Final
 
@@ -5,14 +9,62 @@ from fastapi import APIRouter, FastAPI
 from starlette.responses import FileResponse, JSONResponse, StreamingResponse
 from starlette.staticfiles import StaticFiles
 
+
 from api.dto import AuthenticationRequest, AuthenticationResponse, ChatRequest
 from langutils import LangUtils, build_query, build_explanation_question, build_query_with_history
 from redmine.context import init_context
 
-router = APIRouter()
-app = FastAPI()
-app.include_router(router)
 
+class InterceptHandler(logging.Handler):
+    def emit(self, record):
+        # Get corresponding Loguru level
+        try:
+            level = logger.level(record.levelname).name
+        except ValueError:
+            level = record.levelno
+
+        # Find caller to get correct stack depth
+        frame, depth = logging.currentframe(), 2
+        while frame.f_back and frame.f_code.co_filename == logging.__file__:
+            frame = frame.f_back
+            depth += 1
+
+        logger.opt(depth=depth, exception=record.exc_info).log(level, record.getMessage())
+
+
+def configure_loguru():
+    # Remove existing handlers
+    for handler in logging.root.handlers[:]:
+        logging.root.removeHandler(handler)
+
+    # Intercept standard logging
+    logging.basicConfig(handlers=[InterceptHandler()], level=logging.INFO)
+
+    # Configur loguru
+    sink: str = os.path.join(os.getenv('LOG_DIR'), 'dm050.log')
+    logger.add(sink, rotation='10 MB', retention=5, enqueue=True, level=logging.DEBUG, backtrace=False, diagnose=False)
+
+    # propagate to the root logger
+    loggers = (
+        "uvicorn",
+        "uvicorn.access",
+        "uvicorn.error",
+        "fastapi",
+        "asyncio",
+        "starlette",
+    )
+
+    for logger_name in loggers:
+        logging_logger = logging.getLogger(logger_name)
+        logging_logger.handlers = []
+        logging_logger.propagate = True
+
+
+app = FastAPI()
+configure_loguru()
+
+router = APIRouter()
+app.include_router(router)
 lang_utils = LangUtils(init_context())
 
 # Mount dist files

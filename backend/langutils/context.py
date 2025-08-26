@@ -1,3 +1,5 @@
+import logging
+
 import pandas as pd
 from pandas.core.groupby import DataFrameGroupBy
 from tabulate import tabulate
@@ -88,20 +90,20 @@ class ExecutionContext:
 
     def validate(self):
         for key, value in self.variables.items():
-            print('Validating', key)
+            logging.info(f'Validating {key}')
             if isinstance(value, pd.DataFrame):
                 if not self.validate_dataframe(value):
-                    print(f"Validation failed for {key} DataFrame.")
+                    logging.info(f"Validation failed for {key} DataFrame.")
                     return False
             else:
-                print(f"Variable {key} is not a DataFrame.")
+                logging.info(f"Variable {key} is not a DataFrame.")
         return True
 
     @staticmethod
     def validate_dataframe(df: pd.DataFrame) -> bool:
         # Check if the DataFrame is empty
         if df.empty:
-            print("DataFrame is empty.")
+            logging.warning("DataFrame is empty.")
             return False
 
         # Check for NaN values
@@ -111,13 +113,13 @@ class ExecutionContext:
 
         # Check for duplicate rows
         if df.duplicated().any():
-            print("DataFrame contains duplicate rows.")
+            logging.warning("DataFrame contains duplicate rows.")
             return False
 
         # Check for non-numeric values in numeric columns
         for col in df.select_dtypes(include=['number']).columns:
             if not pd.api.types.is_numeric_dtype(df[col]):
-                print(f"Column {col} contains non-numeric values.")
+                logging.warning(f"Column {col} contains non-numeric values.")
                 return False
 
         return True
