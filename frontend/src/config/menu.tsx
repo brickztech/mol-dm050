@@ -29,11 +29,11 @@ export default {
       link: ["/dm050"],
       component: Text2SqlPageMol,
     },
-    {
-      name: "History",
-      icon: QueryStatsRoundedIcon,
-      link: ["/history"],
-      component: HistoryPage,
-    },
+    // {
+    //   name: "History",
+    //   icon: QueryStatsRoundedIcon,
+    //   link: ["/history"],
+    //   component: HistoryPage,
+    // },
   ] as MenuItem[],
 } as Menu;

@@ -331,7 +331,6 @@ export default function HistoryPage({ thumbs }: { thumbs?: string[] }) {
                 </Select>
             </Sheet>
 
-            {/* Grid */}
             {loading ? (
                 <HistorySkeletonGrid />
             ) : (
@@ -571,7 +570,7 @@ export default function HistoryPage({ thumbs }: { thumbs?: string[] }) {
                         sx={(theme) => ({
                             position: "sticky",
                             top: 0,
-                            zIndex: 2,
+                            zIndex: 3,
                             display: "flex",
                             alignItems: "center",
                             gap: 1,
@@ -599,15 +598,30 @@ export default function HistoryPage({ thumbs }: { thumbs?: string[] }) {
                             {selected ? selected.question : "Preview"}
                         </Typography>
 
-                        <IconButton
-                            onClick={() => setSelected(null)}
-                            variant="plain"
-                            color="neutral"
-                            aria-label="Close"
-                        >
+                        <IconButton onClick={() => setSelected(null)} variant="plain" color="neutral" aria-label="Close">
                             ✕
                         </IconButton>
                     </Box>
+
+                    {selected && !detailLoading && (
+                        <Box
+                            sx={(theme) => ({
+                                zIndex: 2,
+                                px: { xs: 1, md: 2 },
+                                py: 0.75,
+                                borderBottom: "1px solid",
+                                borderColor: "neutral.outlinedBorder",
+                                bgcolor: "rgba(255 255 255 / 0.98)",
+                                [theme.getColorSchemeSelector("dark")]: {
+                                    bgcolor: "rgba(16 18 22 / 0.98)",
+                                },
+                            })}
+                        >
+                            <Typography level="body-xs" sx={{ opacity: 0.7 }}>
+                                {formatDateShort(selected.createdAt)} • {humanMs(selected.durationMs)} • {selected.dbName}
+                            </Typography>
+                        </Box>
+                    )}
 
                     <Box
                         sx={{
@@ -626,7 +640,6 @@ export default function HistoryPage({ thumbs }: { thumbs?: string[] }) {
                                 <Skeleton variant="rectangular" height={140} sx={{ borderRadius: 10 }} />
                             </Box>
                         ) : (
-                            // ── Modal content ──
                             <Box
                                 sx={{
                                     display: "flex",
@@ -635,15 +648,10 @@ export default function HistoryPage({ thumbs }: { thumbs?: string[] }) {
                                 }}
                             >
                                 <Box>
-                                    {/* meta under title */}
-                                    <Typography level="body-xs" sx={{ opacity: 0.7, mt: 0.25 }}>
-                                        {formatDateShort(selected.createdAt)} • {humanMs(selected.durationMs)} • {selected.dbName}
-                                    </Typography>
-                                    <Divider sx={{ my: 1 }} />
-
                                     <Typography level="title-sm" sx={{ mb: 0.5 }}>
                                         Result preview
                                     </Typography>
+
                                     {selected.resultSample ? (
                                         <Sheet variant="outlined" sx={{ borderRadius: 12, overflow: "hidden" }}>
                                             <Table hoverRow stickyHeader stripe="even">
@@ -708,7 +716,6 @@ export default function HistoryPage({ thumbs }: { thumbs?: string[] }) {
                     </Box>
                 </ModalDialog>
             </Modal>
-
         </Box>
     );
 }

@@ -15,7 +15,7 @@ export default function BulletItem({
                                            secondary = false,
                                            iconSrc = logoRed,
                                            iconSize = 20,
-                                           fontWeight = 600,
+                                           fontWeight = 500,
                                        }: Props) {
     return (
         <ListItem sx={{ alignItems: "flex-start",  py: 0.5 }}>
