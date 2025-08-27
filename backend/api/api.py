@@ -7,7 +7,6 @@ import time
 from typing import Final
 
 from fastapi.applications import FastAPI
-from fastapi.routing import APIRouter
 from starlette.responses import FileResponse, JSONResponse, StreamingResponse
 from starlette.staticfiles import StaticFiles
 
@@ -44,8 +43,8 @@ def configure_loguru():
     # Intercept standard logging
     logging.basicConfig(handlers=[InterceptHandler()], level=logging.INFO)
 
-    # Configur loguru
-    sink: str = os.path.join(os.getenv('LOG_DIR'), 'dm050.log')
+    # Configure loguru file logger
+    sink: str = os.path.join(os.getenv('LOG_DIR', './log'), 'dm050.log')
     logger.add(sink, rotation='10 MB', retention=5, enqueue=True, level=logging.DEBUG, backtrace=False, diagnose=False)
 
     # propagate to the root logger
@@ -63,12 +62,11 @@ def configure_loguru():
         logging_logger.handlers = []
         logging_logger.propagate = True
 
+    logger.info('Logger {} configured', 'succesfully')
+
 
 app = FastAPI()
 configure_loguru()
-
-router = APIRouter()
-app.include_router(router)
 
 
 # Mount dist files
