@@ -1,0 +1,2129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 5158.94 6031.5">
+  <defs>
+    <style>
+      .cls-1 {
+        stroke-width: 1.89px;
+      }
+
+      .cls-1, .cls-2, .cls-3, .cls-4, .cls-5, .cls-6, .cls-7, .cls-8, .cls-9, .cls-10, .cls-11, .cls-12, .cls-13, .cls-14, .cls-15, .cls-16, .cls-17, .cls-18, .cls-19, .cls-20, .cls-21, .cls-22, .cls-23, .cls-24, .cls-25, .cls-26, .cls-27, .cls-28, .cls-29, .cls-30, .cls-31, .cls-32, .cls-33, .cls-34, .cls-35, .cls-36, .cls-37, .cls-38, .cls-39, .cls-40, .cls-41, .cls-42, .cls-43, .cls-44, .cls-45, .cls-46, .cls-47, .cls-48, .cls-49, .cls-50, .cls-51, .cls-52, .cls-53, .cls-54, .cls-55, .cls-56, .cls-57, .cls-58, .cls-59, .cls-60, .cls-61, .cls-62, .cls-63, .cls-64, .cls-65, .cls-66, .cls-67, .cls-68, .cls-69, .cls-70, .cls-71, .cls-72, .cls-73, .cls-74, .cls-75, .cls-76, .cls-77, .cls-78, .cls-79, .cls-80, .cls-81, .cls-82, .cls-83, .cls-84, .cls-85, .cls-86, .cls-87, .cls-88, .cls-89, .cls-90, .cls-91, .cls-92, .cls-93, .cls-94, .cls-95, .cls-96, .cls-97, .cls-98, .cls-99, .cls-100, .cls-101, .cls-102, .cls-103, .cls-104, .cls-105, .cls-106, .cls-107, .cls-108, .cls-109, .cls-110, .cls-111, .cls-112, .cls-113, .cls-114, .cls-115, .cls-116, .cls-117, .cls-118, .cls-119, .cls-120, .cls-121, .cls-122, .cls-123, .cls-124, .cls-125, .cls-126, .cls-127, .cls-128, .cls-129, .cls-130, .cls-131, .cls-132, .cls-133, .cls-134, .cls-135, .cls-136, .cls-137, .cls-138, .cls-139, .cls-140, .cls-141, .cls-142, .cls-143, .cls-144, .cls-145, .cls-146, .cls-147, .cls-148, .cls-149, .cls-150, .cls-151, .cls-152, .cls-153, .cls-154, .cls-155, .cls-156, .cls-157, .cls-158, .cls-159, .cls-160, .cls-161, .cls-162, .cls-163, .cls-164, .cls-165, .cls-166, .cls-167, .cls-168, .cls-169, .cls-170, .cls-171, .cls-172, .cls-173, .cls-174, .cls-175, .cls-176, .cls-177, .cls-178, .cls-179, .cls-180, .cls-181, .cls-182, .cls-183, .cls-184, .cls-185, .cls-186, .cls-187, .cls-188, .cls-189, .cls-190, .cls-191, .cls-192, .cls-193, .cls-194, .cls-195, .cls-196, .cls-197, .cls-198, .cls-199, .cls-200, .cls-201, .cls-202, .cls-203, .cls-204, .cls-205, .cls-206, .cls-207, .cls-208, .cls-209, .cls-210, .cls-211, .cls-212, .cls-213, .cls-214, .cls-215, .cls-216, .cls-217, .cls-218, .cls-219, .cls-220, .cls-221, .cls-222, .cls-223, .cls-224, .cls-225, .cls-226, .cls-227, .cls-228, .cls-229, .cls-230, .cls-231, .cls-232, .cls-233, .cls-234, .cls-235, .cls-236, .cls-237, .cls-238, .cls-239, .cls-240, .cls-241, .cls-242, .cls-243, .cls-244, .cls-245, .cls-246, .cls-247, .cls-248, .cls-249, .cls-250, .cls-251, .cls-252, .cls-253, .cls-254, .cls-255, .cls-256, .cls-257, .cls-258, .cls-259, .cls-260, .cls-261, .cls-262, .cls-263, .cls-264, .cls-265, .cls-266, .cls-267, .cls-268, .cls-269, .cls-270, .cls-271, .cls-272, .cls-273, .cls-274, .cls-275, .cls-276, .cls-277, .cls-278, .cls-279, .cls-280, .cls-281, .cls-282, .cls-283, .cls-284, .cls-285, .cls-286, .cls-287, .cls-288, .cls-289, .cls-290, .cls-291, .cls-292, .cls-293, .cls-294, .cls-295, .cls-296, .cls-297, .cls-298, .cls-299, .cls-300, .cls-301, .cls-302, .cls-303, .cls-304, .cls-305, .cls-306, .cls-307, .cls-308, .cls-309, .cls-310, .cls-311, .cls-312, .cls-313, .cls-314, .cls-315, .cls-316, .cls-317, .cls-318, .cls-319, .cls-320, .cls-321, .cls-322, .cls-323, .cls-324, .cls-325, .cls-326, .cls-327, .cls-328, .cls-329, .cls-330, .cls-331, .cls-332, .cls-333, .cls-334, .cls-335, .cls-336, .cls-337, .cls-338, .cls-339, .cls-340, .cls-341, .cls-342, .cls-343, .cls-344, .cls-345, .cls-346, .cls-347, .cls-348, .cls-349, .cls-350, .cls-351, .cls-352, .cls-353, .cls-354, .cls-355, .cls-356, .cls-357, .cls-358, .cls-359, .cls-360, .cls-361, .cls-362, .cls-363, .cls-364, .cls-365, .cls-366, .cls-367, .cls-368, .cls-369, .cls-370, .cls-371, .cls-372, .cls-373, .cls-374, .cls-375, .cls-376, .cls-377, .cls-378, .cls-379, .cls-380, .cls-381, .cls-382, .cls-383, .cls-384, .cls-385, .cls-386, .cls-387, .cls-388, .cls-389, .cls-390, .cls-391, .cls-392, .cls-393, .cls-394, .cls-395, .cls-396, .cls-397, .cls-398, .cls-399, .cls-400, .cls-401, .cls-402, .cls-403, .cls-404, .cls-405, .cls-406, .cls-407, .cls-408, .cls-409, .cls-410, .cls-411, .cls-412, .cls-413, .cls-414, .cls-415, .cls-416, .cls-417, .cls-418, .cls-419, .cls-420, .cls-421, .cls-422, .cls-423, .cls-424, .cls-425, .cls-426, .cls-427, .cls-428, .cls-429, .cls-430, .cls-431, .cls-432, .cls-433, .cls-434, .cls-435, .cls-436, .cls-437, .cls-438, .cls-439, .cls-440, .cls-441, .cls-442, .cls-443, .cls-444, .cls-445, .cls-446, .cls-447, .cls-448, .cls-449, .cls-450, .cls-451, .cls-452, .cls-453, .cls-454, .cls-455, .cls-456, .cls-457, .cls-458, .cls-459, .cls-460, .cls-461, .cls-462, .cls-463, .cls-464, .cls-465, .cls-466, .cls-467, .cls-468, .cls-469, .cls-470, .cls-471, .cls-472, .cls-473, .cls-474, .cls-475, .cls-476, .cls-477, .cls-478, .cls-479, .cls-480, .cls-481, .cls-482, .cls-483, .cls-484, .cls-485, .cls-486, .cls-487, .cls-488, .cls-489, .cls-490, .cls-491, .cls-492, .cls-493, .cls-494, .cls-495, .cls-496, .cls-497, .cls-498, .cls-499, .cls-500, .cls-501, .cls-502, .cls-503, .cls-504 {
+        fill: none;
+        stroke-miterlimit: 10;
+      }
+
+      .cls-1, .cls-198 {
+        stroke: #393536;
+      }
+
+      .cls-2, .cls-3 {
+        stroke: #948c2b;
+      }
+
+      .cls-2, .cls-161, .cls-448, .cls-494 {
+        stroke-width: 1.58px;
+      }
+
+      .cls-3, .cls-449 {
+        stroke-width: 1.58px;
+      }
+
+      .cls-4 {
+        stroke-width: 1.96px;
+      }
+
+      .cls-4, .cls-65 {
+        stroke: #2c2829;
+      }
+
+      .cls-5 {
+        stroke: #e1e4ec;
+      }
+
+      .cls-5, .cls-222, .cls-284, .cls-444 {
+        stroke-width: 1.89px;
+      }
+
+      .cls-6, .cls-7, .cls-13, .cls-19, .cls-20, .cls-27, .cls-29, .cls-36, .cls-37, .cls-39, .cls-40, .cls-42, .cls-46, .cls-47, .cls-48, .cls-49, .cls-50, .cls-51, .cls-54, .cls-55, .cls-59, .cls-62, .cls-65, .cls-66, .cls-69, .cls-70, .cls-73, .cls-74, .cls-77, .cls-78, .cls-83, .cls-87, .cls-91, .cls-93, .cls-94, .cls-97, .cls-98, .cls-99, .cls-100, .cls-101, .cls-102, .cls-104, .cls-106, .cls-111, .cls-112, .cls-113, .cls-117, .cls-120, .cls-121, .cls-125, .cls-126, .cls-131, .cls-136, .cls-137, .cls-138, .cls-141, .cls-190, .cls-191, .cls-192, .cls-194, .cls-196, .cls-197, .cls-198, .cls-202, .cls-204, .cls-206, .cls-210, .cls-215, .cls-216, .cls-217, .cls-225, .cls-229, .cls-241, .cls-242, .cls-244, .cls-247, .cls-251, .cls-253, .cls-254, .cls-262, .cls-263, .cls-267, .cls-273, .cls-274, .cls-275, .cls-276, .cls-286, .cls-295, .cls-298, .cls-307, .cls-310, .cls-316, .cls-343, .cls-365, .cls-370, .cls-371, .cls-377, .cls-382, .cls-385, .cls-388, .cls-390, .cls-391, .cls-392, .cls-393, .cls-395, .cls-399, .cls-401, .cls-402, .cls-403, .cls-404, .cls-410, .cls-413, .cls-415, .cls-416, .cls-420, .cls-424, .cls-428, .cls-433, .cls-435, .cls-437, .cls-451, .cls-452, .cls-453, .cls-455, .cls-460, .cls-462, .cls-463, .cls-466, .cls-468, .cls-471, .cls-472, .cls-475, .cls-476, .cls-484, .cls-486, .cls-487, .cls-488, .cls-493, .cls-495, .cls-497, .cls-499, .cls-503, .cls-504 {
+        stroke-width: 2px;
+      }
+
+      .cls-6, .cls-67 {
+        stroke: #5f5c5d;
+      }
+
+      .cls-7, .cls-199 {
+        stroke: #adacac;
+      }
+
+      .cls-8 {
+        stroke: #9e545e;
+      }
+
+      .cls-8, .cls-327 {
+        stroke-width: 1.1px;
+      }
+
+      .cls-9 {
+        stroke-width: 1.68px;
+      }
+
+      .cls-9, .cls-463 {
+        stroke: #646162;
+      }
+
+      .cls-10 {
+        stroke: #a1a9c3;
+      }
+
+      .cls-10, .cls-147, .cls-205, .cls-454 {
+        stroke-width: 1.65px;
+      }
+
+      .cls-11 {
+        stroke: #6f6827;
+      }
+
+      .cls-11, .cls-64, .cls-68, .cls-178 {
+        stroke-width: 1.72px;
+      }
+
+      .cls-12 {
+        stroke: #eaebf1;
+      }
+
+      .cls-12, .cls-243, .cls-245, .cls-291 {
+        stroke-width: 1.92px;
+      }
+
+      .cls-13, .cls-56 {
+        stroke: #c3c2c2;
+      }
+
+      .cls-14 {
+        stroke: #4f7a91;
+      }
+
+      .cls-14, .cls-159 {
+        stroke-width: 1px;
+      }
+
+      .cls-15 {
+        stroke-width: 1.16px;
+      }
+
+      .cls-15, .cls-87 {
+        stroke: #cbcacb;
+      }
+
+      .cls-16 {
+        stroke: #c2b830;
+      }
+
+      .cls-16, .cls-170, .cls-461, .cls-491 {
+        stroke-width: 1.4px;
+      }
+
+      .cls-17 {
+        stroke: #643358;
+      }
+
+      .cls-17, .cls-71, .cls-184, .cls-447 {
+        stroke-width: 1.75px;
+      }
+
+      .cls-18 {
+        stroke-width: 1.83px;
+      }
+
+      .cls-18, .cls-468 {
+        stroke: #464243;
+      }
+
+      .cls-19 {
+        stroke: #c3693b;
+      }
+
+      .cls-20 {
+        stroke: #b49347;
+      }
+
+      .cls-21 {
+        stroke: #dde0e9;
+      }
+
+      .cls-21, .cls-23, .cls-293, .cls-304 {
+        stroke-width: 1.87px;
+      }
+
+      .cls-22 {
+        stroke: #7682a7;
+      }
+
+      .cls-22, .cls-81, .cls-187, .cls-292 {
+        stroke-width: 1.5px;
+      }
+
+      .cls-23 {
+        stroke: #453f23;
+      }
+
+      .cls-24 {
+        stroke: #8792b2;
+      }
+
+      .cls-24, .cls-119, .cls-149, .cls-379 {
+        stroke-width: 1.56px;
+      }
+
+      .cls-25 {
+        stroke: #875f6d;
+      }
+
+      .cls-25, .cls-339 {
+        stroke-width: 1.07px;
+      }
+
+      .cls-26 {
+        stroke-width: 1.26px;
+      }
+
+      .cls-26, .cls-77 {
+        stroke: #b6b4b5;
+      }
+
+      .cls-27 {
+        stroke: #c4673b;
+      }
+
+      .cls-28 {
+        stroke-width: 1.61px;
+      }
+
+      .cls-28, .cls-455 {
+        stroke: #716e6f;
+      }
+
+      .cls-29, .cls-82 {
+        stroke: #979696;
+      }
+
+      .cls-30 {
+        stroke: #465789;
+      }
+
+      .cls-30, .cls-171, .cls-470, .cls-482 {
+        stroke-width: 1.33px;
+      }
+
+      .cls-31 {
+        stroke: #aa3041;
+      }
+
+      .cls-31, .cls-44, .cls-174, .cls-479 {
+        stroke-width: 1.47px;
+      }
+
+      .cls-32 {
+        stroke: #2e8aa6;
+      }
+
+      .cls-32, .cls-353 {
+        stroke-width: .96px;
+      }
+
+      .cls-33 {
+        stroke: #8b314b;
+      }
+
+      .cls-33, .cls-146, .cls-227, .cls-422 {
+        stroke-width: 1.59px;
+      }
+
+      .cls-34 {
+        stroke: #f5e935;
+      }
+
+      .cls-34, .cls-258, .cls-332, .cls-414 {
+        stroke-width: 1.22px;
+      }
+
+      .cls-35 {
+        stroke: #f2f3f7;
+      }
+
+      .cls-35, .cls-239, .cls-289, .cls-485 {
+        stroke-width: 1.95px;
+      }
+
+      .cls-36 {
+        stroke: #acaa4e;
+      }
+
+      .cls-37 {
+        stroke: #b39648;
+      }
+
+      .cls-38 {
+        stroke: #2d366a;
+      }
+
+      .cls-38, .cls-299, .cls-386, .cls-502 {
+        stroke-width: 1.97px;
+      }
+
+      .cls-39 {
+        stroke: #bf743e;
+      }
+
+      .cls-40, .cls-105 {
+        stroke: #575454;
+      }
+
+      .cls-41 {
+        stroke: #342f22;
+      }
+
+      .cls-41, .cls-240, .cls-301, .cls-483 {
+        stroke-width: 1.94px;
+      }
+
+      .cls-42, .cls-490 {
+        stroke: #413e3f;
+      }
+
+      .cls-43 {
+        stroke: #e12e2f;
+      }
+
+      .cls-43, .cls-88, .cls-283, .cls-360 {
+        stroke-width: 1.25px;
+      }
+
+      .cls-44 {
+        stroke: #b2a82e;
+      }
+
+      .cls-45 {
+        stroke-width: 1.46px;
+      }
+
+      .cls-45, .cls-97 {
+        stroke: #8f8d8d;
+      }
+
+      .cls-46 {
+        stroke: #be773f;
+      }
+
+      .cls-47, .cls-501 {
+        stroke: #797777;
+      }
+
+      .cls-48 {
+        stroke: #d7322b;
+      }
+
+      .cls-49, .cls-236 {
+        stroke: #e1e0e0;
+      }
+
+      .cls-50 {
+        stroke: #d43a2e;
+      }
+
+      .cls-51, .cls-496 {
+        stroke: #524f50;
+      }
+
+      .cls-52 {
+        stroke-width: 1.18px;
+      }
+
+      .cls-52, .cls-484 {
+        stroke: #c7c6c6;
+      }
+
+      .cls-53 {
+        stroke-width: 1.78px;
+      }
+
+      .cls-53, .cls-503 {
+        stroke: #4e4b4c;
+      }
+
+      .cls-54 {
+        stroke: #b58f46;
+      }
+
+      .cls-55 {
+        stroke: #ba8243;
+      }
+
+      .cls-56 {
+        stroke-width: 1.2px;
+      }
+
+      .cls-57 {
+        stroke: #0e9abb;
+      }
+
+      .cls-57, .cls-362 {
+        stroke-width: .91px;
+      }
+
+      .cls-58 {
+        stroke: #9b3146;
+      }
+
+      .cls-58, .cls-188, .cls-306, .cls-500 {
+        stroke-width: 1.53px;
+      }
+
+      .cls-59 {
+        stroke: #b98443;
+      }
+
+      .cls-60 {
+        stroke-width: 1.59px;
+      }
+
+      .cls-60, .cls-488 {
+        stroke: #757273;
+      }
+
+      .cls-61 {
+        stroke: #4c3460;
+      }
+
+      .cls-61, .cls-269, .cls-285, .cls-419 {
+        stroke-width: 1.84px;
+      }
+
+      .cls-62 {
+        stroke: #c5643a;
+      }
+
+      .cls-63 {
+        stroke: #796676;
+      }
+
+      .cls-63, .cls-330 {
+        stroke-width: 1.05px;
+      }
+
+      .cls-64 {
+        stroke: #6c3356;
+      }
+
+      .cls-66 {
+        stroke: #b59047;
+      }
+
+      .cls-67 {
+        stroke-width: 1.7px;
+      }
+
+      .cls-68 {
+        stroke: #b2b9ce;
+      }
+
+      .cls-69 {
+        stroke: #b09e4b;
+      }
+
+      .cls-70 {
+        stroke: #a9b150;
+      }
+
+      .cls-71 {
+        stroke: #bac1d3;
+      }
+
+      .cls-72 {
+        stroke: #c7bd30;
+      }
+
+      .cls-72, .cls-168, .cls-280, .cls-411 {
+        stroke-width: 1.39px;
+      }
+
+      .cls-73 {
+        stroke: #be763f;
+      }
+
+      .cls-74 {
+        stroke: #d2402f;
+      }
+
+      .cls-75 {
+        stroke: #4f5f8e;
+      }
+
+      .cls-75, .cls-127, .cls-169, .cls-465 {
+        stroke-width: 1.36px;
+      }
+
+      .cls-76 {
+        stroke: #a5adc5;
+      }
+
+      .cls-76, .cls-151, .cls-380, .cls-408 {
+        stroke-width: 1.67px;
+      }
+
+      .cls-78 {
+        stroke: #ce4a32;
+      }
+
+      .cls-79 {
+        stroke: #b62f3d;
+      }
+
+      .cls-79, .cls-122, .cls-175, .cls-233 {
+        stroke-width: 1.42px;
+      }
+
+      .cls-80 {
+        stroke: #e52d2e;
+      }
+
+      .cls-80, .cls-89, .cls-249, .cls-355 {
+        stroke-width: 1.23px;
+      }
+
+      .cls-81 {
+        stroke: #a9a02d;
+      }
+
+      .cls-82 {
+        stroke-width: 1.42px;
+      }
+
+      .cls-83 {
+        stroke: #afa14b;
+      }
+
+      .cls-84 {
+        stroke: #666f82;
+      }
+
+      .cls-84, .cls-156 {
+        stroke-width: 1.03px;
+      }
+
+      .cls-85 {
+        stroke: #c34146;
+      }
+
+      .cls-85, .cls-334 {
+        stroke-width: 1.15px;
+      }
+
+      .cls-86 {
+        stroke: #995661;
+      }
+
+      .cls-86, .cls-342 {
+        stroke-width: 1.09px;
+      }
+
+      .cls-88 {
+        stroke: #ece134;
+      }
+
+      .cls-89 {
+        stroke: #f1e534;
+      }
+
+      .cls-90 {
+        stroke: #dcd132;
+      }
+
+      .cls-90, .cls-230, .cls-266, .cls-364 {
+        stroke-width: 1.31px;
+      }
+
+      .cls-91 {
+        stroke: #aca94e;
+      }
+
+      .cls-92 {
+        stroke: #64739c;
+      }
+
+      .cls-92, .cls-95, .cls-143, .cls-176 {
+        stroke-width: 1.44px;
+      }
+
+      .cls-93 {
+        stroke: #b78b45;
+      }
+
+      .cls-94 {
+        stroke: #cc5034;
+      }
+
+      .cls-95 {
+        stroke: #b2303e;
+      }
+
+      .cls-96 {
+        stroke: #1398b8;
+      }
+
+      .cls-96, .cls-361 {
+        stroke-width: .92px;
+      }
+
+      .cls-98 {
+        stroke: #c85b37;
+      }
+
+      .cls-99 {
+        stroke: #d14330;
+      }
+
+      .cls-100 {
+        stroke: #c75e38;
+      }
+
+      .cls-101 {
+        stroke: #c4673a;
+      }
+
+      .cls-102 {
+        stroke: #c4653a;
+      }
+
+      .cls-103 {
+        stroke: #a63042;
+      }
+
+      .cls-103, .cls-186, .cls-255, .cls-312 {
+        stroke-width: 1.48px;
+      }
+
+      .cls-104 {
+        stroke: #d33d2e;
+      }
+
+      .cls-105 {
+        stroke-width: 1.74px;
+      }
+
+      .cls-106 {
+        stroke: #be783f;
+      }
+
+      .cls-107 {
+        stroke: #cc3d40;
+      }
+
+      .cls-107, .cls-325 {
+        stroke-width: 1.16px;
+      }
+
+      .cls-108 {
+        stroke: #5d7488;
+      }
+
+      .cls-108, .cls-155 {
+        stroke-width: 1.02px;
+      }
+
+      .cls-109 {
+        stroke: #847c29;
+      }
+
+      .cls-109, .cls-145, .cls-195, .cls-489 {
+        stroke-width: 1.64px;
+      }
+
+      .cls-110 {
+        stroke: #cbc130;
+      }
+
+      .cls-110, .cls-172, .cls-270, .cls-369 {
+        stroke-width: 1.37px;
+      }
+
+      .cls-111 {
+        stroke: #c85c37;
+      }
+
+      .cls-112, .cls-201 {
+        stroke: #302c2d;
+      }
+
+      .cls-113 {
+        stroke: #c75f38;
+      }
+
+      .cls-114 {
+        stroke: #d92e31;
+      }
+
+      .cls-114, .cls-235, .cls-259, .cls-356 {
+        stroke-width: 1.28px;
+      }
+
+      .cls-115 {
+        stroke: #50345f;
+      }
+
+      .cls-115, .cls-212, .cls-294, .cls-381 {
+        stroke-width: 1.83px;
+      }
+
+      .cls-116 {
+        stroke-width: 1.39px;
+      }
+
+      .cls-116, .cls-206 {
+        stroke: #9c9a9a;
+      }
+
+      .cls-117 {
+        stroke: #c75d37;
+      }
+
+      .cls-118 {
+        stroke: #955864;
+      }
+
+      .cls-118, .cls-324 {
+        stroke-width: 1.09px;
+      }
+
+      .cls-119 {
+        stroke: #98902c;
+      }
+
+      .cls-120 {
+        stroke: #c26c3c;
+      }
+
+      .cls-121 {
+        stroke: #cb5234;
+      }
+
+      .cls-122 {
+        stroke: #606f99;
+      }
+
+      .cls-123 {
+        stroke: #bf4449;
+      }
+
+      .cls-123, .cls-323 {
+        stroke-width: 1.14px;
+      }
+
+      .cls-124 {
+        stroke: #736c28;
+      }
+
+      .cls-124, .cls-150, .cls-265, .cls-297 {
+        stroke-width: 1.7px;
+      }
+
+      .cls-125, .cls-373 {
+        stroke: #a4a3a3;
+      }
+
+      .cls-126 {
+        stroke: #231f20;
+      }
+
+      .cls-127 {
+        stroke: #cfc531;
+      }
+
+      .cls-128 {
+        stroke: #29366c;
+      }
+
+      .cls-128, .cls-224, .cls-300, .cls-384 {
+        stroke-width: 1.98px;
+      }
+
+      .cls-129 {
+        stroke: #da3637;
+      }
+
+      .cls-129, .cls-358 {
+        stroke-width: 1.18px;
+      }
+
+      .cls-130 {
+        stroke-width: 1.22px;
+      }
+
+      .cls-130, .cls-210 {
+        stroke: #bebdbd;
+      }
+
+      .cls-131 {
+        stroke: #d82f2a;
+      }
+
+      .cls-132 {
+        stroke: #c7ccdb;
+      }
+
+      .cls-132, .cls-180, .cls-183, .cls-446 {
+        stroke-width: 1.8px;
+      }
+
+      .cls-133 {
+        stroke: #9d942c;
+      }
+
+      .cls-133, .cls-189, .cls-407, .cls-473 {
+        stroke-width: 1.55px;
+      }
+
+      .cls-134 {
+        stroke: #099cbe;
+      }
+
+      .cls-134, .cls-317 {
+        stroke-width: .91px;
+      }
+
+      .cls-135 {
+        stroke: #a59c2d;
+      }
+
+      .cls-135, .cls-185, .cls-219, .cls-467 {
+        stroke-width: 1.51px;
+      }
+
+      .cls-136, .cls-378 {
+        stroke: #b1b0b0;
+      }
+
+      .cls-137, .cls-234 {
+        stroke: #d8d7d8;
+      }
+
+      .cls-138 {
+        stroke: #bb7e41;
+      }
+
+      .cls-139 {
+        stroke: #059fc1;
+      }
+
+      .cls-139, .cls-319 {
+        stroke-width: .9px;
+      }
+
+      .cls-140 {
+        stroke: #00a1c4;
+      }
+
+      .cls-140, .cls-248, .cls-318 {
+        stroke-width: .9px;
+      }
+
+      .cls-141 {
+        stroke: #cb5335;
+      }
+
+      .cls-142 {
+        stroke: #ed2d2b;
+      }
+
+      .cls-142, .cls-311, .cls-357, .cls-400 {
+        stroke-width: 1.2px;
+      }
+
+      .cls-143 {
+        stroke: #bab02f;
+      }
+
+      .cls-144 {
+        stroke: #69769f;
+      }
+
+      .cls-144, .cls-173, .cls-228, .cls-434 {
+        stroke-width: 1.45px;
+      }
+
+      .cls-145, .cls-146, .cls-147, .cls-148, .cls-149, .cls-150, .cls-151, .cls-152, .cls-153, .cls-154, .cls-155, .cls-156, .cls-157, .cls-158, .cls-159, .cls-160, .cls-161, .cls-163, .cls-164, .cls-165, .cls-166, .cls-167, .cls-168, .cls-169, .cls-170, .cls-171, .cls-172, .cls-173, .cls-174, .cls-175, .cls-176, .cls-177, .cls-178, .cls-179, .cls-181, .cls-182, .cls-183, .cls-184, .cls-185, .cls-186, .cls-187, .cls-188, .cls-189, .cls-284, .cls-285, .cls-287, .cls-288, .cls-289, .cls-290, .cls-291, .cls-293, .cls-294, .cls-299, .cls-300, .cls-301, .cls-317, .cls-318, .cls-319, .cls-320, .cls-321, .cls-322, .cls-323, .cls-324, .cls-325, .cls-326, .cls-327, .cls-328, .cls-329, .cls-330, .cls-331, .cls-332, .cls-333, .cls-334, .cls-335, .cls-336, .cls-337, .cls-338, .cls-339, .cls-340, .cls-341, .cls-342, .cls-344, .cls-345, .cls-346, .cls-347, .cls-348, .cls-349, .cls-350, .cls-351, .cls-352, .cls-353, .cls-354, .cls-355, .cls-356, .cls-357, .cls-358, .cls-359, .cls-360, .cls-361, .cls-362, .cls-363, .cls-364, .cls-402 {
+        stroke: #000;
+      }
+
+      .cls-148, .cls-256, .cls-445, .cls-498 {
+        stroke-width: 1.61px;
+      }
+
+      .cls-152, .cls-302, .cls-305, .cls-436 {
+        stroke-width: 1.62px;
+      }
+
+      .cls-153, .cls-208, .cls-367, .cls-480 {
+        stroke-width: 1.69px;
+      }
+
+      .cls-154, .cls-252 {
+        stroke-width: 1.01px;
+      }
+
+      .cls-157, .cls-237 {
+        stroke-width: 1.03px;
+      }
+
+      .cls-158, .cls-458 {
+        stroke-width: 1px;
+      }
+
+      .cls-160, .cls-417 {
+        stroke-width: .96px;
+      }
+
+      .cls-162 {
+        stroke: #706a7c;
+      }
+
+      .cls-162, .cls-165 {
+        stroke-width: 1.04px;
+      }
+
+      .cls-163, .cls-409 {
+        stroke-width: 1.05px;
+      }
+
+      .cls-164, .cls-313 {
+        stroke-width: 1.02px;
+      }
+
+      .cls-166, .cls-457 {
+        stroke-width: .99px;
+      }
+
+      .cls-167, .cls-438 {
+        stroke-width: 1.06px;
+      }
+
+      .cls-177, .cls-203, .cls-220, .cls-278 {
+        stroke-width: 1.76px;
+      }
+
+      .cls-179, .cls-207, .cls-214, .cls-264 {
+        stroke-width: 1.73px;
+      }
+
+      .cls-180 {
+        stroke: #58345c;
+      }
+
+      .cls-181, .cls-432, .cls-439, .cls-443 {
+        stroke-width: 1.34px;
+      }
+
+      .cls-182, .cls-193, .cls-213, .cls-441 {
+        stroke-width: 1.78px;
+      }
+
+      .cls-190 {
+        stroke: #ada64d;
+      }
+
+      .cls-191 {
+        stroke: #a8b451;
+      }
+
+      .cls-192 {
+        stroke: #c16d3c;
+      }
+
+      .cls-193 {
+        stroke: #c3c8d9;
+      }
+
+      .cls-194 {
+        stroke: #c26b3c;
+      }
+
+      .cls-195 {
+        stroke: #9ca5c0;
+      }
+
+      .cls-196, .cls-218 {
+        stroke: #939192;
+      }
+
+      .cls-197 {
+        stroke: #ada54d;
+      }
+
+      .cls-199 {
+        stroke-width: 1.31px;
+      }
+
+      .cls-200 {
+        stroke: #ac4d55;
+      }
+
+      .cls-200, .cls-337 {
+        stroke-width: 1.12px;
+      }
+
+      .cls-201 {
+        stroke-width: 1.94px;
+      }
+
+      .cls-202 {
+        stroke: #ca5636;
+      }
+
+      .cls-203 {
+        stroke: #60335a;
+      }
+
+      .cls-204 {
+        stroke: #b59147;
+      }
+
+      .cls-205 {
+        stroke: #7f7829;
+      }
+
+      .cls-207 {
+        stroke: #6a6427;
+      }
+
+      .cls-208 {
+        stroke: #733253;
+      }
+
+      .cls-209 {
+        stroke: #ba464c;
+      }
+
+      .cls-209, .cls-321 {
+        stroke-width: 1.13px;
+      }
+
+      .cls-211 {
+        stroke: #df3434;
+      }
+
+      .cls-211, .cls-359 {
+        stroke-width: 1.18px;
+      }
+
+      .cls-212 {
+        stroke: #514b25;
+      }
+
+      .cls-213 {
+        stroke: #5e5826;
+      }
+
+      .cls-214 {
+        stroke: #b6bdd0;
+      }
+
+      .cls-215 {
+        stroke: #abac4f;
+      }
+
+      .cls-216, .cls-221 {
+        stroke: #7e7b7c;
+      }
+
+      .cls-217 {
+        stroke: #da2a29;
+      }
+
+      .cls-218 {
+        stroke-width: 1.44px;
+      }
+
+      .cls-219 {
+        stroke: #7a86aa;
+      }
+
+      .cls-220 {
+        stroke: #625c26;
+      }
+
+      .cls-221 {
+        stroke-width: 1.55px;
+      }
+
+      .cls-222 {
+        stroke: #403b23;
+      }
+
+      .cls-223 {
+        stroke: #8b5d6a;
+      }
+
+      .cls-223, .cls-341 {
+        stroke-width: 1.07px;
+      }
+
+      .cls-224 {
+        stroke: #fbfbfc;
+      }
+
+      .cls-225 {
+        stroke: #aaae4f;
+      }
+
+      .cls-226, .cls-227 {
+        stroke: #8f9ab8;
+      }
+
+      .cls-226, .cls-421 {
+        stroke-width: 1.59px;
+      }
+
+      .cls-228 {
+        stroke: #ae3040;
+      }
+
+      .cls-229 {
+        stroke: #c0723e;
+      }
+
+      .cls-230 {
+        stroke: #d22e34;
+      }
+
+      .cls-231 {
+        stroke: #b5484f;
+      }
+
+      .cls-231, .cls-322 {
+        stroke-width: 1.13px;
+      }
+
+      .cls-232 {
+        stroke-width: 1.81px;
+      }
+
+      .cls-232, .cls-273 {
+        stroke: #4a4747;
+      }
+
+      .cls-233 {
+        stroke: #beb42f;
+      }
+
+      .cls-234 {
+        stroke-width: 1.09px;
+      }
+
+      .cls-235 {
+        stroke: #394c81;
+      }
+
+      .cls-236 {
+        stroke-width: 1.05px;
+      }
+
+      .cls-237 {
+        stroke: #6b6d7f;
+      }
+
+      .cls-238 {
+        stroke: #483461;
+      }
+
+      .cls-238, .cls-287, .cls-474, .cls-481 {
+        stroke-width: 1.86px;
+      }
+
+      .cls-239 {
+        stroke: #313569;
+      }
+
+      .cls-240 {
+        stroke: #eeeff4;
+      }
+
+      .cls-241 {
+        stroke: #c56339;
+      }
+
+      .cls-242, .cls-459 {
+        stroke: #eeedee;
+      }
+
+      .cls-243 {
+        stroke: #383322;
+      }
+
+      .cls-244 {
+        stroke: #bc7d41;
+      }
+
+      .cls-245 {
+        stroke: #393567;
+      }
+
+      .cls-246 {
+        stroke: #2191af;
+      }
+
+      .cls-246, .cls-345 {
+        stroke-width: .94px;
+      }
+
+      .cls-247 {
+        stroke: #bb8042;
+      }
+
+      .cls-248, .cls-495 {
+        stroke: #fff;
+      }
+
+      .cls-249 {
+        stroke: #2d4078;
+      }
+
+      .cls-250 {
+        stroke: #d13b3d;
+      }
+
+      .cls-250, .cls-335 {
+        stroke-width: 1.16px;
+      }
+
+      .cls-251 {
+        stroke: #c66139;
+      }
+
+      .cls-252 {
+        stroke: #58768b;
+      }
+
+      .cls-253, .cls-296 {
+        stroke: #828080;
+      }
+
+      .cls-254 {
+        stroke: #afa14c;
+      }
+
+      .cls-255 {
+        stroke: #ada42e;
+      }
+
+      .cls-256 {
+        stroke: #949dba;
+      }
+
+      .cls-257 {
+        stroke: #cbd0de;
+      }
+
+      .cls-257, .cls-288, .cls-464, .cls-477 {
+        stroke-width: 1.81px;
+      }
+
+      .cls-258 {
+        stroke: #e92d2c;
+      }
+
+      .cls-259 {
+        stroke: #e4d933;
+      }
+
+      .cls-260 {
+        stroke: #d52e33;
+      }
+
+      .cls-260, .cls-308, .cls-363, .cls-412 {
+        stroke-width: 1.29px;
+      }
+
+      .cls-261 {
+        stroke: #1c93b2;
+      }
+
+      .cls-261, .cls-352 {
+        stroke-width: .93px;
+      }
+
+      .cls-262 {
+        stroke: #b98543;
+      }
+
+      .cls-263 {
+        stroke: #cf4832;
+      }
+
+      .cls-264 {
+        stroke: #683357;
+      }
+
+      .cls-265 {
+        stroke: #adb5cb;
+      }
+
+      .cls-266 {
+        stroke: #425386;
+      }
+
+      .cls-267 {
+        stroke: #af9f4b;
+      }
+
+      .cls-268 {
+        stroke-width: 1.11px;
+      }
+
+      .cls-268, .cls-493 {
+        stroke: #d4d3d3;
+      }
+
+      .cls-269 {
+        stroke: #d4d8e4;
+      }
+
+      .cls-270 {
+        stroke: #536391;
+      }
+
+      .cls-271 {
+        stroke-width: .92px;
+      }
+
+      .cls-271, .cls-472 {
+        stroke: #fbfbfb;
+      }
+
+      .cls-272 {
+        stroke-width: .94px;
+      }
+
+      .cls-272, .cls-504 {
+        stroke: #f6f6f6;
+      }
+
+      .cls-274 {
+        stroke: #d04531;
+      }
+
+      .cls-275 {
+        stroke: #25366d;
+      }
+
+      .cls-276 {
+        stroke: #aca84d;
+      }
+
+      .cls-277 {
+        stroke-width: 1.87px;
+      }
+
+      .cls-277, .cls-365 {
+        stroke: #3d393a;
+      }
+
+      .cls-278 {
+        stroke: #bfc4d6;
+      }
+
+      .cls-279 {
+        stroke: #a74f58;
+      }
+
+      .cls-279, .cls-328 {
+        stroke-width: 1.11px;
+      }
+
+      .cls-280 {
+        stroke: #586794;
+      }
+
+      .cls-281 {
+        stroke-width: 1.37px;
+      }
+
+      .cls-281, .cls-404 {
+        stroke: #a09e9f;
+      }
+
+      .cls-282 {
+        stroke-width: 1.33px;
+      }
+
+      .cls-282, .cls-382 {
+        stroke: #a9a7a8;
+      }
+
+      .cls-283 {
+        stroke: #31447b;
+      }
+
+      .cls-286, .cls-397 {
+        stroke: #8b8889;
+      }
+
+      .cls-290, .cls-303, .cls-368, .cls-398 {
+        stroke-width: 1.91px;
+      }
+
+      .cls-292 {
+        stroke: #a23044;
+      }
+
+      .cls-295, .cls-376 {
+        stroke: #d0cfcf;
+      }
+
+      .cls-296 {
+        stroke-width: 1.52px;
+      }
+
+      .cls-297 {
+        stroke: #703354;
+      }
+
+      .cls-298 {
+        stroke: #d92d2a;
+      }
+
+      .cls-302 {
+        stroke: #83324e;
+      }
+
+      .cls-303 {
+        stroke: #e5e8ef;
+      }
+
+      .cls-304 {
+        stroke: #443563;
+      }
+
+      .cls-305 {
+        stroke: #98a1bd;
+      }
+
+      .cls-306 {
+        stroke: #7e8aad;
+      }
+
+      .cls-307, .cls-405 {
+        stroke: #868485;
+      }
+
+      .cls-308 {
+        stroke: #e0d533;
+      }
+
+      .cls-309 {
+        stroke-width: 1.24px;
+      }
+
+      .cls-309, .cls-401 {
+        stroke: #bab9b9;
+      }
+
+      .cls-310 {
+        stroke: #bf743f;
+      }
+
+      .cls-311 {
+        stroke: #243873;
+      }
+
+      .cls-312 {
+        stroke: #717ea4;
+      }
+
+      .cls-313 {
+        stroke: #627185;
+      }
+
+      .cls-314 {
+        stroke: #1796b5;
+      }
+
+      .cls-314, .cls-346 {
+        stroke-width: .93px;
+      }
+
+      .cls-315 {
+        stroke: #b14b52;
+      }
+
+      .cls-315, .cls-331 {
+        stroke-width: 1.12px;
+      }
+
+      .cls-316 {
+        stroke: #b29949;
+      }
+
+      .cls-320, .cls-469 {
+        stroke-width: 1.15px;
+      }
+
+      .cls-326, .cls-450 {
+        stroke-width: 1.1px;
+      }
+
+      .cls-329, .cls-394 {
+        stroke-width: 1.06px;
+      }
+
+      .cls-333, .cls-431 {
+        stroke-width: 1.19px;
+      }
+
+      .cls-336, .cls-372 {
+        stroke-width: 1.17px;
+      }
+
+      .cls-338, .cls-374 {
+        stroke-width: 1.19px;
+      }
+
+      .cls-340, .cls-426 {
+        stroke-width: 1.08px;
+      }
+
+      .cls-343 {
+        stroke: #d5382d;
+      }
+
+      .cls-344, .cls-456 {
+        stroke-width: .95px;
+      }
+
+      .cls-347, .cls-423 {
+        stroke-width: .99px;
+      }
+
+      .cls-348, .cls-366 {
+        stroke-width: .98px;
+      }
+
+      .cls-349, .cls-383 {
+        stroke-width: .94px;
+      }
+
+      .cls-350, .cls-430 {
+        stroke-width: .97px;
+      }
+
+      .cls-351, .cls-396 {
+        stroke-width: .97px;
+      }
+
+      .cls-354, .cls-375, .cls-389, .cls-442 {
+        stroke-width: 1.26px;
+      }
+
+      .cls-366 {
+        stroke: #41819a;
+      }
+
+      .cls-367 {
+        stroke: #a9b1c8;
+      }
+
+      .cls-368 {
+        stroke: #3c3722;
+      }
+
+      .cls-369 {
+        stroke: #c22f39;
+      }
+
+      .cls-370 {
+        stroke: #b19b4a;
+      }
+
+      .cls-371 {
+        stroke: #b68d45;
+      }
+
+      .cls-372 {
+        stroke: #d6383a;
+      }
+
+      .cls-373 {
+        stroke-width: 1.35px;
+      }
+
+      .cls-374 {
+        stroke: #e43231;
+      }
+
+      .cls-375 {
+        stroke: #e8dd33;
+      }
+
+      .cls-376 {
+        stroke-width: 1.13px;
+      }
+
+      .cls-377 {
+        stroke: #a9b050;
+      }
+
+      .cls-378 {
+        stroke-width: 1.29px;
+      }
+
+      .cls-379 {
+        stroke: #933149;
+      }
+
+      .cls-380 {
+        stroke: #7b7429;
+      }
+
+      .cls-381 {
+        stroke: #d0d4e1;
+      }
+
+      .cls-383 {
+        stroke: #258fac;
+      }
+
+      .cls-384 {
+        stroke: #272320;
+      }
+
+      .cls-385 {
+        stroke: #b88844;
+      }
+
+      .cls-386 {
+        stroke: #f6f7fa;
+      }
+
+      .cls-387 {
+        stroke-width: 1.98px;
+      }
+
+      .cls-387, .cls-435 {
+        stroke: #272324;
+      }
+
+      .cls-388 {
+        stroke: #b68d46;
+      }
+
+      .cls-389 {
+        stroke: #dd2e30;
+      }
+
+      .cls-390 {
+        stroke: #db2728;
+      }
+
+      .cls-391 {
+        stroke: #b88644;
+      }
+
+      .cls-392 {
+        stroke: #b09d4a;
+      }
+
+      .cls-393 {
+        stroke: #a9b250;
+      }
+
+      .cls-394 {
+        stroke: #7d6473;
+      }
+
+      .cls-395 {
+        stroke: #d6352c;
+      }
+
+      .cls-396 {
+        stroke: #3886a0;
+      }
+
+      .cls-397 {
+        stroke-width: 1.48px;
+      }
+
+      .cls-398 {
+        stroke: #3d3565;
+      }
+
+      .cls-399 {
+        stroke: #aea34c;
+      }
+
+      .cls-400 {
+        stroke: #f9ed35;
+      }
+
+      .cls-403 {
+        stroke: #bb7f42;
+      }
+
+      .cls-405 {
+        stroke-width: 1.5px;
+      }
+
+      .cls-406 {
+        stroke-width: 1.91px;
+      }
+
+      .cls-406, .cls-451 {
+        stroke: #343131;
+      }
+
+      .cls-407 {
+        stroke: #828eaf;
+      }
+
+      .cls-408 {
+        stroke: #773252;
+      }
+
+      .cls-409 {
+        stroke: #746879;
+      }
+
+      .cls-410 {
+        stroke: #cd4e33;
+      }
+
+      .cls-411 {
+        stroke: #be2f3b;
+      }
+
+      .cls-412 {
+        stroke: #3e4f83;
+      }
+
+      .cls-413 {
+        stroke: #b29748;
+      }
+
+      .cls-414 {
+        stroke: #283c76;
+      }
+
+      .cls-415 {
+        stroke: #ba8242;
+      }
+
+      .cls-416 {
+        stroke: #b39548;
+      }
+
+      .cls-417 {
+        stroke: #3388a3;
+      }
+
+      .cls-418 {
+        stroke-width: 1.03px;
+      }
+
+      .cls-418, .cls-462 {
+        stroke: #e5e5e5;
+      }
+
+      .cls-419 {
+        stroke: #4d4724;
+      }
+
+      .cls-420 {
+        stroke: #ce4b32;
+      }
+
+      .cls-421, .cls-422 {
+        stroke: #90882b;
+      }
+
+      .cls-423 {
+        stroke: #467f97;
+      }
+
+      .cls-424, .cls-478 {
+        stroke: #686566;
+      }
+
+      .cls-425 {
+        stroke-width: 1px;
+      }
+
+      .cls-425, .cls-460 {
+        stroke: #e9e9e9;
+      }
+
+      .cls-426 {
+        stroke: #905a67;
+      }
+
+      .cls-427 {
+        stroke-width: .96px;
+      }
+
+      .cls-427, .cls-475 {
+        stroke: #f2f2f2;
+      }
+
+      .cls-428 {
+        stroke: #ca5435;
+      }
+
+      .cls-429 {
+        stroke-width: 1.07px;
+      }
+
+      .cls-429, .cls-497 {
+        stroke: #dcdcdc;
+      }
+
+      .cls-430 {
+        stroke: #3c839d;
+      }
+
+      .cls-431 {
+        stroke: #e82f2e;
+      }
+
+      .cls-432 {
+        stroke: #4b5b8c;
+      }
+
+      .cls-433 {
+        stroke: #bc7c41;
+      }
+
+      .cls-434 {
+        stroke: #b6ac2e;
+      }
+
+      .cls-436 {
+        stroke: #88802a;
+      }
+
+      .cls-437, .cls-492 {
+        stroke: #6c6a6a;
+      }
+
+      .cls-438 {
+        stroke: #826170;
+      }
+
+      .cls-439 {
+        stroke: #d3c931;
+      }
+
+      .cls-440 {
+        stroke-width: 1.72px;
+      }
+
+      .cls-440, .cls-487 {
+        stroke: #5b5859;
+      }
+
+      .cls-441 {
+        stroke: #5c345b;
+      }
+
+      .cls-442 {
+        stroke: #35487e;
+      }
+
+      .cls-443 {
+        stroke: #ca2f37;
+      }
+
+      .cls-444 {
+        stroke: #403564;
+      }
+
+      .cls-445 {
+        stroke: #8c842a;
+      }
+
+      .cls-446 {
+        stroke: #5a5425;
+      }
+
+      .cls-447 {
+        stroke: #666027;
+      }
+
+      .cls-448, .cls-449 {
+        stroke: #8b96b5;
+      }
+
+      .cls-450 {
+        stroke: #a3515b;
+      }
+
+      .cls-452 {
+        stroke: #b78a45;
+      }
+
+      .cls-453 {
+        stroke: #c95936;
+      }
+
+      .cls-454 {
+        stroke: #7b3251;
+      }
+
+      .cls-456 {
+        stroke: #2a8da9;
+      }
+
+      .cls-457 {
+        stroke: #4a7d94;
+      }
+
+      .cls-458 {
+        stroke: #54788e;
+      }
+
+      .cls-459 {
+        stroke-width: .98px;
+      }
+
+      .cls-461 {
+        stroke: #ba2f3c;
+      }
+
+      .cls-464 {
+        stroke: #54345d;
+      }
+
+      .cls-465 {
+        stroke: #c62f38;
+      }
+
+      .cls-466 {
+        stroke: #c0713e;
+      }
+
+      .cls-467 {
+        stroke: #9f3145;
+      }
+
+      .cls-469 {
+        stroke: #c83f43;
+      }
+
+      .cls-470 {
+        stroke: #ce2e35;
+      }
+
+      .cls-471 {
+        stroke: #bd7a40;
+      }
+
+      .cls-473 {
+        stroke: #973147;
+      }
+
+      .cls-474 {
+        stroke: #494324;
+      }
+
+      .cls-476 {
+        stroke: #b29849;
+      }
+
+      .cls-477 {
+        stroke: #554f25;
+      }
+
+      .cls-478 {
+        stroke-width: 1.65px;
+      }
+
+      .cls-479 {
+        stroke: #6d7aa2;
+      }
+
+      .cls-480 {
+        stroke: #777028;
+      }
+
+      .cls-481 {
+        stroke: #d8dce6;
+      }
+
+      .cls-482 {
+        stroke: #d7cd32;
+      }
+
+      .cls-483 {
+        stroke: #353568;
+      }
+
+      .cls-485 {
+        stroke: #302b21;
+      }
+
+      .cls-486 {
+        stroke: #c16f3d;
+      }
+
+      .cls-489 {
+        stroke: #7f324f;
+      }
+
+      .cls-490 {
+        stroke-width: 1.85px;
+      }
+
+      .cls-491 {
+        stroke: #5c6b97;
+      }
+
+      .cls-492 {
+        stroke-width: 1.63px;
+      }
+
+      .cls-494 {
+        stroke: #8f314a;
+      }
+
+      .cls-496 {
+        stroke-width: 1.76px;
+      }
+
+      .cls-498 {
+        stroke: #87324d;
+      }
+
+      .cls-499 {
+        stroke: #cd4c33;
+      }
+
+      .cls-500 {
+        stroke: #a1982c;
+      }
+
+      .cls-501 {
+        stroke-width: 1.57px;
+      }
+
+      .cls-502 {
+        stroke: #2b2721;
+      }
+    </style>
+  </defs>
+
+  <g>
+    <path class="cls-140" d="M1658.07.11c20.52,190.5-421.57,75.17-308.21,690.57,118.09,641.1-615.96,231.39-904.07,235.95C160.96,931.14.87,1207.97.87,1207.97"/>
+    <path class="cls-139" d="M1658.22.65c29.15,191.48-428.76,72.98-308.81,686.58,123.94,634.01-606.43,235.81-896,241.7-283.63,5.3-444.53,276.97-444.53,276.97"/>
+    <path class="cls-134" d="M1658.36,1.19c37.77,192.45-435.99,70.73-309.4,682.6,129.7,626.9-596.91,240.24-887.93,247.45-282.42,6.08-444.13,272.6-444.13,272.6"/>
+    <path class="cls-57" d="M1658.5,1.73c46.4,193.43-443.28,68.43-309.99,678.62,135.37,619.76-587.36,245.36-879.86,253.2-281.19,7.54-443.73,268.22-443.73,268.22"/>
+    <path class="cls-96" d="M1658.64,2.27c55.02,194.4-450.62,66.08-310.59,674.64,140.96,612.6-577.83,250-871.79,258.95-279.98,8.52-443.34,263.85-443.34,263.85"/>
+    <path class="cls-314" d="M1658.78,2.81c63.65,195.38-458.01,63.68-311.18,670.65,146.45,605.41-568.3,254.63-863.73,264.7-278.76,9.49-442.94,259.48-442.94,259.48"/>
+    <path class="cls-261" d="M1658.93,3.35c72.28,196.35-465.46,61.23-311.78,666.67,151.84,598.2-558.76,259.26-855.66,270.44-277.54,10.46-442.54,255.11-442.54,255.11"/>
+    <path class="cls-246" d="M1659.07,3.89c80.9,197.33-472.97,58.74-312.37,662.69,157.14,590.97-549.22,263.88-847.59,276.19-276.33,11.41-442.14,250.73-442.14,250.73"/>
+    <path class="cls-383" d="M1659.21,4.43c89.53,198.3-480.54,56.21-312.97,658.71,162.35,583.73-539.68,268.48-839.52,281.94-275.11,12.35-441.74,246.36-441.74,246.36"/>
+    <path class="cls-456" d="M1659.35,4.97c98.15,199.28-488.17,53.63-313.56,654.72,167.46,576.47-530.14,273.08-831.45,287.69-273.89,13.27-441.34,241.99-441.34,241.99"/>
+    <path class="cls-32" d="M1659.5,5.51c106.78,200.25-495.87,51.02-314.16,650.74,172.47,569.2-520.6,277.68-823.38,293.44-272.67,14.19-440.94,237.62-440.94,237.62"/>
+    <path class="cls-417" d="M1659.64,6.05c115.4,201.23-503.64,48.37-314.75,646.76,177.37,561.92-511.06,282.26-815.32,299.19-271.45,15.1-440.55,233.24-440.55,233.24"/>
+    <path class="cls-396" d="M1659.78,6.59c124.03,202.2-511.47,45.69-315.35,642.78,182.18,554.63-501.52,286.83-807.25,304.93-270.23,16-440.15,228.87-440.15,228.87"/>
+    <path class="cls-430" d="M1659.92,7.13c132.65,203.18-519.38,42.98-315.94,638.79,186.89,547.34-491.97,291.4-799.18,310.68-269.01,16.89-439.75,224.5-439.75,224.5"/>
+    <path class="cls-366" d="M1660.06,7.67c141.28,204.15-527.37,40.25-316.53,634.81,191.5,540.05-482.43,295.95-791.11,316.43-267.79,17.76-439.35,220.13-439.35,220.13"/>
+    <path class="cls-423" d="M1660.21,8.21c149.91,205.12-535.43,37.49-317.13,630.83,196.01,532.75-472.89,300.5-783.04,322.18-266.56,18.63-438.95,215.75-438.95,215.75"/>
+    <path class="cls-457" d="M1660.35,8.75c158.53,206.1-543.56,34.71-317.72,626.85,200.41,525.46-463.34,305.04-774.97,327.93-265.34,19.49-438.55,211.38-438.55,211.38"/>
+    <path class="cls-14" d="M1660.49,9.29c167.16,207.07-551.78,31.92-318.32,622.86,204.72,518.18-453.8,309.56-766.91,333.68-264.12,20.34-438.16,207.01-438.16,207.01"/>
+    <path class="cls-458" d="M1660.63,9.83c175.78,208.05-560.08,29.12-318.91,618.88,208.92,510.9-444.26,314.08-758.84,339.42-262.9,21.18-437.76,202.64-437.76,202.64"/>
+    <path class="cls-252" d="M1660.77,10.37c184.41,209.02-568.47,26.31-319.51,614.9,213.03,503.64-434.71,318.59-750.77,345.17-261.68,22.01-437.36,198.26-437.36,198.26"/>
+    <path class="cls-108" d="M1660.92,10.91c193.03,210-576.94,23.5-320.1,610.92,217.04,496.38-425.17,323.09-742.7,350.92-260.46,22.83-436.96,193.89-436.96,193.89"/>
+    <path class="cls-313" d="M1661.06,11.45c201.66,210.97-585.5,20.69-320.7,606.93,220.95,489.15-415.63,327.58-734.63,356.67-259.24,23.64-436.56,189.52-436.56,189.52"/>
+    <path class="cls-84" d="M1661.2,11.99c210.29,211.95-594.15,17.88-321.29,602.95,224.76,481.93-406.09,332.06-726.56,362.42-258.02,24.44-436.16,185.15-436.16,185.15"/>
+    <path class="cls-237" d="M1661.34,12.53c218.91,212.92-602.89,15.09-321.88,598.97,228.47,474.74-396.55,336.53-718.5,368.17-256.81,25.24-435.76,180.77-435.76,180.77"/>
+    <path class="cls-162" d="M1661.49,13.07c227.54,213.9-611.72,12.31-322.48,594.99,232.1,467.56-387.01,340.98-710.43,373.91-255.59,26.02-435.37,176.4-435.37,176.4"/>
+    <path class="cls-409" d="M1661.63,13.61c236.16,214.87-620.64,9.55-323.07,591,235.63,460.42-377.47,345.43-702.36,379.66-254.37,26.8-434.97,172.03-434.97,172.03"/>
+    <path class="cls-63" d="M1661.77,14.16c244.79,215.85-629.66,6.81-323.67,587.02,239.07,453.3-367.93,349.87-694.29,385.41-253.16,27.57-434.57,167.66-434.57,167.66"/>
+    <path class="cls-394" d="M1661.91,14.7c253.41,216.82-638.78,4.1-324.26,583.04,242.42,446.22-358.39,354.29-686.22,391.16-251.94,28.33-434.17,163.28-434.17,163.28"/>
+    <path class="cls-438" d="M1662.05,15.24c262.04,217.8-648,1.43-324.86,579.06,245.68,439.17-348.86,358.71-678.15,396.91-250.73,29.08-433.77,158.91-433.77,158.91"/>
+    <path class="cls-25" d="M1662.2,15.78c270.66,218.77-657.31-1.21-325.45,575.07,248.86,432.15-339.32,363.12-670.09,402.66-249.52,29.83-433.37,154.54-433.37,154.54"/>
+    <path class="cls-223" d="M1662.34,16.32c279.29,219.75-666.73-3.8-326.05,571.09,251.96,425.18-329.79,367.51-662.02,408.4-248.3,30.56-432.98,150.17-432.98,150.17"/>
+    <path class="cls-426" d="M1662.48,16.86c287.92,220.72-676.24-6.34-326.64,567.11,254.98,418.24-320.26,371.89-653.95,414.15-247.09,31.29-432.58,145.79-432.58,145.79"/>
+    <path class="cls-118" d="M1662.62,17.4c296.54,221.7-685.85-8.82-327.23,563.13,257.92,411.35-310.73,376.26-645.88,419.9-245.88,32.02-432.18,141.42-432.18,141.42"/>
+    <path class="cls-86" d="M1662.76,17.94c305.17,222.67-695.57-11.24-327.83,559.14,260.79,404.5-301.2,380.62-637.81,425.65-244.68,32.73-431.78,137.05-431.78,137.05"/>
+    <path class="cls-8" d="M1662.91,18.48c313.79,223.64-705.39-13.6-328.42,555.16,263.58,397.69-291.68,384.97-629.74,431.4-243.47,33.44-431.38,132.68-431.38,132.68"/>
+    <path class="cls-450" d="M1663.05,19.02c322.42,224.62-715.3-15.88-329.02,551.18,266.31,390.94-282.16,389.31-621.68,437.15-242.27,34.14-430.98,128.3-430.98,128.3"/>
+    <path class="cls-279" d="M1663.19,19.56c331.04,225.59-725.32-18.09-329.61,547.2,268.97,384.24-272.64,393.63-613.61,442.89-241.06,34.83-430.58,123.93-430.58,123.93"/>
+    <path class="cls-200" d="M1663.33,20.1C2003,246.67,927.89-.12,1333.13,563.31c271.58,377.59-263.12,397.94-605.54,448.64-239.86,35.51-430.19,119.56-430.19,119.56"/>
+    <path class="cls-315" d="M1663.48,20.64c348.29,227.54-745.67-22.25-330.8,539.23,274.12,370.99-253.6,402.24-597.47,454.39-238.66,36.19-429.79,115.19-429.79,115.19"/>
+    <path class="cls-231" d="M1663.62,21.18c356.92,228.52-755.99-24.19-331.4,535.25,276.6,364.45-244.09,406.53-589.4,460.14-237.46,36.87-429.39,110.81-429.39,110.81"/>
+    <path class="cls-209" d="M1663.76,21.72c365.55,229.49-766.41-26.03-331.99,531.26,279.04,357.97-234.58,410.81-581.33,465.89-236.27,37.53-428.99,106.44-428.99,106.44"/>
+    <path class="cls-123" d="M1663.9,22.26c374.17,230.47-776.93-27.76-332.58,527.28,281.43,351.54-225.08,415.07-573.27,471.64-235.07,38.19-428.59,102.07-428.59,102.07"/>
+    <path class="cls-85" d="M1664.04,22.8c382.8,231.44-787.54-29.39-333.18,523.3,283.77,345.18-215.57,419.32-565.2,477.38-233.88,38.84-428.19,97.7-428.19,97.7"/>
+    <path class="cls-469" d="M1664.19,23.34c391.42,232.42-798.25-30.89-333.77,519.32,286.07,338.87-206.07,423.56-557.13,483.13-232.69,39.49-427.8,93.32-427.8,93.32"/>
+    <path class="cls-107" d="M1664.33,23.88c400.05,233.39-809.05-32.28-334.37,515.33,288.33,332.63-196.58,427.78-549.06,488.88-231.5,40.13-427.4,88.95-427.4,88.95"/>
+    <path class="cls-250" d="M1664.47,24.42c408.67,234.37-819.94-33.54-334.96,511.35,290.56,326.45-187.09,431.99-540.99,494.63-230.32,40.76-427,84.58-427,84.58"/>
+    <path class="cls-372" d="M1664.61,24.96c417.3,235.34-830.93-34.67-335.56,507.37,292.76,320.34-177.6,436.19-532.92,500.38-229.13,41.39-426.6,80.21-426.6,80.21"/>
+    <path class="cls-129" d="M1664.75,25.5c425.93,236.32-841.99-35.66-336.15,503.39,294.93,314.29-168.11,440.37-524.86,506.13-227.95,42.01-426.2,75.83-426.2,75.83"/>
+    <path class="cls-211" d="M1664.9,26.04c434.55,237.29-853.15-36.51-336.75,499.4,297.08,308.3-158.63,444.55-516.79,511.87-226.77,42.63-425.8,71.46-425.8,71.46"/>
+    <path class="cls-374" d="M1665.04,26.58c443.18,238.27-864.38-37.21-337.34,495.42,299.21,302.39-149.27,448.13-508.72,517.62-225.66,42.88-425.4,67.09-425.4,67.09"/>
+    <path class="cls-431" d="M1665.18,27.12c451.8,239.24-875.69-37.76-337.93,491.44,301.33,296.54-139.74,452.55-500.65,523.37-224.45,43.66-425.01,62.72-425.01,62.72"/>
+    <path class="cls-142" d="M1665.32,27.66c460.43,240.22-910.56-12.5-338.53,487.46,468.35,491.84-917.19,587.46-917.19,587.46"/>
+    <path class="cls-258" d="M420.5,1105.76c-4.06-2.69,272.91-29.02,541.91-93.18,324.05-77.54,622.96-232.67,367.31-500.88C752.65,9.36,2128.37,265.84,1672.07,28.44"/>
+    <path class="cls-80" d="M431.39,1108.94c-8.11-5.39,261.21-38.39,531.58-99.45,325.23-73.92,624.9-233.71,369.67-501.21C750.54,3.56,2130.99,263.8,1678.82,29.22"/>
+    <path class="cls-43" d="M442.28,1112.12c-12.17-8.08,249.52-47.76,521.25-105.73,326.41-70.31,626.83-234.76,372.04-501.54C748.42-2.23,2133.6,261.77,1685.57,29.99"/>
+    <path class="cls-389" d="M453.17,1115.29c-16.23-10.78,237.82-57.14,510.92-112,327.6-66.69,628.76-235.8,374.4-501.86C746.3-8.03,2136.22,259.73,1692.31,30.77"/>
+    <path class="cls-114" d="M464.07,1118.47c-20.29-13.47,226.12-66.51,500.59-118.27,328.78-63.07,630.7-236.85,376.76-502.19C744.19-13.83,2138.84,257.69,1699.06,31.55"/>
+    <path class="cls-260" d="M474.96,1121.65c-24.34-16.16,214.42-75.89,490.26-124.54,329.96-59.46,632.63-237.89,379.13-502.52C742.07-19.63,2141.46,255.66,1705.81,32.32"/>
+    <path class="cls-230" d="M485.85,1124.83c-28.4-18.86,202.82-84.68,479.93-130.81,331.26-55.15,634.56-238.93,381.49-502.85C739.95-25.43,2144.07,253.62,1712.56,33.1"/>
+    <path class="cls-470" d="M496.74,1128.01c-32.46-21.55,191.12-93.99,469.6-137.08,332.44-51.45,636.5-239.98,383.85-503.18C737.84-31.23,2146.69,251.58,1719.3,33.88"/>
+    <path class="cls-443" d="M507.64,1131.18c-36.52-24.24,179.43-103.3,459.27-143.36,333.62-47.76,638.43-241.02,386.22-503.5C735.72-37.03,2149.31,249.54,1726.05,34.65"/>
+    <path class="cls-465" d="M518.53,1134.36c-40.57-26.94,167.73-112.61,448.94-149.63,334.8-44.07,640.36-242.07,388.58-503.83C733.61-42.83,2151.93,247.51,1732.8,35.43"/>
+    <path class="cls-369" d="M529.42,1137.54c-44.63-29.63,156.03-121.93,438.61-155.9,335.98-40.39,642.3-243.11,390.94-504.16C731.49-48.63,2154.55,245.47,1739.54,36.21"/>
+    <path class="cls-411" d="M540.31,1140.72c-48.69-32.33,144.32-131.25,428.28-162.17,337.16-36.71,644.23-244.16,393.31-504.49C729.37-54.42,2157.16,243.43,1746.29,36.99"/>
+    <path class="cls-461" d="M551.2,1143.89c-52.74-35.02,132.62-140.58,417.95-168.44,338.34-33.04,646.16-245.2,395.67-504.82C727.26-60.22,2159.78,241.4,1753.04,37.76"/>
+    <path class="cls-79" d="M562.1,1147.07c-56.8-37.71,120.92-149.91,407.62-174.71,339.51-29.37,648.1-246.24,398.03-505.14C725.14-66.02,2162.4,239.36,1759.79,38.54"/>
+    <path class="cls-95" d="M572.99,1150.25c-60.86-40.41,109.21-159.24,397.29-180.99,340.68-25.71,650.03-247.29,400.4-505.47C723.03-71.82,2165.02,237.32,1766.53,39.32"/>
+    <path class="cls-228" d="M583.88,1153.43c-64.92-43.1,97.5-168.58,386.96-187.26,341.85-22.06,651.96-248.33,402.76-505.8C720.91-77.62,2167.63,235.28,1773.28,40.09"/>
+    <path class="cls-31" d="M594.77,1156.61c-68.97-45.8,85.79-177.92,376.63-193.53,343.02-18.41,653.9-249.38,405.12-506.13C718.79-83.42,2170.25,233.25,1780.03,40.87"/>
+    <path class="cls-103" d="M605.67,1159.78c-73.03-48.49,74.08-187.27,366.3-199.8,344.19-14.76,655.83-250.42,407.49-506.46C716.68-89.22,2172.87,231.21,1786.78,41.65"/>
+    <path class="cls-292" d="M616.56,1162.96c-77.09-51.18,62.37-196.62,355.97-206.07,345.36-11.12,657.76-251.46,409.85-506.78C714.56-95.02,2175.49,229.17,1793.52,42.42"/>
+    <path class="cls-467" d="M627.45,1166.14c-81.15-53.88,50.66-205.98,345.64-212.34,346.53-7.48,659.7-252.51,412.21-507.11C712.45-100.81,2178.1,227.14,1800.27,43.2"/>
+    <path class="cls-58" d="M638.34,1169.32c-85.2-56.57,38.95-215.34,335.31-218.61,347.69-3.85,661.63-253.55,414.58-507.44C710.33-106.61,2180.72,225.1,1807.02,43.98"/>
+    <path class="cls-473" d="M649.23,1172.49c-89.26-59.26,27.25-222.35,324.98-224.89,348.85-2.97,663.56-254.6,416.94-507.77C708.21-112.41,2183.34,223.06,1813.77,44.75"/>
+    <path class="cls-379" d="M660.13,1175.67c-93.32-61.96,15.53-234.07,314.65-231.16,350.03,3.4,665.5-255.64,419.3-508.1C706.1-118.21,2185.96,221.03,1820.51,45.53"/>
+    <path class="cls-494" d="M671.02,1178.85c-97.37-64.65,3.82-243.44,304.32-237.43,351.19,7.02,667.43-256.69,421.67-508.42C703.98-124.01,2188.57,218.99,1827.26,46.31"/>
+    <path class="cls-33" d="M681.91,1182.03c-101.43-67.35-7.89-252.81,293.99-243.7,352.36,10.63,669.36-257.73,424.03-508.75C701.87-129.81,2191.19,216.95,1834.01,47.08"/>
+    <path class="cls-498" d="M692.8,1185.21c-105.49-70.04-19.6-262.19,283.66-249.97,353.53,14.24,671.3-258.77,426.39-509.08C699.75-135.61,2193.81,214.91,1840.76,47.86"/>
+    <path class="cls-302" d="M703.7,1188.38c-109.55-72.73-31.31-271.57,273.33-256.24,354.7,17.85,673.23-259.82,428.75-509.41C697.63-141.41,2196.43,212.88,1847.5,48.64"/>
+    <path class="cls-489" d="M714.59,1191.56c-113.6-75.43-43.02-280.96,263-262.52,355.87,21.45,675.16-260.86,431.12-509.74C695.52-147.21,2199.05,210.84,1854.25,49.42"/>
+    <path class="cls-454" d="M725.48,1194.74c-117.66-78.12-54.73-290.35,252.67-268.79,357.04,25.04,677.1-261.91,433.48-510.06C693.4-153,2201.66,208.8,1861,50.19"/>
+    <path class="cls-408" d="M736.37,1197.92c-121.72-80.82-66.43-299.74,242.34-275.06,358.21,28.64,679.03-262.95,435.84-510.39C691.28-158.8,2204.28,206.77,1867.74,50.97"/>
+    <path class="cls-208" d="M747.26,1201.1c-125.78-83.51-78.14-309.14,232.01-281.33,359.38,32.22,680.96-263.99,438.21-510.72C689.17-164.6,2206.9,204.73,1874.49,51.75"/>
+    <path class="cls-297" d="M758.16,1204.27c-129.83-86.2-89.85-318.54,221.69-287.6,360.55,35.81,682.9-265.04,440.57-511.05C687.05-170.4,2209.52,202.69,1881.24,52.52"/>
+    <path class="cls-64" d="M769.05,1207.45c-133.89-88.9-101.55-327.95,211.36-293.87,361.72,39.39,684.83-266.08,442.93-511.38C684.94-176.2,2212.13,200.65,1887.99,53.3"/>
+    <path class="cls-264" d="M779.94,1210.63c-137.95-91.59-113.26-337.35,201.03-300.15,362.9,42.96,686.76-267.13,445.3-511.7C682.82-182,2214.75,198.62,1894.73,54.08"/>
+    <path class="cls-17" d="M790.83,1213.81c-142-94.28-124.96-346.76,190.7-306.42,364.07,46.54,688.7-268.17,447.66-512.03C680.7-187.8,2217.37,196.58,1901.48,54.85"/>
+    <path class="cls-203" d="M801.73,1216.98c-146.06-96.98-136.66-356.18,180.37-312.69,365.25,50.11,690.63-269.22,450.02-512.36C678.59-193.6,2219.99,194.54,1908.23,55.63"/>
+    <path class="cls-441" d="M812.62,1220.16c-150.12-99.67-148.36-365.6,170.04-318.96,366.43,53.67,692.56-270.26,452.39-512.69C676.47-199.4,2222.6,192.51,1914.98,56.41"/>
+    <path class="cls-180" d="M823.51,1223.34c-154.18-102.37-160.06-375.02,159.71-325.23,367.61,57.23,694.5-271.3,454.75-513.02C674.36-205.19,2225.22,190.47,1921.72,57.18"/>
+    <path class="cls-464" d="M834.4,1226.52c-158.23-105.06-171.76-384.44,149.38-331.5,368.79,60.79,696.43-272.35,457.11-513.34C672.24-210.99,2227.84,188.43,1928.47,57.96"/>
+    <path class="cls-115" d="M845.3,1229.7c-162.29-107.75-183.46-393.87,139.05-337.77,369.97,64.35,698.36-273.39,459.48-513.67C670.12-216.79,2230.46,186.39,1935.22,58.74"/>
+    <path class="cls-61" d="M856.19,1232.87c-166.35-110.45-195.15-403.3,128.72-344.05,371.16,67.9,700.3-274.44,461.84-514C668.01-222.59,2233.07,184.36,1941.97,59.51"/>
+    <path class="cls-238" d="M867.08,1236.05c-170.41-113.14-206.72-413.35,118.39-350.32,372.48,70.73,702.23-275.48,464.2-514.33C665.89-228.39,2235.69,182.32,1948.71,60.29"/>
+    <path class="cls-304" d="M877.97,1239.23c-174.46-115.84-218.42-422.73,108.06-356.59,373.66,74.35,704.16-276.53,466.57-514.66C663.78-234.19,2238.31,180.28,1955.46,61.07"/>
+    <path class="cls-444" d="M888.86,1242.41c-178.52-118.53-230.12-432.1,97.73-362.86,374.84,77.96,706.1-277.57,468.93-514.98C661.66-239.99,2240.93,178.25,1962.21,61.85"/>
+    <path class="cls-398" d="M899.76,1245.58c-182.58-121.22-241.82-441.48,87.4-369.13,376.03,81.58,708.03-278.61,471.29-515.31C659.54-245.79,2243.55,176.21,1968.96,62.62"/>
+    <path class="cls-245" d="M910.65,1248.76c-186.63-123.92-253.52-450.85,77.07-375.4,377.21,85.2,709.96-279.66,473.66-515.64C657.43-251.58,2246.16,174.17,1975.7,63.4"/>
+    <path class="cls-483" d="M921.54,1251.94c-190.69-126.61-265.22-460.23,66.74-381.68,378.39,88.81,711.9-280.7,476.02-515.97-808.99-611.68,784.48-182.16,518.15-290.12"/>
+    <path class="cls-239" d="M932.43,1255.12c-194.75-129.3-276.91-469.6,56.41-387.95,379.57,92.43,713.83-281.75,478.38-516.3-814.03-614.06,784.18-180.78,521.97-285.92"/>
+    <path class="cls-38" d="M943.33,1258.3c-198.81-132-288.61-478.97,46.08-394.22,380.75,96.04,715.76-282.79,480.75-516.62-819.07-616.43,783.87-179.39,525.8-281.72"/>
+    <path class="cls-128" d="M954.22,1261.47c-202.86-134.69-300.31-488.35,35.75-400.49,381.93,99.66,717.7-283.83,483.11-516.95-824.11-618.81,783.56-178.01,529.62-277.52"/>
+    <path class="cls-275" d="M965.11,1264.65c-206.92-137.39-312.01-497.72,25.42-406.76,383.11,103.28,719.63-284.88,485.47-517.28-829.15-621.19,783.25-176.62,533.44-273.33"/>
+  </g>
+
+
+
+
+</svg>
