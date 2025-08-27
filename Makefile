@@ -21,6 +21,8 @@ help:
 	@echo "    dev-build             build development images"
 	@echo "    dev-up                start up development environment"
 	@echo "    dev-down              bring down development environment"
+	@echo "    az-create-file-share  create Azure Storage Account with file share for container log"
+	@echo "    az-create-registry    create Azure Container Registry"
 	@echo
 
 
@@ -45,3 +47,13 @@ dev-up:
 dev-down:
 	docker-compose -f docker/dev/docker-compose.yml down
 
+
+# Create Azure Storage Account and file share for conatiner log
+az-create-file-share:
+	az storage account create --name dm050storage --resource-group dm050 --location westeurope --sku Standard_LRS --min-tls-version TLS1_2
+	az storage share create --name containerlogs --account-name dm050storage
+
+
+# Create Azure Container Registry
+az-create-registry:
+	@echo "Not yet implemented"
