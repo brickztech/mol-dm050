@@ -29,7 +29,6 @@ const Background = React.memo(function Background({ isDark }: { isDark: boolean 
             isDark
                 ? [
                     `url(${bgUrl2})`,
-
                     `linear-gradient(180deg, ${BRAND.dark} 0%, ${BRAND.dark2} 100%)`,
                 ]
                 : [
@@ -91,6 +90,8 @@ const Background = React.memo(function Background({ isDark }: { isDark: boolean 
                     position: "absolute",
                     inset: 0,
                     pointerEvents: "none",
+                    background:"transparent",
+
 
                 },
             }}

@@ -1,4 +1,4 @@
-import type { LLMResponse, Message } from "src/pages/chat";
+import type { Message } from "src/pages/chat";
 
 export async function askQuestionStream(question: string, history: Message[]): Promise<
   ReadableStreamDefaultReader | undefined
@@ -17,42 +17,42 @@ export async function askQuestionStream(question: string, history: Message[]): P
   return response.body?.getReader();
 }
 
-export async function askQuestion(question: string): Promise<LLMResponse> {
-  const url = new URL("/api/chat_rq", window.location.origin);
-
-  url.searchParams.set("query", question);
-
-  const response = await fetch(url.toString(), {
-    method: "GET",
-  });
-
-  if (!response.ok) {
-    throw new Error(`API error: ${response.statusText}`);
-  }
-
-  const text = await response.text();
-
-  const trimmed = text.trim();
-  if (trimmed.startsWith("<table")) {
-    return {
-      answer: trimmed,
-      format: "Table",
-    } as LLMResponse;
-  } else if (trimmed.startsWith("{") || trimmed.startsWith("[")) {
-    try {
-      const json = JSON.parse(trimmed);
-      if (Array.isArray(json)) {
-        return {
-          answer: json,
-          format: "Json",
-        } as LLMResponse;
-      } else if (typeof json === "object") {
-        return { answer: json, format: "Json" } as LLMResponse;
-      }
-    } catch (e) {}
-  }
-  return { answer: trimmed, format: "Text" } as LLMResponse;
-}
+// export async function askQuestion(question: string): Promise<LLMResponse> {
+//   const url = new URL("/api/chat_rq", window.location.origin);
+//
+//   url.searchParams.set("query", question);
+//
+//   const response = await fetch(url.toString(), {
+//     method: "GET",
+//   });
+//
+//   if (!response.ok) {
+//     throw new Error(`API error: ${response.statusText}`);
+//   }
+//
+//   const text = await response.text();
+//
+//   const trimmed = text.trim();
+//   if (trimmed.startsWith("<table")) {
+//     return {
+//       answer: trimmed,
+//       format: "Table",
+//     } as LLMResponse;
+//   } else if (trimmed.startsWith("{") || trimmed.startsWith("[")) {
+//     try {
+//       const json = JSON.parse(trimmed);
+//       if (Array.isArray(json)) {
+//         return {
+//           answer: json,
+//           format: "Json",
+//         } as LLMResponse;
+//       } else if (typeof json === "object") {
+//         return { answer: json, format: "Json" } as LLMResponse;
+//       }
+//     } catch (e) {}
+//   }
+//   return { answer: trimmed, format: "Text" } as LLMResponse;
+// }
 
 export interface AuthResponse {
   code: string;

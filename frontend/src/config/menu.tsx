@@ -3,7 +3,7 @@ import DashboardRoundedIcon from "@mui/icons-material/DashboardRounded";
 import QueryStatsRoundedIcon from "@mui/icons-material/QueryStatsRounded";
 import HomePage from "src/pages";
 import Text2SqlPageMol from "src/pages/chat";
-import HistoryPage from "src/pages/historyPage.tsx";
+// import HistoryPage from "src/pages/historyPage.tsx";
 
 export interface Menu {
   items: MenuItem[];
