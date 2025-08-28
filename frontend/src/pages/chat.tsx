@@ -1,29 +1,19 @@
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
     Box,
-    Button,
-    LinearProgress,
+
     Textarea,
-    Chip,
     Typography,
     Card,
     Sheet,
-    Table,
-    Input,
-    Select,
-    Option,
-    FormControl,
-    FormLabel,
-    CircularProgress,
-    linearProgressClasses,
+
     Tooltip,
     IconButton, Divider
-} from "@mui/joy"; // +CircularProgress
+} from "@mui/joy";
 import { AnimatePresence, motion } from "framer-motion";
 import SimpleChatBubble from "src/components/SimpleBubble";
 import { askQuestionStream } from "../api/api";
 import MotionWrapper from "../components/MotionWrapper";
-import { FullSizeCentered } from "../components/styled";
 import "./style.css";
 import SendRoundedIcon from "@mui/icons-material/SendRounded";
 import StopRoundedIcon from "@mui/icons-material/StopRounded";
@@ -36,7 +26,6 @@ import {
 } from "src/components/htmlSegments";
 import MolTriangleLoader from "components/MolTriangleLoader.tsx";
 import {useLocation} from "react-router";
-import ChatBubble from "src/components/ChatBubble.tsx";
 export type MessageSender = "user" | "assistant";
 export type TextFormat = "Text" | "Table" | "Json";
 import EmojiObjectsRoundedIcon from "@mui/icons-material/EmojiObjectsRounded";
@@ -44,6 +33,7 @@ import TableChartRoundedIcon from "@mui/icons-material/TableChartRounded";
 import AutoGraphRoundedIcon from "@mui/icons-material/AutoGraphRounded";
 import QueryStatsRoundedIcon from "@mui/icons-material/QueryStatsRounded";
 import HelpOutlineRoundedIcon from "@mui/icons-material/HelpOutlineRounded";
+import LiquidGlass from "components/LiquidGlass.tsx";
 
 export interface Message {
     id: string;
@@ -158,175 +148,172 @@ function FadingBlurLoader({
         </AnimatePresence>
     );
 }
+type ExampleItem = {
+    icon: React.ReactNode;
+    title: string;
+    subtitle?: string;
+    prompt: string;
+};
 
-
-function EmptyState({ onPick }: { onPick?: (text: string) => void }) {
-    const example = (t: string) => () => onPick?.(t);
+function ExampleCard({
+                         item,
+                         onPick,
+                     }: {
+    item: ExampleItem;
+    onPick?: (text: string) => void;
+}) {
+    const handleClick = useCallback(() => {
+        onPick?.(item.prompt);
+    }, [item.prompt, onPick]);
 
     return (
-        <Box sx={{ display: "flex", justifyContent: "center", width: "100%", marginTop: 6 }}>
-            <Sheet
-                variant="outlined"
-                sx={{
-                    position: "relative",
-                    width: "100%",
+        <Sheet
+            variant="soft"
+            onClick={handleClick}
+            sx={{
+                p: 2,
+                borderRadius: 20,
+                cursor: "pointer",
+                "&:hover": { boxShadow: "sm", transform: "translateY(-6px)" },
+                transition: "all .15s ease",
 
-                    maxWidth: 920,
-                    p: { xs: 1.5, sm: 2 },
-                    borderRadius: 5,
-                    borderColor: "neutral.outlinedBorder",
-                    background:
-                        "linear-gradient(180deg, rgba(0,90,155,0.06), rgba(0,90,155,0.03))",
-                    boxShadow: "0 2px 10px rgba(0,0,0,0.04)",
-                }}
-            >
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                    <Box
-                        sx={{
-                            width: 40,
-                            height: 40,
-                            borderRadius: "50%",
-                            display: "grid",
-                            placeItems: "center",
-                            background:
-                                "linear-gradient(135deg, rgba(0,90,155,.18), rgba(224,8,31,.18))",
-                            border: "1px solid rgba(0,0,0,0.06)",
-                        }}
-                    >
-                        <QueryStatsRoundedIcon sx={{height:22, width:22}}  />
-                    </Box>
-                    <Box sx={{ flex: 1 }}>
-                        <Typography level="title-md" fontWeight="lg">
-                            Text → SQL
-                        </Typography>
-                        <Typography level="body-sm" sx={{ opacity: 0.85 }}>
-                            Ask in natural language — I’ll build SQL and provide the results.
-                        </Typography>
-                    </Box>
-                </Box>
 
-                {/* Examples */}
-                <Box
-                    sx={{
-                        mt: 1.5,
-                        display: "grid",
-                        gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr 1fr" },
-                        gap: 1,
-                    }}
-                >
-                    <Sheet
-                        variant="soft"
-                        onClick={example(
-                            "Top 10 customers by lifetime revenue this year, include total orders and last order date."
-                        )}
-                        sx={{
-                            p: 1,
-                            borderRadius: 10,
-                            cursor: "pointer",
-                            "&:hover": { boxShadow: "sm", transform: "translateY(-1px)" },
-                            transition: "all .15s ease",
-                        }}
-                    >
-                        <Box sx={{ display: "flex", alignItems: "center", gap: 0.75 }}>
-                            <AutoGraphRoundedIcon fontSize="small" />
-                            <Typography level="body-sm" fontWeight="lg">
-                                Top revenue customers
-                            </Typography>
-                        </Box>
-                        <Typography level="body-xs" sx={{ mt: 0.5, opacity: 0.8 }}>
-                            Includes total orders + last order date
-                        </Typography>
-                    </Sheet>
+            }}
+        >
+            <Box sx={{ display: "flex", alignItems: "center", gap: 0.75 }}>
+                {item.icon}
+                <Typography level="body-sm" fontWeight="lg" color={"secondary"}>
+                    {item.title}
+                </Typography>
+            </Box>
+            {item.subtitle && (
+                <Typography level="body-xs" sx={{ mt: 0.5, opacity: 0.8 }} color={"secondary"}>
+                    {item.subtitle}
+                </Typography>
+            )}
+        </Sheet>
+    );
+}
 
-                    <Sheet
-                        variant="soft"
-                        onClick={example(
-                            "Monthly sales by region for 2024, pivot as columns (regions) with totals."
-                        )}
-                        sx={{
-                            p: 1,
-                            borderRadius: 10,
-                            cursor: "pointer",
-                            "&:hover": { boxShadow: "sm", transform: "translateY(-1px)" },
-                            transition: "all .15s ease",
-                        }}
-                    >
-                        <Box sx={{ display: "flex", alignItems: "center", gap: 0.75 }}>
-                            <TableChartRoundedIcon fontSize="small" />
-                            <Typography level="body-sm" fontWeight="lg">
-                                Pivot by region
-                            </Typography>
-                        </Box>
-                        <Typography level="body-xs" sx={{ mt: 0.5, opacity: 0.8 }}>
-                            Month × Region with totals
-                        </Typography>
-                    </Sheet>
-
-                    <Sheet
-                        variant="soft"
-                        onClick={example(
-                            "Find orders delayed > 7 days between dispatch and delivery, show order id, customer, days delayed."
-                        )}
-                        sx={{
-                            p: 1,
-                            borderRadius: 10,
-                            cursor: "pointer",
-                            "&:hover": { boxShadow: "sm", transform: "translateY(-1px)" },
-                            transition: "all .15s ease",
-                        }}
-                    >
-                        <Box sx={{ display: "flex", alignItems: "center", gap: 0.75 }}>
-                            <EmojiObjectsRoundedIcon fontSize="small" />
-                            <Typography level="body-sm" fontWeight="lg">
-                                Delayed orders
-                            </Typography>
-                        </Box>
-                        <Typography level="body-xs" sx={{ mt: 0.5, opacity: 0.8 }}>
-                            Gap  7 days from dispatch to delivery
-                        </Typography>
-                    </Sheet>
-                </Box>
-                <Divider
-                    sx={{
-                        my: 2,
-                        borderColor: "neutral.outlinedBorder",
-                        width: "100%",
-                        opacity: 0.6,
-                    }}
-
-                />
-                <Box
-                    sx={{
-                        display: "grid",
-                        gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
-                        gap: 1,
-                    }}
-                >
-                    <TipItem
-                        icon={<HelpOutlineRoundedIcon fontSize="small" />}
-                        title="Natural language"
-                        text='Ask plainly: e.g. “Top 10 sales by region this quarter.”'
-                    />
-                    <TipItem
-                        icon={<AutoGraphRoundedIcon fontSize="small" />}
-                        title="Add constraints"
-                        text='Use filters: “only electronics”, “after 2024-01-01”, “exclude test users”.'
-                    />
-                    <TipItem
-                        icon={<TableChartRoundedIcon fontSize="small" />}
-                        title="Shape the output"
-                        text='Say “as a table”, “pivot by region”, or “grouped weekly with totals”.'
-                    />
-                    <TipItem
-                        icon={<EmojiObjectsRoundedIcon fontSize="small" />}
-                        title="Name fields"
-                        text='Ask for columns: “customer, region, revenue, last_order_at”.'
-                    />
-                </Box>
-            </Sheet>
+function ExamplesGrid({
+                          items,
+                          onPick,
+                      }: {
+    items: ExampleItem[];
+    onPick?: (text: string) => void;
+}) {
+    return (
+        <Box
+            sx={{
+                mt: 1.5,
+                display: "grid",
+                gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr 1fr" },
+                gap: 1,
+            }}
+        >
+            {items.map((item, idx) => (
+                <ExampleCard key={idx} item={item} onPick={onPick} />
+            ))}
         </Box>
     );
 }
+
+    function EmptyState({ onPick }: { onPick?: (text: string) => void }) {
+        const examples: ExampleItem[] = [
+            {
+                icon: <AutoGraphRoundedIcon fontSize="small" />,
+                title: "Top revenue customers",
+                subtitle: "Includes total orders + last order date",
+                prompt:
+                    "Top 10 customers by lifetime revenue this year, include total orders and last order date.",
+            },
+            {
+                icon: <TableChartRoundedIcon fontSize="small" />,
+                title: "Pivot by region",
+                subtitle: "Month × Region with totals",
+                prompt: "Monthly sales by region for 2024, pivot as columns (regions) with totals.",
+            },
+            {
+                icon: <EmojiObjectsRoundedIcon fontSize="small" />,
+                title: "Delayed orders",
+                subtitle: "Gap ≥ 7 days from dispatch to delivery",
+                prompt:
+                    "Find orders delayed > 7 days between dispatch and delivery, show order id, customer, days delayed.",
+            },
+        ];
+
+        return (
+            <Box sx={{ display: "flex", justifyContent: "center", width: "100%", mt: 6 }}>
+                <Box sx={{ position: "relative", width: "100%", maxWidth: 920 }}>
+                    <LiquidGlass opacity={0.8}  radius={20} />
+
+                    <Sheet
+                    variant="outlined"
+                    sx={{
+                        position: "relative",
+                        width: "100%",
+                        maxWidth: 920,
+                        p: { xs: 1.5, sm: 2 },
+                        bgcolor: "transparent",
+                        border:"none",
+                        // borderColor: "rgba(255,255,255,0)",
+                        // boxShadow: "0 2px 10px rgba(0,0,0,0.04)",
+                    }}
+                >
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                        <Box
+                            sx={{
+                                width: 50,
+                                height: 50,
+                                borderRadius: "50%",
+                                display: "grid",
+                                placeItems: "center",
+                                background: "linear-gradient(135deg, rgba(0,90,155,.18), rgba(224,8,31,.18))",
+                                border: "1px solid rgba(0,0,0,0.06)",
+                            }}
+                        >
+                            <QueryStatsRoundedIcon sx={{ height: 35, width: 35 }} />
+                        </Box>
+                        <Box sx={{ flex: 1, m:2 }}>
+                            <Typography level="h3" fontWeight="lg" color={"secondary"}>
+                                Text → SQL
+                            </Typography>
+                            <Typography level="h5" sx={{ opacity: 0.85 }} color={"secondary"}>
+                                Ask in natural language — I’ll build SQL and provide the results.
+                            </Typography>
+                        </Box>
+                    </Box>
+
+                    <ExamplesGrid items={examples} onPick={onPick} />
+
+                    <Divider
+                        sx={{
+                            my: 2,
+                            borderColor: "neutral.outlinedBorder",
+                            width: "100%",
+                            opacity: 0.6,
+                        }}
+                    />
+
+                        <Box
+                            sx={{
+                                display: "grid",
+                                gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
+                                gap: 2,
+                                mt: 1,
+                            }}
+                        >
+                            <TipItem icon={<HelpOutlineRoundedIcon fontSize="small" />} title="Natural language" text='Ask plainly: e.g. “Top 10 sales by region this quarter.”' />
+                            <TipItem icon={<AutoGraphRoundedIcon fontSize="small" />} title="Add constraints" text='Use filters: “only electronics”, “after 2024-01-01”, “exclude test users”.' />
+                            <TipItem icon={<TableChartRoundedIcon fontSize="small" />} title="Shape the output" text='Say “as a table”, “pivot by region”, or “grouped weekly with totals”.' />
+                            <TipItem icon={<EmojiObjectsRoundedIcon fontSize="small" />} title="Name fields" text='Ask for columns: “customer, region, revenue, last_order_at”.' />
+                        </Box>
+                </Sheet>
+                </Box>
+            </Box>
+        );
+    }
+
 
 function TipItem({
                      icon,
@@ -338,31 +325,42 @@ function TipItem({
     text: string;
 }) {
     return (
-        <Box sx={{ display: "flex", gap: 0.75, alignItems: "flex-start" }}>
+        <Box
+            sx={{
+                display: "flex",
+                gap: 1.25,
+                alignItems: "flex-start",
+                py: 0.75,
+            }}
+        >
             <Box
                 sx={{
-                    width: 22,
-                    height: 22,
+                    width: 28,
+                    height: 28,
+                    flex: "0 0 auto",
                     borderRadius: "50%",
                     display: "grid",
                     placeItems: "center",
-                    backgroundColor: "rgba(0,0,0,0.06)",
-                    flex: "0 0 auto",
+                    backgroundColor: "neutral.softBg",
+                    color: "neutral.plainColor",
+                    fontSize: "16px",
                 }}
             >
                 {icon}
             </Box>
+
             <Box sx={{ minWidth: 0 }}>
-                <Typography level="body-sm" fontWeight="lg">
+                <Typography level="body-sm" fontWeight="lg" sx={{ mb: 0.25 }}>
                     {title}
                 </Typography>
-                <Typography level="body-xs" sx={{ opacity: 0.8 }}>
+                <Typography level="body-xs" sx={{ opacity: 0.75, lineHeight: 1.5 }}>
                     {text}
                 </Typography>
             </Box>
         </Box>
     );
 }
+
 
 
 
@@ -465,6 +463,7 @@ export default function Text2SqlPageMol() {
 
     return (
         <MotionWrapper >
+
                     <Box
                         sx={{
                             display: "flex",
@@ -543,17 +542,15 @@ export default function Text2SqlPageMol() {
                                     sx={(theme) => ({
                                         bottom: 0,
                                         flexShrink: 0,
-                                        borderRadius: 8,
-                                        p: 0.75,
-                                        backdropFilter: "blur(8px)",
-                                        bgcolor: "background.surface",
-                                        borderColor: "neutral.outlinedBorder",
-                                        boxShadow: "md",
-                                        [theme.getColorSchemeSelector("dark")]: {
-                                            bgcolor: "rgba(255 255 255 / 0.05)",
-                                        },
+                                        borderRadius: 2,
+                                        p: 2,
+
+                                        bgcolor: "transparent",
+                                        border:"0px",
+                                        boxShadow: "0",
                                     })}
                                 >
+                                    <LiquidGlass opacity={1} radius={20}/>
                                     <Box sx={{ position: "relative" }}>
                                         <Textarea
                                             ref={textareaRef}
@@ -568,28 +565,46 @@ export default function Text2SqlPageMol() {
                                             minRows={1}
                                             maxRows={6}
                                             sx={(theme) => ({
-                                                "--Textarea-radius": "8px",
+                                                "--Textarea-radius": "40px",
                                                 "--Textarea-paddingBlock": "10px",
                                                 "--Textarea-paddingInline": "12px",
-                                                "--Textarea-focusedInset": "0px",
                                                 "--Textarea-focusedThickness": "2px",
-                                                "--Textarea-placeholderColor": theme.vars.palette.text.tertiary,
-                                                bgcolor: "background.level1",
-                                                boxShadow: "sm",
+                                                "--Textarea-focusedHighlight": theme.vars.palette.danger[500],
+                                                "--Textarea-placeholderColor": theme.vars.palette.text.primary,
+
+                                                bgcolor: "transparent",
+
+                                                borderColor: "rgba(255,255,255,0.92)",
+                                                "&:hover": { borderColor: "#fff" },
+
+                                                "&.Mui-focused": {
+                                                    border: `1px solid rgba(0,60,255,0.3)`,
+                                                },
+
                                                 "& textarea": {
-                                                    color: "text.primary",
+                                                    background: "transparent",
+                                                    color: theme.vars.palette.text.secondary,
+                                                    caretColor: "#fff",
                                                     fontFamily:
                                                         "Inter, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, 'Helvetica Neue', Arial, 'Noto Sans', 'Liberation Sans', sans-serif",
                                                     scrollbarWidth: "thin",
                                                 },
+                                                "&.Mui-focused textarea": {
+                                                    caretColor: theme.vars.palette.danger[500],
+                                                },
+
+                                                paddingRight: "48px",
+
+                                                "&::before": { display: "none" },
                                             })}
                                         />
+
                                         <Tooltip title={isLoading ? "Stop" : "Send"} placement="top" variant="soft">
                                           <span>
                                             <IconButton
                                                 size="sm"
                                                 variant="solid"
-                                                color={isLoading ? "danger" : "primary"}  // ✅ use Joy palette keys
+                                                color={isLoading ? "danger" : "secondary"}
                                                 onClick={isLoading ? handleStop : handleSend}
                                                 disabled={!input.trim() && !isLoading}
                                                 sx={{
@@ -598,8 +613,8 @@ export default function Text2SqlPageMol() {
                                                     bottom: 6,
                                                     width: 32,
                                                     height: 32,
-                                                    borderRadius: 8,
-                                                    boxShadow: "sm",
+                                                    borderRadius: 2,
+
                                                 }}
                                             >
                                               {isLoading ? <StopRoundedIcon /> : <SendRoundedIcon />}

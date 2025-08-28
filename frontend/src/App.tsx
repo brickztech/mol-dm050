@@ -1,4 +1,3 @@
-// JoyOrderDashboardTemplate.tsx
 import * as React from "react";
 import Box from "@mui/joy/Box";
 import Breadcrumbs from "@mui/joy/Breadcrumbs";
@@ -13,14 +12,13 @@ import Header from "components/joy/Header";
 import Sidebar from "components/joy/Sidebar";
 import { Outlet, useLocation } from "react-router";
 import menu from "./config/menu";
-import bgUrl from "assets/wave_green.svg?url";
-import Footer from "components/joy/Footer.tsx";
+import bgUrl2 from "assets/svgviewer-png-output.png";
 
 const BRAND = {
     red: "#E0081F",
     blue: "#005A9B",
-    dark: "#0F1720",
-    dark2: "#0B1119",
+    dark: "rgba(15,23,32,0.52)",
+    dark2: "rgba(11,17,25,0.80)",
 } as const;
 
 const MAIN_HEIGHT = "90dvh";
@@ -30,19 +28,32 @@ const Background = React.memo(function Background({ isDark }: { isDark: boolean 
         () =>
             isDark
                 ? [
-                    `url(${bgUrl})`,
-                    `radial-gradient(1100px 700px at 0% 0%, rgba(224,8,31,0.12) 0%, transparent 60%)`,
-                    `radial-gradient(1100px 700px at 100% 100%, rgba(0,90,155,0.12) 0%, transparent 60%)`,
+                    `url(${bgUrl2})`,
+
                     `linear-gradient(180deg, ${BRAND.dark} 0%, ${BRAND.dark2} 100%)`,
                 ]
-                : [`url(${bgUrl})`],
+                : [
+                    `url(${bgUrl2})`,
+                    ` linear-gradient(0deg,rgba(231, 231, 231, 0.6) 1%, rgba(255, 255, 255, 0.6) 50%, rgba(231, 231, 231, 0.6) 100%)`,
+                ],
         [isDark]
     );
 
-    const bgRepeat = isDark ? "no-repeat, no-repeat, no-repeat, no-repeat" : "no-repeat";
-    const bgSize = isDark ? "cover, 1100px 700px, 1100px 700px, cover" : "cover";
-    const bgPos = isDark ? "center, 0% 0%, 100% 100%, center" : "center";
-    const bgBlend = isDark ? "overlay, screen, screen, normal" : "normal";
+    const bgRepeat = isDark
+        ? "no-repeat, no-repeat, no-repeat, no-repeat, no-repeat"
+        : "no-repeat, no-repeat, no-repeat";
+
+    const bgSize = isDark
+        ? "var(--bg2-size) auto, auto, auto, auto, cover"
+        : "var(--bg2-size) auto, auto, cover";
+
+    const bgPos = isDark
+        ? "var(--bg2-x) var(--bg2-y), 0 0, 0 0, 0 0, center"
+        : "var(--bg2-x) var(--bg2-y), 0 0, center";
+
+    const bgBlend = isDark
+        ? "soft-light, screen, screen, screen, normal"
+        : "soft-light, screen, normal";
 
     return (
         <Box
@@ -53,11 +64,19 @@ const Background = React.memo(function Background({ isDark }: { isDark: boolean 
                 inset: 0,
                 zIndex: 0,
                 pointerEvents: "none",
+
+                "--bg2-size": "120vw",
+                "--bg2-x": "calc(100% - -130px)",
+                "--bg2-y": "calc(100% - -240px)",
+
+
+
                 backgroundImage: bgImages.join(", "),
                 backgroundRepeat: bgRepeat,
                 backgroundSize: bgSize,
                 backgroundPosition: bgPos,
                 backgroundBlendMode: bgBlend,
+
                 "&::before": {
                     content: '""',
                     position: "absolute",
@@ -65,19 +84,20 @@ const Background = React.memo(function Background({ isDark }: { isDark: boolean 
                     left: 0,
                     right: 0,
                     height: 3,
-                    background: `linear-gradient(90deg, ${BRAND.red}, ${BRAND.blue})`,
+                    background: `linear-gradient(90deg, ${BRAND.blue}, ${BRAND.red})`,
                 },
                 "&::after": {
                     content: '""',
                     position: "absolute",
                     inset: 0,
                     pointerEvents: "none",
-                    opacity: isDark ? 0.06 : 0.03,
+
                 },
             }}
         />
     );
 });
+
 
 
 export default function JoyOrderDashboardTemplate() {
@@ -150,9 +170,9 @@ function InnerApp() {
                             display: "flex",
                             flexDirection: "column",
                             gap: 1,
-                            borderRadius: 2,
+                            borderRadius: 15,
                             border: "0px solid",
-                            bgcolor: isDark ? "rgba(255 255 255 / 0.04)" : "transparent",
+                            bgcolor: isDark ? "transparent" : "transparent",
                             p: { xs: 1.5, md: 2 },
                         }}
                     >
