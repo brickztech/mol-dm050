@@ -66,6 +66,7 @@ def fill_in_img_attachments(text: str, tools_handler: T2SQLTools) -> str:
         return text
 
     matches = img_extract_pattern.finditer(text)
+    matches = list(matches)
     parsed = ""
     last_group_end = 0
     for match in matches:
@@ -103,7 +104,7 @@ class LangUtils(LLM):
             return match.group(1)
         return None
 
-    def get_response(self, messages: list) -> Response:
+    def get_response(self, messages: list[str]) -> Response:
         return self.client.responses.create(
             model="gpt-4.1",
             input=messages,

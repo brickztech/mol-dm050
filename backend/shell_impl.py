@@ -31,19 +31,13 @@ class MolShell(Shell):
 
         response_iterator = llm.call_chat(build_query_with_history(req, history_list), tools)
         response: Result = []
+        _text_content = ""
         for part in response_iterator:
             response.append(TextElement(part))
-            print(part, end="", flush=True)
+            _text_content += part
+
         _new_history = history.copy()
         _new_history.append({"user": req})
-
-        _text_content = ""
-        for element in response:
-            if isinstance(element, TextElement):
-                _text_content += element.getcontent()
-            else:
-                print("Unknown element in response", element)
-
         _new_history.append({"assistant": _text_content})
 
         return response, _new_history

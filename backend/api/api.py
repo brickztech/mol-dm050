@@ -1,24 +1,26 @@
+import json
 import logging
 import os
 import time
-from typing import Final
+from typing import TypedDict
 
 from fastapi.applications import FastAPI
 from fastapi.routing import APIRouter
 from loguru import logger
 from starlette.responses import FileResponse, JSONResponse, StreamingResponse
 from starlette.staticfiles import StaticFiles
+from typing_extensions import Generator
 
 from api.dto import AuthenticationRequest, AuthenticationResponse, ChatRequest
 from langutils.llm_tools import ToolsHandler
 from langutils.open_ai import LangUtils
-from redmine.context import init_sql_context
+from redmine.context import init_context
 from shell.llm import History, TextElement
 from shell_impl import MolShell
 
 
 class InterceptHandler(logging.Handler):
-    def emit(self, record):
+    def emit(self, record):  # type: ignore
         # Get corresponding Loguru level
         try:
             level = logger.level(record.levelname).name
@@ -44,7 +46,7 @@ def configure_loguru():
 
     # Configur loguru
     sink: str = os.path.join(os.getenv('LOG_DIR'), 'dm050.log')  # type: ignore
-    logger.add(sink, rotation='10 MB', retention=5, enqueue=True, level=logging.DEBUG, backtrace=False, diagnose=False)
+    logger.add(sink, rotation='10 MB', retention=5, enqueue=True, level=logging.DEBUG, backtrace=False, diagnose=False)  # type: ignore
 
     # propagate to the root logger
     loggers = (
@@ -72,15 +74,22 @@ app.include_router(router)
 # Mount dist files
 app.mount("/assets", StaticFiles(directory="dist/assets"), name="assets")
 
-users: Final = [
+
+class UserDict(TypedDict):
+    id: int
+    code: str
+    name: str
+    email: str
+    password: str
+
+
+users: list[UserDict] = [
     {'id': 1, 'code': 'asdasd', 'name': 'Brickztech', 'email': 'user@brickztech.com', 'password': 'Secret2025!'},
     {'id': 2, 'code': 'asdasdasd', 'name': 'EGIS', 'email': 'user@egis.com', 'password': 'BrickzText2Sql25'},
 ]
 
-websocket_clients = set()
 
-
-context = init_sql_context()
+context = init_context()
 lang_utils = LangUtils(context)
 tools = ToolsHandler(context)
 history: History = []
@@ -90,7 +99,7 @@ shell = MolShell()
 @app.get('/api/chat_rq')
 def chat_rq(query: str) -> str:
 
-    result, new_history = shell.request(lang_utils, tools, history, query)
+    result, _new_history = shell.request(lang_utils, tools, history, query)
     response = ""
     for item in result:
         if isinstance(item, TextElement):
@@ -117,24 +126,29 @@ def generate_numbers():
         time.sleep(1)  # simulate streaming delay
 
 
+def combine_response(response: Generator[str], history: History):
+    for item in response:
+        yield item
+    yield "\n===========##}}\n"
+    yield json.dumps(history)
+
+
 @app.post("/api/chat_rq_stream", response_class=StreamingResponse)
 def chat_rq_stream(request: ChatRequest) -> StreamingResponse:
 
     result, new_history = shell.request(lang_utils, tools, history, request.query)
-    response = ""
-    for item in result:
-        if isinstance(item, TextElement):
-            response += item.getcontent()
+    response = (item.getcontent() for item in result if isinstance(item, TextElement))
+    response = combine_response(response, new_history)
 
     return StreamingResponse(response, media_type="text/plain")
 
 
 # static content serving
 @app.get("/")
-async def serve_root():
+def serve_root():
     return FileResponse("dist/index.html")
 
 
 @app.get("/{full_path:path}")
-async def serve_spa(full_path: str):
+def serve_spa(full_path: str):
     return FileResponse("dist/index.html")

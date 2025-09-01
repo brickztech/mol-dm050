@@ -368,8 +368,20 @@ function TipItem({
         </Box>
     );
 }
-
-
+/**
+ * Check for potential history separator string \n===========##}}\n
+ * @param msg 
+ * @returns 
+ */
+const HISTORY_SEPARATOR = "\n===========##}}\n";
+function checkForPotentialSeparatorEnding(msg: string) {
+    for (let i = 0; i < HISTORY_SEPARATOR.length; i++) {
+        if (!msg.endsWith(HISTORY_SEPARATOR.slice(0, i + 1))) {
+            return false;
+        }
+    }
+    return true;
+}
 
 
 export default function Text2SqlPageMol() {
@@ -379,6 +391,7 @@ export default function Text2SqlPageMol() {
     const [error, setError] = useState<string>("");
     const { mode, systemMode } = useColorScheme();
     const [streamText, setStreamText] = useState<string>("");
+    const [shellHistory, setShellHistory] = useState<string>("");
     const isLoadingRef = useLiveRef(isLoading);
     const readerRef = useRef<ReadableStreamDefaultReader<Uint8Array<any>> | null>(null);
     const { endRef, scrollToBottom } = useAutoScroll([history.length, streamText]);
@@ -415,7 +428,9 @@ export default function Text2SqlPageMol() {
 
     useEffect(() => () => { readerRef.current?.cancel?.().catch(() => {}); }, []);
 
-    const handleSend = useCallback(async () => {
+
+
+    const handleSend = async () => {
         if (!input.trim() || isLoadingRef.current) return;
         setError("");
         setIsLoading(true);
@@ -428,29 +443,47 @@ export default function Text2SqlPageMol() {
         const context = [...history, userMsg];
 
         try {
-            const readerOrStream = await askQuestionStream(question, context);
-            const reader: ReadableStreamDefaultReader<Uint8Array> =
+            const readerOrStream = await askQuestionStream(question, history, shellHistory);
+            const reader: ReadableStreamDefaultReader<Uint8Array<any>> =
                 typeof (readerOrStream as any)?.read === "function"
                     ? (readerOrStream as ReadableStreamDefaultReader<Uint8Array>)
                     : (readerOrStream as unknown as ReadableStream<Uint8Array>).getReader();
 
             readerRef.current = reader;
             setStreamText("");
-
             const decoder = new TextDecoder();
             let accum = "";
-
+            let responseDone = false;
+            let finalResponse = "";
             while (true) {
                 if (!isLoadingRef.current) break;
                 const { done, value } = await reader.read();
                 if (done) break;
                 const chunk = decoder.decode(value, { stream: true });
                 accum += chunk;
-                setStreamText((prev) => prev + chunk);
+                if (!responseDone && checkForPotentialSeparatorEnding(accum)) {
+                    // wait for more
+                    continue;
+                }
+                if (!responseDone && accum.includes(HISTORY_SEPARATOR)) {
+                    responseDone = true;
+                    finalResponse = accum.split(HISTORY_SEPARATOR)[0];
+                    setStreamText(finalResponse);
+                }
+                if (!responseDone) {
+                    setStreamText((prev) => prev + chunk);
+                }
             }
+            console.log("Stream finished");
 
-            if (accum.trim().length > 0) {
-                addMessage({ id: generateId(), role: "assistant", content: accum, timestamp: Date.now(), format: "Text" });
+            console.log("accum:", accum);
+            console.log("split:", accum.split(HISTORY_SEPARATOR));
+            const sh = accum.split(HISTORY_SEPARATOR)[1] ?? ""
+            console.log("shell history:", sh);
+            setShellHistory(sh);
+
+            if (finalResponse.trim().length > 0) {
+                addMessage({ id: generateId(), role: "assistant", content: finalResponse, timestamp: Date.now(), format: "Text" });
                 setStreamText("");
             }
         } catch (err: any) {
@@ -460,7 +493,7 @@ export default function Text2SqlPageMol() {
             readerRef.current = null;
             scrollToBottom(true);
         }
-    }, [addMessage, history, input, isLoadingRef, scrollToBottom]);
+    };
 
     const onKeyDown = useCallback((e: React.KeyboardEvent<HTMLTextAreaElement>) => {
         if (e.key === "Enter" && !e.shiftKey && !isLoading) {

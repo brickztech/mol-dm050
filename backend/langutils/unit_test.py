@@ -2,8 +2,9 @@ import unittest
 from io import BytesIO
 
 from langutils.llm_tools import ToolsHandler
+from redmine.context import init_sql_context
 
-from .context import fill_in_img_attachments, init_sql_context
+from .open_ai import fill_in_img_attachments
 
 
 class TestMathUtils(unittest.TestCase):
@@ -15,11 +16,11 @@ class TestMathUtils(unittest.TestCase):
 
     def test_img_extract(self):
         result = fill_in_img_attachments(
-            "Here is an image (attachement://12345) and another one  (attachement://234567) end of text, this is not found (attachement://0000) neither this (attachement://) ) ( sdfsdfsdf",
+            "Here is an image (attachment://12345) and another one  (attachment://234567) end of text, this is not found (attachment://0000) neither this (attachment://) ) ( sdfsdfsdf",
             self.toolhandler,
         )
         self.assertIn(
-            """Here is an image <img src="data:image/png;base64,aW1hZ2UgZGF0YSAx"> and another one  <img src="data:image/png;base64,aW1hZ2UgZGF0YSAy"> end of text, this is not found (attachement://0000) neither this (attachement://) ) ( sdfsdfsdf""",
+            """Here is an image <img src="data:image/png;base64,aW1hZ2UgZGF0YSAx"> and another one  <img src="data:image/png;base64,aW1hZ2UgZGF0YSAy"> end of text, this is not found (attachment://0000) neither this (attachment://) ) ( sdfsdfsdf""",
             result,
         )
 
