@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from api.dto import HistoryMessage, Role
 from langutils.llm_tools import ToolsHandler
 from langutils.open_ai import LangUtils, build_query_with_history
-from redmine.context import init_context
+from redmine.context import init_sql_context
 from shell.llm import LLM, History, Result, Shell, TextElement
 from shell.tools import T2SQLTools
 
@@ -51,7 +51,7 @@ class MolShell(Shell):
 
 if __name__ == "__main__":
     load_dotenv()
-    context = init_context()
+    context = init_sql_context()
     lang_utils = LangUtils(context)
     tools = ToolsHandler(context)
     history: History = []

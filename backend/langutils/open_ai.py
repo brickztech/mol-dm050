@@ -1,6 +1,5 @@
 import base64
 import json
-import re
 from typing import Iterator, List
 
 from openai import OpenAI
@@ -13,6 +12,7 @@ from openai.types.responses.response import Response
 from openai.types.responses.response_output_message import Content
 
 from api.dto import HistoryMessage
+from langutils import img_extract_pattern, python_code_exp
 from langutils.context import ExecutionContext
 from langutils.llm_tools import llm_tools_list_descriptor
 from shell.llm import LLM
@@ -58,9 +58,33 @@ def build_query(query: str):
     ]
 
 
+def fill_in_img_attachments(text: str, tools_handler: T2SQLTools) -> str:
+
+    p_start = text.index("(")
+    p_end = text.index(")")
+    if p_start == -1 or p_end == -1:
+        return text
+
+    matches = img_extract_pattern.finditer(text)
+    parsed = ""
+    last_group_end = 0
+    for match in matches:
+        img_name = match.group(1)
+        img_data = tools_handler.get_image(img_name)
+        if img_data:
+            parsed += text[last_group_end : match.start(0)]
+            img_base64 = base64.b64encode(img_data.img_buffer.getvalue()).decode("utf-8")
+            parsed += "<img src=\"data:image/png;base64," + img_base64 + "\">"
+            last_group_end = match.end(0)
+        else:
+            parsed += text[last_group_end : match.end(0)]
+            last_group_end = match.end(0)
+    parsed += text[last_group_end:]
+    return parsed
+
+
 class LangUtils(LLM):
-    python_code_exp = re.compile("```python\\s(.*?)```", re.MULTILINE | re.DOTALL)
-    img_extract_pattern = re.compile("\(attachment://(.*)\)", re.MULTILINE | re.DOTALL)
+
     unknown_context_response = "I can not process this from the given context."
     # these will be set only by the main program
     prompt_prefix_for_query = ""
@@ -74,8 +98,8 @@ class LangUtils(LLM):
         self.client = OpenAI()
 
     def extract_python_code(self, text: str):
-        match = self.python_code_exp.search(text)
-        if match and LangUtils.python_code_exp.groups == 1:
+        match = python_code_exp.search(text)
+        if match and python_code_exp.groups == 1:
             return match.group(1)
         return None
 
@@ -119,36 +143,10 @@ class LangUtils(LLM):
                 yield text_to_yield
                 text_to_yield = ""
             elif ")" in text_to_yield and tools_handler is not None:
-                for new_text in self.fill_in_img_attachments(text_to_yield, tools_handler):
-                    yield new_text
+                yield fill_in_img_attachments(text_to_yield, tools_handler)
                 text_to_yield = ""
-        yield text_to_yield
 
-    def fill_in_img_attachments(self, text: str, tools_handler: T2SQLTools) -> Iterator[str]:
-        p_start = 0
-        try:
-            while p_start < len(text):
-                p_start = text.index("(", p_start)
-                try:
-                    p_end = text.index(")", p_start + 1)
-                    match = self.img_extract_pattern.search(text, p_start)
-                    if match and len(match.groups()) == 1 and tools_handler:
-                        img_name = match.group(1)
-                        img_data = tools_handler.get_image(img_name)
-                        if img_data:
-                            # <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA...">
-                            img_base64 = base64.b64encode(img_data.img_buffer.getvalue()).decode("utf-8")
-                            text = text[:p_start] + "<img src=\"data:image/png;base64," + img_base64 + "\">" + text[p_end + 1 :]
-                            yield text
-                        else:
-                            yield f'<img src="/assets/unknown.png" alt="Unknown image: {img_name}">'
-                        text = ""
-                    else:
-                        p_start += 1
-                except ValueError:
-                    pass
-        except ValueError:
-            pass
+        yield text_to_yield
 
     # def process_response(self, in_response: str, console_out: bool = False) -> str:
     #     print("response:", in_response)

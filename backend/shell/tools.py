@@ -1,6 +1,7 @@
 import io
 from abc import ABC, abstractmethod
 from datetime import datetime
+from typing import Any
 
 
 class ImgData:
@@ -49,7 +50,7 @@ class T2SQLTools(ABC):
         """
 
     @abstractmethod
-    def call_function(self, name: str, args: dict[str, str]) -> str:
+    def call_function(self, name: str, args: dict[str, Any]) -> str:
         """
         Calls a predefined function by name with the given arguments.
         Returns the result as a string.

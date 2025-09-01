@@ -1,20 +1,18 @@
-import os
-
-from loguru import logger
 import logging
-
+import os
 import time
 from typing import Final
 
 from fastapi.applications import FastAPI
 from fastapi.routing import APIRouter
+from loguru import logger
 from starlette.responses import FileResponse, JSONResponse, StreamingResponse
 from starlette.staticfiles import StaticFiles
 
 from api.dto import AuthenticationRequest, AuthenticationResponse, ChatRequest
 from langutils.llm_tools import ToolsHandler
 from langutils.open_ai import LangUtils
-from redmine.context import init_context
+from redmine.context import init_sql_context
 from shell.llm import History, TextElement
 from shell_impl import MolShell
 
@@ -45,7 +43,7 @@ def configure_loguru():
     logging.basicConfig(handlers=[InterceptHandler()], level=logging.INFO)
 
     # Configur loguru
-    sink: str = os.path.join(os.getenv('LOG_DIR'), 'dm050.log')
+    sink: str = os.path.join(os.getenv('LOG_DIR'), 'dm050.log')  # type: ignore
     logger.add(sink, rotation='10 MB', retention=5, enqueue=True, level=logging.DEBUG, backtrace=False, diagnose=False)
 
     # propagate to the root logger
@@ -82,7 +80,7 @@ users: Final = [
 websocket_clients = set()
 
 
-context = init_context()
+context = init_sql_context()
 lang_utils = LangUtils(context)
 tools = ToolsHandler(context)
 history: History = []
@@ -134,8 +132,6 @@ def chat_rq_stream(request: ChatRequest) -> StreamingResponse:
 # static content serving
 @app.get("/")
 async def serve_root():
-    for client in websocket_clients:
-        await client.send_text("Welcome to the FastAPI STOMP WebSocket server!")
     return FileResponse("dist/index.html")
 
 

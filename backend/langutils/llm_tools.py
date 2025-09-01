@@ -2,6 +2,7 @@ import io
 import json
 import uuid
 from datetime import datetime
+from typing import Any
 
 from matplotlib import pyplot as plt
 from matplotlib.colors import Normalize
@@ -159,7 +160,7 @@ class ToolsHandler(T2SQLTools):
 
         raise NotImplementedError("linechart method is not implemented.")
 
-    def _generate_chart(self, chart_type: str, x_axis: list[float], y_axis: list[float], y_axis_label: str, title: str):
+    def _generate_chart(self, chart_type: str, x_axis: list, y_axis: list[float], y_axis_label: str, title: str):
         norm = Normalize(min(y_axis), max(y_axis))
         from matplotlib.colors import ListedColormap
 
@@ -195,7 +196,7 @@ class ToolsHandler(T2SQLTools):
     def get_image(self, name: str) -> ImgData | None:
         return self.img_cache.get_image(name)
 
-    def call_function(self, name: str, args: dict[str, str]) -> str:
+    def call_function(self, name: str, args: dict[str, Any]) -> str:
         if name == "get_current_date":
             return datetime.now().strftime("%Y-%m-%d")
         elif name == "get_tables":
@@ -222,16 +223,17 @@ class ToolsHandler(T2SQLTools):
         elif name == "generate_chart":
             x_axis_input = args.get("x_axis")
             y_axis_input = args.get("y_axis")
+            if not isinstance(x_axis_input, list) or not isinstance(y_axis_input, list):
+                raise ValueError("x_axis and y_axis must be arrays.")
             if x_axis_input is None or y_axis_input is None:
                 raise ValueError("x_axis or y_axis values are not found")
 
             try:
-                x_axis: list[float] = [float(i) for i in json.loads(x_axis_input)]
-                y_axis: list[float] = [float(i) for i in json.loads(y_axis_input)]
+                y_axis: list[float] = [float(i) for i in y_axis_input]
                 title = args.get("title", "")
                 chart_type = args.get("chart_type", "line")
                 y_axis_label = args.get("y_axis_label", "")
-                chart_name = self._generate_chart(chart_type, x_axis, y_axis, y_axis_label, title)
+                chart_name = self._generate_chart(chart_type, x_axis_input, y_axis, y_axis_label, title)
                 return f"(attachment://{chart_name})"
             except:
                 raise ValueError("x_axis and y_axis must be valid JSON arrays of numbers.")
