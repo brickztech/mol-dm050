@@ -6,3 +6,14 @@ services:
             context: ../../
             dockerfile: docker/dev/Dockerfile
         image: ${BACKEND_IMAGE_NAME}:dev
+        volumes:
+            -  log_data:/app/log
+        environment:
+            - "TZ=Europe/Budapest"
+            - "OPENAI_API_KEY=${OPENAI_API_KEY}"
+            - "LOG_DIR=${LOG_DIR}"
+            - "LOGURU_DIAGNOSE=${LOGURU_DIAGNOSE}"
+            - "LOGURU_FORMAT=${LOGURU_FORMAT}"
+
+volumes:
+    log_data:

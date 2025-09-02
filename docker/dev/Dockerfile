@@ -2,6 +2,7 @@ FROM ghcr.io/astral-sh/uv:python3.10-bookworm-slim
 
 ENV UV_COMPILE_BYTECODE=1
 ENV UV_LINK_MODE=copy
+RUN mkdir -p /app/log
 
 WORKDIR /app
 
@@ -17,10 +18,11 @@ ADD backend ./
 # Place executables in the environment at the front of the path
 ENV PATH="/app/.venv/bin:$PATH"
 
-EXPOSE 8000
+VOLUME /app/log
+EXPOSE 80
 
 # Reset the entrypoint, don't invoke `uv`
 ENTRYPOINT []
 
 # Run the FastAPI application by default
-CMD ["uvicorn", "api:app", "--host", "0.0.0.0", "--port", "80", "--reload"]
+CMD ["uvicorn", "api.api:app", "--host", "0.0.0.0", "--port", "80", "--reload"]
