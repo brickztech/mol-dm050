@@ -14,6 +14,7 @@ import { Outlet, useLocation } from "react-router";
 import menu from "./config/menu";
 import bgUrl2 from "assets/svgviewer-png-output.png";
 
+
 const BRAND = {
     red: "#E0081F",
     blue: "#005A9B",
@@ -22,38 +23,11 @@ const BRAND = {
 } as const;
 
 const MAIN_HEIGHT = "90dvh";
-
 const Background = React.memo(function Background({ isDark }: { isDark: boolean }) {
-    const bgImages = React.useMemo(
-        () =>
-            isDark
-                ? [
-                    `url(${bgUrl2})`,
+    const bgImage = `url(${bgUrl2})`;
 
-                    `linear-gradient(180deg, ${BRAND.dark} 0%, ${BRAND.dark2} 100%)`,
-                ]
-                : [
-                    `url(${bgUrl2})`,
-                    ` linear-gradient(0deg,rgba(231, 231, 231, 0.6) 1%, rgba(255, 255, 255, 0.6) 50%, rgba(231, 231, 231, 0.6) 100%)`,
-                ],
-        [isDark]
-    );
-
-    const bgRepeat = isDark
-        ? "no-repeat, no-repeat, no-repeat, no-repeat, no-repeat"
-        : "no-repeat, no-repeat, no-repeat";
-
-    const bgSize = isDark
-        ? "var(--bg2-size) auto, auto, auto, auto, cover"
-        : "var(--bg2-size) auto, auto, cover";
-
-    const bgPos = isDark
-        ? "var(--bg2-x) var(--bg2-y), 0 0, 0 0, 0 0, center"
-        : "var(--bg2-x) var(--bg2-y), 0 0, center";
-
-    const bgBlend = isDark
-        ? "soft-light, screen, screen, screen, normal"
-        : "soft-light, screen, normal";
+    const veil = !isDark
+        ? `linear-gradient(0deg, rgba(231,231,231,0.3) 0%, rgba(255,255,255,0.3) 50%, rgba(231,231,231,0.3) 100%)` :`linear-gradient(180deg, ${BRAND.dark} 0%, ${BRAND.dark2} 100%)`
 
     return (
         <Box
@@ -69,13 +43,11 @@ const Background = React.memo(function Background({ isDark }: { isDark: boolean 
                 "--bg2-x": "calc(100% - -130px)",
                 "--bg2-y": "calc(100% - -240px)",
 
-
-
-                backgroundImage: bgImages.join(", "),
-                backgroundRepeat: bgRepeat,
-                backgroundSize: bgSize,
-                backgroundPosition: bgPos,
-                backgroundBlendMode: bgBlend,
+                backgroundImage: `${bgImage}, ${veil}`,
+                backgroundRepeat: "no-repeat, no-repeat",
+                backgroundSize: "var(--bg2-size) auto, cover",
+                backgroundPosition: "var(--bg2-x) var(--bg2-y), center",
+                backgroundBlendMode: "soft-light, normal",
 
                 "&::before": {
                     content: '""',
@@ -86,31 +58,31 @@ const Background = React.memo(function Background({ isDark }: { isDark: boolean 
                     height: 3,
                     background: `linear-gradient(90deg, ${BRAND.blue}, ${BRAND.red})`,
                 },
-                "&::after": {
-                    content: '""',
-                    position: "absolute",
-                    inset: 0,
-                    pointerEvents: "none",
-
-                },
             }}
         />
     );
 });
 
 
+// at the top
 
 export default function JoyOrderDashboardTemplate() {
     return (
-        <CssVarsProvider defaultMode="system" disableTransitionOnChange>
-            <CssBaseline />
-            <InnerApp />
-        </CssVarsProvider>
+            <CssVarsProvider
+                defaultMode="system"
+
+                disableTransitionOnChange
+            >
+                <CssBaseline />
+                <InnerApp />
+            </CssVarsProvider>
     );
 }
 
+
 function InnerApp() {
     const { mode } = useColorScheme();
+    if (!mode) return null;
     const isDark = mode === "dark";
 
     const location = useLocation();

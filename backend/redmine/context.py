@@ -2,6 +2,7 @@ import os
 from datetime import datetime
 
 import pandas as pd
+import psycopg
 
 from langutils.context import ExecutionContext
 from langutils.open_ai import LangUtils
@@ -101,6 +102,63 @@ def init_context() -> RedmineContext:
         If you don't have information about a particular table, don't try to guess or generate something. Return back a response which says that you don't know that object.
         When you are asked to execute a query, you have to use the "execute_query" function.
         "execute_query" function takes panda queries as text input and executes them on the database. The query has to save the output to "result_table" variable. The result will be returned as tab separated table.
+        Consider that the user interface is in Hungarian and it is a HTML interface. Format the output to HTML or keep the original formatting received by the tools if it is in HTML format.
+        If you are returning images returned it in the following format: (attachment://<name of the picture>)
+    """
+
+    LangUtils.prompt_prefix_for_query = """
+        The question is the following:
+    """
+    context.validate()
+
+    return context
+
+
+class RedmineSQLContext(RedmineContext):
+    def __init__(self, variables: dict):
+        super().__init__(variables)
+
+    def open_connection(self) -> psycopg.Connection:
+        con = psycopg.connect(
+            host=os.getenv('PGHOST', 'localhost'),
+            port=os.getenv('PGPORT', '5432'),
+            dbname=os.getenv('PGDATABASE', 'redmine'),
+            user=os.getenv('PGUSER', 'postgres'),
+            password=os.getenv('PGPASSWORD', 'password'),
+        )
+        con.autocommit = True
+        return con
+
+    def execute_query(self, query: str) -> list[dict]:
+        conn = self.open_connection()
+        cursor = conn.cursor()
+        try:
+            cursor.execute(query)  # pyright: ignore[reportArgumentType]
+            result = cursor.fetchall()
+            description = cursor.description
+            if description is None:
+                return []
+            columns = [desc[0] for desc in description]
+            result = [dict(zip(columns, row)) for row in result]
+            return result
+        finally:
+            cursor.close()
+            conn.close()
+
+
+def init_sql_context() -> RedmineSQLContext:
+    context = RedmineSQLContext(dict())
+    LangUtils.system_instruction_for_query = f"""
+        You are a programmer working on reporting tasks.
+        The reports all come from a postgreSQL database.
+        {context.get_domain_description()}
+        When you need information about all the available tables in the database use the "get_tables" function.
+        When you need information about a particular table in the database use the "describe_table" function.
+        This function will return the table structure and the connections to other tables.
+        When this function returns "unknown" text, it means that the table is not known, it is not in the database.
+        If you don't have information about a particular table, don't try to guess or generate something. Return back a response which says that you don't know that object.
+        When you are asked to execute a query, you have to use the "execute_query" function.
+        "execute_query" function takes postgres SQL queries as text input and executes them on the database. The result will be returned as tab separated table.
         Consider that the user interface is in Hungarian and it is a HTML interface. Format the output to HTML or keep the original formatting received by the tools if it is in HTML format.
         If you are returning images returned it in the following format: (attachment://<name of the picture>)
     """

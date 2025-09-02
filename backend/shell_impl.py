@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from api.dto import HistoryMessage, Role
 from langutils.llm_tools import ToolsHandler
 from langutils.open_ai import LangUtils, build_query_with_history
-from redmine.context import init_context
+from redmine.context import init_sql_context
 from shell.llm import LLM, History, Result, Shell, TextElement
 from shell.tools import T2SQLTools
 
@@ -31,19 +31,13 @@ class MolShell(Shell):
 
         response_iterator = llm.call_chat(build_query_with_history(req, history_list), tools)
         response: Result = []
+        _text_content = ""
         for part in response_iterator:
             response.append(TextElement(part))
-            print(part, end="", flush=True)
+            _text_content += part
+
         _new_history = history.copy()
         _new_history.append({"user": req})
-
-        _text_content = ""
-        for element in response:
-            if isinstance(element, TextElement):
-                _text_content += element.getcontent()
-            else:
-                print("Unknown element in response", element)
-
         _new_history.append({"assistant": _text_content})
 
         return response, _new_history
@@ -51,7 +45,7 @@ class MolShell(Shell):
 
 if __name__ == "__main__":
     load_dotenv()
-    context = init_context()
+    context = init_sql_context()
     lang_utils = LangUtils(context)
     tools = ToolsHandler(context)
     history: History = []

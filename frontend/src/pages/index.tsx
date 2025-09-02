@@ -58,10 +58,9 @@ export default function HomePage() {
     };
 
     return (
-        <motion.div initial="hidden" animate="visible" variants={container}>
+        <motion.div initial="hidden" animate="visible" >
             <Box
                 component={motion.section}
-                variants={item}
                 sx={{
                     width: "100%",
                     p: { xs: 1.5, md: 2 },
@@ -75,7 +74,6 @@ export default function HomePage() {
             >
                 <Box
                     component={motion.div}
-                    variants={item}
                     sx={{
                         width: "100%",
                         maxWidth: 1100,
@@ -101,7 +99,6 @@ export default function HomePage() {
                     <Typography
                         level="h2"
                         component={motion.h1}
-                        variants={item}
                         sx={{
                             fontSize: { xs: 18, sm: 34 },
                             fontWeight: 600,
@@ -142,9 +139,7 @@ export default function HomePage() {
                 <Divider sx={{ my: 3, opacity: 1, width: "100%",  }} />
 
                 <Typography
-                    level="h5"
                     component={motion.p}
-                    variants={item}
                     sx={{ color: "text.primary", width: "100%", maxWidth: 960, mt: 0.5 }}
                 >
                     Try an example to jump straight into DM050 with a prefilled question:
@@ -155,7 +150,6 @@ export default function HomePage() {
                     spacing={1}
                     sx={{ width: "100%", maxWidth: 960 }}
                     component={motion.div}
-                    variants={container}
                 >
                     {EXAMPLES.map((q) => (
                         <Grid
@@ -164,7 +158,6 @@ export default function HomePage() {
                             lg={4}
                             key={q}
                             component={motion.div}
-                            variants={item}
                             sx={{ display: "flex" }}
                         >
                             <ExampleQuestionCard
@@ -183,7 +176,6 @@ export default function HomePage() {
 
                 <Box
                     component={motion.div}
-                    variants={item}
                     sx={{ display: "flex", gap: 1, width: "100%", maxWidth: 960, mt: 3, flex: 1}}
                 >
                     <Button

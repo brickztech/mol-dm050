@@ -19,7 +19,6 @@ import SendRoundedIcon from "@mui/icons-material/SendRounded";
 import StopRoundedIcon from "@mui/icons-material/StopRounded";
 import DataTable from "src/components/DataTable.tsx";
 import {
-    brandGradient,
     generateId,
     looksLikeHtmlTable,
     parseHtmlMessageToSegments,
@@ -35,6 +34,8 @@ import QueryStatsRoundedIcon from "@mui/icons-material/QueryStatsRounded";
 import HelpOutlineRoundedIcon from "@mui/icons-material/HelpOutlineRounded";
 import LiquidGlass from "components/LiquidGlass.tsx";
 
+import type { PaletteMode } from "@mui/material";
+import {useColorScheme} from "@mui/joy/styles";
 export interface Message {
     id: string;
     role: MessageSender;
@@ -59,11 +60,15 @@ function useAutoScroll(dependsOn: unknown[]) {
 }
 
 const MemoBubble = React.memo(function MemoBubble({ msg }: { msg: Message }) {
+    const { mode, systemMode } = useColorScheme();
+    const paletteMode = (mode === "system" ? systemMode : mode) as PaletteMode;
+
     const hasTable = msg.role === "assistant" && looksLikeHtmlTable(msg.content);
     const segments = React.useMemo(
         () => (hasTable ? parseHtmlMessageToSegments(msg.content) : []),
         [hasTable, msg.content]
     );
+
     if (hasTable) {
         return (
             <Card variant="soft" sx={{ p: 1.25, width: "100%" }}>
@@ -75,19 +80,21 @@ const MemoBubble = React.memo(function MemoBubble({ msg }: { msg: Message }) {
                     ) : (
                         <Box key={`tbl-${i}`} sx={{ mb: 1 }}>
                             <Typography level="title-sm" sx={{ mb: 0.75 }}>Táblázatos eredmény</Typography>
-                            <DataTable columns={seg.columns} rows={seg.rows} />
+                            <DataTable columns={seg.columns} rows={seg.rows} mode={paletteMode} />
                         </Box>
                     )
                 )}
             </Card>
         );
     }
+
     return (
         <Box sx={{ display: "flex", justifyContent: msg.role === "user" ? "flex-end" : "flex-start", width: "100%" }}>
             <SimpleChatBubble sender={msg.role} message={msg.content} />
         </Box>
     );
 });
+
 
 function StreamingBubble({ role, content }: { role: MessageSender; content: string }) {
     return (
@@ -154,6 +161,101 @@ type ExampleItem = {
     subtitle?: string;
     prompt: string;
 };
+function EmptyState({ onPick }: { onPick?: (text: string) => void }) {
+    const examples: ExampleItem[] = [
+        {
+            icon: <AutoGraphRoundedIcon fontSize="small" />,
+            title: "Top revenue customers",
+            subtitle: "Includes total orders + last order date",
+            prompt:
+                "Top 10 customers by lifetime revenue this year, include total orders and last order date.",
+        },
+        {
+            icon: <TableChartRoundedIcon fontSize="small" />,
+            title: "Pivot by region",
+            subtitle: "Month × Region with totals",
+            prompt: "Monthly sales by region for 2024, pivot as columns (regions) with totals.",
+        },
+        {
+            icon: <EmojiObjectsRoundedIcon fontSize="small" />,
+            title: "Delayed orders",
+            subtitle: "Gap ≥ 7 days from dispatch to delivery",
+            prompt:
+                "Find orders delayed > 7 days between dispatch and delivery, show order id, customer, days delayed.",
+        },
+    ];
+
+    return (
+        <Box sx={{ display: "flex", justifyContent: "center", width: "100%", mt: 6 }}>
+            <Box sx={{ position: "relative", width: "100%", maxWidth: 920 }}>
+                <LiquidGlass opacity={0.8}  radius={20} />
+
+                <Sheet
+                    variant="outlined"
+                    sx={{
+                        position: "relative",
+                        width: "100%",
+                        maxWidth: 920,
+                        p: { xs: 1.5, sm: 2 },
+                        bgcolor: "transparent",
+                        border:"none",
+                        // borderColor: "rgba(255,255,255,0)",
+                        // boxShadow: "0 2px 10px rgba(0,0,0,0.04)",
+                    }}
+                >
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                        <Box
+                            sx={{
+                                width: 50,
+                                height: 50,
+                                borderRadius: "50%",
+                                display: "grid",
+                                placeItems: "center",
+                                background: "linear-gradient(135deg, rgba(0,90,155,.18), rgba(224,8,31,.18))",
+                                border: "1px solid rgba(0,0,0,0.06)",
+                            }}
+                        >
+                            <QueryStatsRoundedIcon sx={{ height: 35, width: 35 }} />
+                        </Box>
+                        <Box sx={{ flex: 1, m:2 }}>
+                            <Typography level="h3" fontWeight="lg" >
+                                Text → SQL
+                            </Typography>
+                            <Typography level="title-md" sx={{ opacity: 0.85 }} >
+                                Ask in natural language — I’ll build SQL and provide the results.
+                            </Typography>
+                        </Box>
+                    </Box>
+
+                    <ExamplesGrid items={examples} onPick={onPick} />
+
+                    <Divider
+                        sx={{
+                            my: 2,
+                            borderColor: "neutral.outlinedBorder",
+                            width: "100%",
+                            opacity: 0.6,
+                        }}
+                    />
+
+                    <Box
+                        sx={{
+                            display: "grid",
+                            gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
+                            gap: 2,
+                            mt: 1,
+                        }}
+                    >
+                        <TipItem icon={<HelpOutlineRoundedIcon fontSize="small" />} title="Natural language" text='Ask plainly: e.g. “Top 10 sales by region this quarter.”' />
+                        <TipItem icon={<AutoGraphRoundedIcon fontSize="small" />} title="Add constraints" text='Use filters: “only electronics”, “after 2024-01-01”, “exclude test users”.' />
+                        <TipItem icon={<TableChartRoundedIcon fontSize="small" />} title="Shape the output" text='Say “as a table”, “pivot by region”, or “grouped weekly with totals”.' />
+                        <TipItem icon={<EmojiObjectsRoundedIcon fontSize="small" />} title="Name fields" text='Ask for columns: “customer, region, revenue, last_order_at”.' />
+                    </Box>
+                </Sheet>
+            </Box>
+        </Box>
+    );
+}
 
 function ExampleCard({
                          item,
@@ -182,12 +284,12 @@ function ExampleCard({
         >
             <Box sx={{ display: "flex", alignItems: "center", gap: 0.75 }}>
                 {item.icon}
-                <Typography level="body-sm" fontWeight="lg" color={"secondary"}>
+                <Typography level="body-sm" fontWeight="lg" >
                     {item.title}
                 </Typography>
             </Box>
             {item.subtitle && (
-                <Typography level="body-xs" sx={{ mt: 0.5, opacity: 0.8 }} color={"secondary"}>
+                <Typography level="body-xs" sx={{ mt: 0.5, opacity: 0.8 }} >
                     {item.subtitle}
                 </Typography>
             )}
@@ -218,101 +320,7 @@ function ExamplesGrid({
     );
 }
 
-    function EmptyState({ onPick }: { onPick?: (text: string) => void }) {
-        const examples: ExampleItem[] = [
-            {
-                icon: <AutoGraphRoundedIcon fontSize="small" />,
-                title: "Top revenue customers",
-                subtitle: "Includes total orders + last order date",
-                prompt:
-                    "Top 10 customers by lifetime revenue this year, include total orders and last order date.",
-            },
-            {
-                icon: <TableChartRoundedIcon fontSize="small" />,
-                title: "Pivot by region",
-                subtitle: "Month × Region with totals",
-                prompt: "Monthly sales by region for 2024, pivot as columns (regions) with totals.",
-            },
-            {
-                icon: <EmojiObjectsRoundedIcon fontSize="small" />,
-                title: "Delayed orders",
-                subtitle: "Gap ≥ 7 days from dispatch to delivery",
-                prompt:
-                    "Find orders delayed > 7 days between dispatch and delivery, show order id, customer, days delayed.",
-            },
-        ];
 
-        return (
-            <Box sx={{ display: "flex", justifyContent: "center", width: "100%", mt: 6 }}>
-                <Box sx={{ position: "relative", width: "100%", maxWidth: 920 }}>
-                    <LiquidGlass opacity={0.8}  radius={20} />
-
-                    <Sheet
-                    variant="outlined"
-                    sx={{
-                        position: "relative",
-                        width: "100%",
-                        maxWidth: 920,
-                        p: { xs: 1.5, sm: 2 },
-                        bgcolor: "transparent",
-                        border:"none",
-                        // borderColor: "rgba(255,255,255,0)",
-                        // boxShadow: "0 2px 10px rgba(0,0,0,0.04)",
-                    }}
-                >
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                        <Box
-                            sx={{
-                                width: 50,
-                                height: 50,
-                                borderRadius: "50%",
-                                display: "grid",
-                                placeItems: "center",
-                                background: "linear-gradient(135deg, rgba(0,90,155,.18), rgba(224,8,31,.18))",
-                                border: "1px solid rgba(0,0,0,0.06)",
-                            }}
-                        >
-                            <QueryStatsRoundedIcon sx={{ height: 35, width: 35 }} />
-                        </Box>
-                        <Box sx={{ flex: 1, m:2 }}>
-                            <Typography level="h3" fontWeight="lg" color={"secondary"}>
-                                Text → SQL
-                            </Typography>
-                            <Typography level="h5" sx={{ opacity: 0.85 }} color={"secondary"}>
-                                Ask in natural language — I’ll build SQL and provide the results.
-                            </Typography>
-                        </Box>
-                    </Box>
-
-                    <ExamplesGrid items={examples} onPick={onPick} />
-
-                    <Divider
-                        sx={{
-                            my: 2,
-                            borderColor: "neutral.outlinedBorder",
-                            width: "100%",
-                            opacity: 0.6,
-                        }}
-                    />
-
-                        <Box
-                            sx={{
-                                display: "grid",
-                                gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
-                                gap: 2,
-                                mt: 1,
-                            }}
-                        >
-                            <TipItem icon={<HelpOutlineRoundedIcon fontSize="small" />} title="Natural language" text='Ask plainly: e.g. “Top 10 sales by region this quarter.”' />
-                            <TipItem icon={<AutoGraphRoundedIcon fontSize="small" />} title="Add constraints" text='Use filters: “only electronics”, “after 2024-01-01”, “exclude test users”.' />
-                            <TipItem icon={<TableChartRoundedIcon fontSize="small" />} title="Shape the output" text='Say “as a table”, “pivot by region”, or “grouped weekly with totals”.' />
-                            <TipItem icon={<EmojiObjectsRoundedIcon fontSize="small" />} title="Name fields" text='Ask for columns: “customer, region, revenue, last_order_at”.' />
-                        </Box>
-                </Sheet>
-                </Box>
-            </Box>
-        );
-    }
 
 
 function TipItem({
@@ -360,8 +368,20 @@ function TipItem({
         </Box>
     );
 }
-
-
+/**
+ * Check for potential history separator string \n===========##}}\n
+ * @param msg 
+ * @returns 
+ */
+const HISTORY_SEPARATOR = "\n===========##}}\n";
+function checkForPotentialSeparatorEnding(msg: string) {
+    for (let i = 0; i < HISTORY_SEPARATOR.length; i++) {
+        if (!msg.endsWith(HISTORY_SEPARATOR.slice(0, i + 1))) {
+            return false;
+        }
+    }
+    return true;
+}
 
 
 export default function Text2SqlPageMol() {
@@ -369,14 +389,15 @@ export default function Text2SqlPageMol() {
     const [input, setInput] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string>("");
-
+    const { mode, systemMode } = useColorScheme();
     const [streamText, setStreamText] = useState<string>("");
+    const [shellHistory, setShellHistory] = useState<string>("");
     const isLoadingRef = useLiveRef(isLoading);
     const readerRef = useRef<ReadableStreamDefaultReader<Uint8Array<any>> | null>(null);
     const { endRef, scrollToBottom } = useAutoScroll([history.length, streamText]);
 
     const location = useLocation();
-    const textareaRef = React.useRef<HTMLTextAreaElement | null>(null);
+    const textareaRef = React.useRef<HTMLDivElement | null>(null);
 
     const hasStream = isLoading && streamText.length > 0;
     const streamHasTable = hasStream && looksLikeHtmlTable(streamText);
@@ -407,7 +428,9 @@ export default function Text2SqlPageMol() {
 
     useEffect(() => () => { readerRef.current?.cancel?.().catch(() => {}); }, []);
 
-    const handleSend = useCallback(async () => {
+
+
+    const handleSend = async () => {
         if (!input.trim() || isLoadingRef.current) return;
         setError("");
         setIsLoading(true);
@@ -420,29 +443,47 @@ export default function Text2SqlPageMol() {
         const context = [...history, userMsg];
 
         try {
-            const readerOrStream = await askQuestionStream(question, context);
+            const readerOrStream = await askQuestionStream(question, history, shellHistory);
             const reader: ReadableStreamDefaultReader<Uint8Array<any>> =
                 typeof (readerOrStream as any)?.read === "function"
-                    ? (readerOrStream as ReadableStreamDefaultReader<Uint8Array<any>>)
-                    : (readerOrStream as ReadableStream<Uint8Array<any>>).getReader();
+                    ? (readerOrStream as ReadableStreamDefaultReader<Uint8Array>)
+                    : (readerOrStream as unknown as ReadableStream<Uint8Array>).getReader();
 
             readerRef.current = reader;
             setStreamText("");
-
             const decoder = new TextDecoder();
             let accum = "";
-
+            let responseDone = false;
+            let finalResponse = "";
             while (true) {
                 if (!isLoadingRef.current) break;
                 const { done, value } = await reader.read();
                 if (done) break;
                 const chunk = decoder.decode(value, { stream: true });
                 accum += chunk;
-                setStreamText((prev) => prev + chunk);
+                if (!responseDone && checkForPotentialSeparatorEnding(accum)) {
+                    // wait for more
+                    continue;
+                }
+                if (!responseDone && accum.includes(HISTORY_SEPARATOR)) {
+                    responseDone = true;
+                    finalResponse = accum.split(HISTORY_SEPARATOR)[0];
+                    setStreamText(finalResponse);
+                }
+                if (!responseDone) {
+                    setStreamText((prev) => prev + chunk);
+                }
             }
+            console.log("Stream finished");
 
-            if (accum.trim().length > 0) {
-                addMessage({ id: generateId(), role: "assistant", content: accum, timestamp: Date.now(), format: "Text" });
+            console.log("accum:", accum);
+            console.log("split:", accum.split(HISTORY_SEPARATOR));
+            const sh = accum.split(HISTORY_SEPARATOR)[1] ?? ""
+            console.log("shell history:", sh);
+            setShellHistory(sh);
+
+            if (finalResponse.trim().length > 0) {
+                addMessage({ id: generateId(), role: "assistant", content: finalResponse, timestamp: Date.now(), format: "Text" });
                 setStreamText("");
             }
         } catch (err: any) {
@@ -452,7 +493,7 @@ export default function Text2SqlPageMol() {
             readerRef.current = null;
             scrollToBottom(true);
         }
-    }, [addMessage, history, input, isLoadingRef, scrollToBottom]);
+    };
 
     const onKeyDown = useCallback((e: React.KeyboardEvent<HTMLTextAreaElement>) => {
         if (e.key === "Enter" && !e.shiftKey && !isLoading) {
@@ -518,7 +559,7 @@ export default function Text2SqlPageMol() {
                                                             ) : (
                                                                 <Box key={`tt-${i}`} sx={{ mb: 1 }}>
                                                                     <Typography level="title-sm" sx={{ mb: 0.75 }}>Táblázatos eredmény (stream)</Typography>
-                                                                    <DataTable columns={seg.columns} rows={seg.rows} />
+                                                                    {/*<DataTable columns={seg.columns} rows={seg.rows} mode={paletteMode} />*/}
                                                                 </Box>
                                                             )
                                                         )}
@@ -603,8 +644,7 @@ export default function Text2SqlPageMol() {
                                           <span>
                                             <IconButton
                                                 size="sm"
-                                                variant="solid"
-                                                color={isLoading ? "danger" : "secondary"}
+                                                variant="plain"
                                                 onClick={isLoading ? handleStop : handleSend}
                                                 disabled={!input.trim() && !isLoading}
                                                 sx={{
