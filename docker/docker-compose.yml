@@ -3,9 +3,9 @@ version: '3.5'
 services:
     backend:
         build: 
-            context: ../../
-            dockerfile: docker/dev/Dockerfile
-        image: ${BACKEND_IMAGE_NAME}:dev
+            context: ../
+            dockerfile: docker/Dockerfile
+        image: ${WEBAPP_IMAGE_NAME}
         volumes:
             -  log_data:/app/log
         environment:
@@ -14,6 +14,8 @@ services:
             - "LOG_DIR=${LOG_DIR}"
             - "LOGURU_DIAGNOSE=${LOGURU_DIAGNOSE}"
             - "LOGURU_FORMAT=${LOGURU_FORMAT}"
+        ports:
+            - 80:80
 
 volumes:
     log_data:

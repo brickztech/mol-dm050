@@ -9,4 +9,5 @@
 **/.git
 **/data
 doc
+backend/dist
 **/log

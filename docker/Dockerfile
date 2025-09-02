@@ -1,3 +1,12 @@
+FROM node:23.6.0 AS builder
+
+WORKDIR /app
+ADD frontend ./
+
+RUN npm install && \
+    npm run build
+
+
 FROM ghcr.io/astral-sh/uv:python3.10-bookworm-slim
 
 ENV UV_COMPILE_BYTECODE=1
@@ -15,6 +24,9 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 # Then, add the rest of the project source code
 ADD backend ./
 
+# Copy frontend
+COPY --from=builder /backend/dist ./dist
+
 # Place executables in the environment at the front of the path
 ENV PATH="/app/.venv/bin:$PATH"
 
@@ -25,4 +37,4 @@ EXPOSE 80
 ENTRYPOINT []
 
 # Run the FastAPI application by default
-CMD ["uvicorn", "api.api:app", "--host", "0.0.0.0", "--port", "80", "--reload"]
+CMD ["uvicorn", "api.api:app", "--host", "0.0.0.0", "--port", "80"]

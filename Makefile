@@ -22,7 +22,7 @@ help:
 	@echo
 	@echo "Targets:"
 	@echo "    init                  create .env file from template"
-	@echo "    dev-build             build development images"
+	@echo "    dev-build             build Web App image"
 	@echo "    dev-up                start up development environment"
 	@echo "    dev-down              bring down development environment"
 	@echo "    az-up                 bring up Azure environment"
@@ -37,22 +37,22 @@ init:
 	cp env.template .env
 
 
-# Build development images
+# Build Web App image
 dev-build:
-	cp docker/dev/.dockerignore .
-	docker-compose -f docker/dev/docker-compose.yml build
+	cp docker/.dockerignore .
+	docker-compose -f docker/docker-compose.yml build
 	rm .dockerignore
 	docker image prune -f
 
 
 # Start up development environment
 dev-up:
-	docker-compose -f docker/dev/docker-compose.yml up -d
+	docker-compose -f docker/docker-compose.yml up -d
 
 
 # Bring down development environment
 dev-down:
-	docker-compose -f docker/dev/docker-compose.yml down
+	docker-compose -f docker/docker-compose.yml down
 
 
 # Bring up Azure environment
@@ -83,15 +83,15 @@ az-up:
 # Push container image to Azure Container Registry
 az-app-push:
 	az acr login -n ${AZ_REGISTRY}
-	docker image tag ${BACKEND_IMAGE_NAME}:dev ${AZ_REGISTRY}.azurecr.io/${BACKEND_IMAGE_NAME}:dev
-	docker image push ${AZ_REGISTRY}.azurecr.io/${BACKEND_IMAGE_NAME}:dev
+	docker image tag ${WEBAPP_IMAGE_NAME} ${AZ_REGISTRY}.azurecr.io/${WEBAPP_IMAGE_NAME}
+	docker image push ${AZ_REGISTRY}.azurecr.io/${WEBAPP_IMAGE_NAME}
 
 
 # Deploy container image as Web App Service
 az-app-deploy:
 	@IDENTITY_ID=$$(az identity show -n dm050identity -g ${AZ_RESOURCE_GROUP} --query id --output tsv); \
 	az webapp create -g ${AZ_RESOURCE_GROUP} -n dm050webapp -p dm050asp \
-	  --container-image-name ${AZ_REGISTRY}.azurecr.io/${BACKEND_IMAGE_NAME}:dev \
+	  --container-image-name ${AZ_REGISTRY}.azurecr.io/${WEBAPP_IMAGE_NAME} \
 	  --assign-identity $$IDENTITY_ID \
 	  --acr-identity $$IDENTITY_ID \
 	  --acr-use-identity
@@ -107,9 +107,12 @@ az-app-configure:
 		az webapp config storage-account add -g ${AZ_RESOURCE_GROUP} -n dm050webapp --custom-id LogMapping --storage-type AzureFiles --account-name dm050storage --share-name containerlogs --access-key $$ACCESS_KEY --mount-path /app/log; \
 	fi
 	@echo
-	@echo "Creating envirmonet variables..."
+	@echo "Creating environment variables..."
 	@az webapp config appsettings set --n dm050webapp -g ${AZ_RESOURCE_GROUP} --settings LOG_DIR=/app/log LOGURU_DIAGNOSE=NO LOGURU_FORMAT='${LOGURU_FORMAT}'
 	@az webapp config appsettings set --n dm050webapp -g ${AZ_RESOURCE_GROUP} --settings OPENAI_API_KEY=${OPENAI_API_KEY}
+	@echo
+	@echo "Restarting web app..."
+	@az webapp restart -n dm050webapp -g ${AZ_RESOURCE_GROUP}
 
 
 az-app-delete:
