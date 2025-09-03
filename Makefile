@@ -10,6 +10,7 @@ base_dir = $(shell pwd)
 AZ_RESOURCE_GROUP = dm050
 AZ_LOCATION = westeurope
 AZ_REGISTRY = dm050registry
+AZ_STORAGE = dm050storage
 
 .PHONY: help
 
@@ -60,9 +61,12 @@ az-up:
 	@echo "Creating resource group..."
 	@az group create -n ${AZ_RESOURCE_GROUP} -l ${AZ_LOCATION}
 	@echo
-	@echo "Creating storge account and file share..."
-	@az storage account create -n dm050storage -g ${AZ_RESOURCE_GROUP} -l ${AZ_LOCATION} --sku Standard_LRS --min-tls-version TLS1_2
-	@az storage share create -n containerlogs --account-name dm050storage
+	@echo "Creating storge account..."
+	@az storage account create -n ${AZ_STORAGE} -g ${AZ_RESOURCE_GROUP} -l ${AZ_LOCATION} --sku Standard_LRS --min-tls-version TLS1_2
+	@echo
+	@echo "Creating file share..."
+	@ACCESS_KEY=$$(az storage account keys list -g ${AZ_RESOURCE_GROUP} -n ${AZ_STORAGE} --query [0].value -o tsv); \
+	az storage share create -n containerlogs --account-name ${AZ_STORAGE} --account-key $$ACCESS_KEY
 	@echo
 	@echo "Creating service plan..."
 	@az appservice plan create -g ${AZ_RESOURCE_GROUP} -n dm050asp --is-linux --sku B1
@@ -75,8 +79,8 @@ az-up:
 	@az acr update -n ${AZ_REGISTRY} --admin-enabled true
 	@echo
 	@echo "Assigning role to managed identity..."
-	@PRINCIPAL_ID=$$(az identity show -n dm050identity -g ${AZ_RESOURCE_GROUP} --query principalId --output tsv); \
-	ACR_ID=$$(az acr show -n ${AZ_REGISTRY} -g ${AZ_RESOURCE_GROUP} --query id --output tsv); \
+	@PRINCIPAL_ID=$$(az identity show -n dm050identity -g ${AZ_RESOURCE_GROUP} --query principalId -o tsv); \
+	ACR_ID=$$(az acr show -n ${AZ_REGISTRY} -g ${AZ_RESOURCE_GROUP} --query id -o tsv); \
 	az role assignment create --assignee $$PRINCIPAL_ID --role AcrPull --scope $$ACR_ID
 
 
@@ -89,7 +93,7 @@ az-app-push:
 
 # Deploy container image as Web App Service
 az-app-deploy:
-	@IDENTITY_ID=$$(az identity show -n dm050identity -g ${AZ_RESOURCE_GROUP} --query id --output tsv); \
+	@IDENTITY_ID=$$(az identity show -n dm050identity -g ${AZ_RESOURCE_GROUP} --query id -o tsv); \
 	az webapp create -g ${AZ_RESOURCE_GROUP} -n dm050webapp -p dm050asp \
 	  --container-image-name ${AZ_REGISTRY}.azurecr.io/${WEBAPP_IMAGE_NAME} \
 	  --assign-identity $$IDENTITY_ID \
@@ -103,13 +107,15 @@ az-app-configure:
 		echo "LogMapping storage configuration already exists."; \
 	else \
 		echo "Creating LogMapping storage configuration..."; \
-		ACCESS_KEY=$$(az storage account keys list -g ${AZ_RESOURCE_GROUP} -n dm050storage --query [0].value -o tsv); \
-		az webapp config storage-account add -g ${AZ_RESOURCE_GROUP} -n dm050webapp --custom-id LogMapping --storage-type AzureFiles --account-name dm050storage --share-name containerlogs --access-key $$ACCESS_KEY --mount-path /app/log; \
+		ACCESS_KEY=$$(az storage account keys list -g ${AZ_RESOURCE_GROUP} -n ${AZ_STORAGE} --query [0].value -o tsv); \
+		az webapp config storage-account add -g ${AZ_RESOURCE_GROUP} -n dm050webapp --custom-id LogMapping \
+		  --storage-type AzureFiles --account-name ${AZ_STORAGE} --share-name containerlogs \
+		  --access-key $$ACCESS_KEY --mount-path /app/log; \
 	fi
 	@echo
 	@echo "Creating environment variables..."
 	@az webapp config appsettings set --n dm050webapp -g ${AZ_RESOURCE_GROUP} --settings LOG_DIR=/app/log LOGURU_DIAGNOSE=NO LOGURU_FORMAT='${LOGURU_FORMAT}'
-	@az webapp config appsettings set --n dm050webapp -g ${AZ_RESOURCE_GROUP} --settings OPENAI_API_KEY=${OPENAI_API_KEY}
+	@az webapp config appsettings set --n dm050webapp -g ${AZ_RESOURCE_GROUP} --settings OPENAI_API_KEY=${OPENAI_API_KEY} TZ=${TZ}
 	@echo
 	@echo "Restarting web app..."
 	@az webapp restart -n dm050webapp -g ${AZ_RESOURCE_GROUP}
