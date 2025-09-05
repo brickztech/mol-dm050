@@ -4,3 +4,4 @@ node_modules
 __pychache__
 .env
 backend/.zed
+backend/*.png
