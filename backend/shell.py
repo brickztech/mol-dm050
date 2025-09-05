@@ -1,4 +1,6 @@
-from typing import List
+from typing import List, cast
+
+from openai.types.responses import ResponseInputParam
 
 from langutils.open_ai import LangUtils, build_query
 from redmine.context import init_context
@@ -17,7 +19,8 @@ if __name__ == "__main__":
         if user_input == "exit":
             break
         try:
-            response_iterator = lang_utils.call_chat(build_query(user_input), None)
+            message_list: ResponseInputParam = cast(ResponseInputParam, build_query(user_input))
+            response_iterator = lang_utils.call_chat(message_list, None)
             response: str = "".join(response_iterator)
             # if not response == LangUtils.unknown_context_response:
             #     # lang_utils.process_response(response, True)

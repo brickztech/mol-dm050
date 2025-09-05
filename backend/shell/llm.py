@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from dataclasses import dataclass
 from typing import Iterator, Tuple, TypeAlias
 
 from .tools import T2SQLTools
@@ -15,41 +16,48 @@ class LLM(ABC):
         """
 
 
-class Element(ABC):
-    @abstractmethod
-    # Returns string or a tuple with field names and records
-    def getcontent(self) -> str | Tuple[list[str], list[list[str]]]:
-        """
-        Converts the element to a dictionary representation.
-        """
+@dataclass
+class Element:
+    pass
 
 
+@dataclass
 class TextElement(Element):
-    def __init__(self, text: str):
-        self.text: str = text
+    """Carrier of literal texts. Anything that can possibly be found in an LLM reply will make it here: Markdown, links etc. so be prepared"""
+
+    _content: str
+
+    def __repr__(self) -> str:
+        return f"TextElement(_content={self._content})"
 
     def getcontent(self) -> str:
-        return self.text
+        return self._content
 
 
+@dataclass
 class GraphicsElement(Element):
-    def __init__(self, image: str):
-        self.image: str = image
+    """Carrier of a graphics element encoded as a legal string. For now this is PNG over base64"""
+
+    _content: str
+
+    def __repr__(self) -> str:
+        return f"GraphicsElement(_content={self._content})"
 
     def getcontent(self) -> str:
-        return self.image
+        return self._content
 
 
+@dataclass
 class TableElement(Element):
-    def __init__(self, data: list[dict[str, str]]):
-        self.data: list[dict[str, str]] = data
+    """Carrier of a table"""
 
-    def get_content(self) -> Tuple[list[str], list[list[str]]]:
-        if not self.data:
-            return [], []
-        fields = list(self.data[0].keys())
-        records = [list(record.values()) for record in self.data]
-        return fields, records
+    _content: list[dict[str, str]]
+
+    def __repr__(self) -> str:
+        return f"""TableElement(_content={self._content})"""
+
+    def getcontent(self) -> list[dict[str, str]]:
+        return self._content
 
 
 RecStrDictValue: TypeAlias = 'str | RecStrDict | list[RecStrDictValue]'

@@ -1,14 +1,19 @@
 import base64
 import json
-from typing import Iterator, List
+from typing import Iterator, List, cast
 
 from openai import OpenAI
 from openai.types.responses import (
     ResponseFunctionToolCall,
+    ResponseInputParam,
     ResponseOutputMessage,
     ResponseOutputRefusal,
 )
 from openai.types.responses.response import Response
+from openai.types.responses.response_function_tool_call_param import ResponseFunctionToolCallParam
+from openai.types.responses.response_input_item import Message
+from openai.types.responses.response_input_param import FunctionCallOutput
+from openai.types.responses.response_input_text import ResponseInputText
 from openai.types.responses.response_output_message import Content
 
 from api.dto import HistoryMessage
@@ -48,13 +53,20 @@ def build_query_with_history(query: str, history: list[HistoryMessage]):
     return history_list
 
 
-def build_query(query: str):
+def build_query(query: str) -> List[Message]:
     print("Building query")
     print("System instruction:", LangUtils.system_instruction_for_query)
     print("Query:", LangUtils.prompt_prefix_for_query + query)
+    # Create a ResponseInputText instance
+    text_input = ResponseInputText(text=LangUtils.prompt_prefix_for_query + query, type="input_text")
+    # Create Message instances for system and user
+    system_message = Message(
+        content=[ResponseInputText(text=LangUtils.system_instruction_for_query, type="input_text")], role="system", type="message"
+    )
+    user_message = Message(content=[text_input], role="user", type="message")
     return [
-        {"role": "system", "content": LangUtils.system_instruction_for_query},
-        {"role": "user", "content": LangUtils.prompt_prefix_for_query + query},
+        system_message,
+        user_message,
     ]
 
 
@@ -104,25 +116,34 @@ class LangUtils(LLM):
             return match.group(1)
         return None
 
-    def get_response(self, messages: list[str]) -> Response:
+    def get_response(self, messages: ResponseInputParam) -> Response:
         return self.client.responses.create(
             model="gpt-4.1",
-            input=messages,
+            input=messages,  # type: ignore
             tools=llm_tools_list_descriptor,
         )
 
-    def call_chat(self, messages: list, tools_handler: T2SQLTools | None) -> Iterator[str]:
+    def call_chat(self, messages: ResponseInputParam, tools_handler: T2SQLTools | None) -> Iterator[str]:
         raw_response = self.get_response(messages)
         new_function_calls = False
         for response in raw_response.output:
             if type(response) == ResponseFunctionToolCall:
+                function_call = cast(ResponseFunctionToolCall, response)
                 print(f"call_function {response.name}, arguments {response.arguments}")
                 args = json.loads(response.arguments)
                 if not tools_handler:
                     raise ValueError("Tools handler is not provided")
                 result = tools_handler.call_function(response.name, args)
-                messages.append(response)
-                messages.append({"type": "function_call_output", "call_id": response.call_id, "output": str(result)})
+                function_call_param = ResponseFunctionToolCallParam(
+                    call_id=function_call.call_id,
+                    name=function_call.name,
+                    type="function_call",
+                    arguments=function_call.arguments,
+                    status="completed",
+                )
+                messages.append(function_call_param)
+                messages.append(FunctionCallOutput(type="function_call_output", call_id=response.call_id, output=str(result)))
+
                 new_function_calls = True
             elif type(response) == ResponseOutputMessage:
                 return self.extract_stream_content(response.content, tools_handler)

@@ -3,16 +3,18 @@ import json
 import os
 import uuid
 from datetime import datetime
+from itertools import groupby
 from typing import Any
 
 from matplotlib import pyplot as plt
-from matplotlib.cbook import flatten
 from matplotlib.colors import Normalize
 from openai.types.responses import FunctionToolParam
 from rapidfuzz import fuzz
 
 from langutils.context import ExecutionContext
 from shell.tools import ImgData, T2SQLTools
+
+from . import COLORS, GRID_COLOR, MAX_VALUES_X_AXIS
 
 llm_tools_list_descriptor: list[FunctionToolParam] = [
     {
@@ -112,7 +114,7 @@ class ImgCache:
 
 
 class DateTimeEncoder(json.JSONEncoder):
-    def default(self, o):
+    def default(self, o: object):
         if isinstance(o, datetime):
             return o.isoformat()
         return super().default(o)
@@ -126,17 +128,21 @@ class ToolsHandler(T2SQLTools):
         similarity_query = os.getenv("SIMILARITY_QUERY", "")
         if similarity_query:
             result_dict = context.execute_query(similarity_query)
-            self.similars_cache = [(list(rec.values())[0], list(rec.values())[1], list(rec.values())[2]) for rec in result_dict]
+            similars = [(str(rec.get("value")), str(rec.get("col_name")), str(rec.get("table"))) for rec in result_dict]
+            self.similars_cache = similars
         else:
             self.similars_cache: list[tuple[str, str, str]] = []
 
-    def similar(self, ref: str) -> list[tuple[str, str, str]]:
+    def similar(self, ref: str, limit: int = 0) -> list[tuple[str, str, str, float]]:
         """
         Returns the topN (default 10) most similar (value, table, field) tuples to the given ref
         from all soft-searchable columns in all tables.
         Has to work based on some preloaded data of a database. The fields of the preloaded database has to come from a configuration.
         """
-        return [rec for rec in self.similars_cache if rec[0].find(ref) > -1]
+        ratios = [(rec[0], rec[1], rec[2], fuzz.ratio(ref, rec[0])) for rec in self.similars_cache]
+        ratios.sort(key=lambda x: x[3], reverse=True)
+        filtered_ratios = [x for x in ratios if x[3] > limit]
+        return filtered_ratios
 
     def data(self, sql: str) -> list[dict[str, str]]:
         """
@@ -156,84 +162,176 @@ class ToolsHandler(T2SQLTools):
 
         labels = [row[labelfield] for row in chart_data]
         values = [row[valuefield] for row in chart_data]
-        bar_colors = self.buil_color_list(values)
+        bar_colors = self._build_color_list_scale(values)
 
         plt.pie(values, labels=labels, autopct='%1.1f%%', colors=bar_colors)
         img_name = f"{uuid.uuid4()}"
         img_buffer = io.BytesIO()
         plt.savefig(img_buffer, format='png')
+        plt.savefig("pie.png", format='png')
         self.img_cache.add_image(img_name, img_buffer)
 
         return img_name
 
-    def linechart(self, sql: str, xfield: str, ylabel: str, linelist: list[str]) -> str:
+    def set_axis_lables(self, x_values: list[list[str]]):
+        x_values_merged = []
+        for x in x_values:
+            x_values_merged.extend(x)
+        x_values_merged = list(set(x_values_merged))
+        x_values_merged.sort()
+
+        scale = len(x_values_merged) // MAX_VALUES_X_AXIS
+
+        if len(x_values_merged) > MAX_VALUES_X_AXIS:
+            plt.xticks(
+                ticks=[i for i in range(len(x_values_merged)) if i % scale == 0],
+                labels=[str(x_values_merged[i]) for i in range(len(x_values_merged)) if i % scale == 0],
+                rotation=45,
+                ha='right',
+            )
+        else:
+            plt.xticks(rotation=45, ha='right')
+
+    def linechart(self, sql: str, xfield: str, ylabel: str, name: str, value: str) -> str:
         """
         Executes the SQL and generates a line chart.
 
         xfield: column for x-axis labels, ylabel: y-axis label, linelist: list of columns for values of x-axis.
         Returns a string (e.g., image path or base64).
         """
-        y_values, x_values, bar_colors = self.build_chart_data(sql, xfield, linelist)
+        data_series_names, data_series_values, x_values = self._build_chart_data(sql, xfield, name, value)
 
-        plt.figure(figsize=(8, 5))
-        for i, y in enumerate(y_values):
-            plt.plot(x_values, y, marker='o', label=f'Line {i + 1}', color=bar_colors[i])
+        bar_colors = self._build_static_color_list(data_series_names)
+
+        plt.figure(figsize=(8, 5))  # type: ignore
+        for i, y in enumerate(data_series_values):
+            plt.plot(x_values[i], y, marker='o', label=data_series_names[i], color=bar_colors[i])
+
+        self.set_axis_lables(x_values)
 
         plt.ylabel(ylabel)
         plt.legend()
-        plt.grid(True)
+        plt.grid(axis='y', color=GRID_COLOR)
         plt.tight_layout()
 
         img_name = f"{uuid.uuid4()}"
         img_buffer = io.BytesIO()
+        plt.savefig("line.png", format='png')
         plt.savefig(img_buffer, format='png')
+
         self.img_cache.add_image(img_name, img_buffer)
 
         return img_name
 
-    def build_chart_data(self, sql: str, xfield, linelist):
+    def _build_chart_data(
+        self, sql: str, xfield: str, line_name: str, line_value: str
+    ) -> tuple[list[str], list[list[str]], list[list[str]]]:
+        """sql: the SQL query to execute
+        xfield: the column name to use for x-axis values
+        line_name : the column name to group by for different lines
+        line_value: the column name to use for y-axis values
+        returns a tuple with the following elements:
+        - list with the name of data series of different data_series_values
+        - list of lists with the data_series_values for each data series, the upper level list has the same size as the name list above
+        - list of lists with the x_values for each data series. The length of this list is equal with number of series.
+        """
+
         chart_data = self.data(sql)
         if not chart_data:
             raise ValueError("No data returned from the SQL query.")
-        y_values = []
-        for line_x in linelist:
-            y_values.append([chart_data_row[line_x] for chart_data_row in chart_data])
-        x_values = [row[xfield] for row in chart_data]
 
-        flat_y_values = list(flatten(y_values))
-        bar_colors = self.buil_color_list(flat_y_values)
-        return y_values, x_values, bar_colors
+        chart_data.sort(key=lambda x: x[line_name])
 
-    def buil_color_list(self, flat_y_values) -> list[str]:
-        norm = Normalize(min(flat_y_values), max(flat_y_values))
+        data_series_values: list[list[str]] = []
+        data_series_names: list[str] = []
+        x_values: list[list[str]] = []
+        # grouped contains data for each line_name with the key.
+        for key, group in groupby(chart_data, key=lambda x: x[line_name]):
+            group = list(group)
+            values = [row[line_value] for row in group]
+            x_labels = [row[xfield] for row in group]
+            data_series_values.append(values)
+            x_values.append(x_labels)
+            data_series_names.append(key)
+            # Display the shape of data_series_values
+            print(f"Shape of data_series_values: ({len(data_series_values)}, {len(data_series_values[0]) if data_series_values else 0})")
+        return data_series_names, data_series_values, x_values
+
+    def _build_color_list_scale(
+        self, values_scale: list[str] | list[float], invert_order: bool = False
+    ) -> list[tuple[float, float, float, float]]:
+        flat_y_values_float = [float(y) for y in values_scale]
+        norm = Normalize(min(flat_y_values_float), max(flat_y_values_float))
         from matplotlib.colors import ListedColormap
 
-        colors = ['#f4ff24', '#ffdb1b', '#ff9e20', '#ff6a1f', '#ff001c']
+        color_list = COLORS[::-1] if invert_order else COLORS
+        if len(values_scale) < len(COLORS):
+            color_list = color_list[: len(values_scale)]
 
-        cmap = ListedColormap(colors)
-        bar_colors = [cmap(norm(y)) for y in flat_y_values]
+        cmap = ListedColormap(color_list)
+        bar_colors = [cmap(norm(y)) for y in flat_y_values_float]
         return bar_colors
 
-    def barchart(self, sql: str, xfield: str, ylabel: str, barlist: list[str]) -> str:
+    def _build_static_color_list(self, category_list: list[int] | list[str]) -> list[tuple[float, float, float, float]]:
+        category_list.sort()
+        values = [float(i) for i in range(0, len(category_list))]
+        return self._build_color_list_scale(values, True)
+
+    def barchart(self, sql: str, xfield: str, ylabel: str, name: str, value: str) -> str:
         """
         Executes the SQL and generates a bar chart.
         xfield: column for x-axis, ylabel: y-axis label, barlist: columns for bars.
         Returns a string (e.g., image path or base64).
         """
-        y_values, x_values, bar_colors = self.build_chart_data(sql, xfield, barlist)
+        data_series_names, data_series_values, x_labels = self._build_chart_data(sql, xfield, name, value)
 
-        plt.figure(figsize=(8, 5))
-        for i, y in enumerate(y_values):
-            plt.bar(x_values, y, marker='o', label=f'Line {i + 1}', color=bar_colors[i])
+        if len(data_series_names) == 1:
+            bar_colors = self._build_color_list_scale(data_series_values[0])
+        else:
+            bar_colors = self._build_static_color_list(data_series_names)
+
+        # Merge all x_labels into a set to ensure uniqueness
+        x_labels_set = set()
+        for labels in x_labels:
+            x_labels_set.update(labels)
+
+        # create a complete dataset for all the values. Fill the missing values in certain series with 0
+        x_labels_set = sorted(x_labels_set)
+        y_values_for_x_labels = []
+        for labels, values in zip(x_labels, data_series_values):
+            label_value_map: dict[str, str] = dict(zip(labels, values))
+            y_values = [label_value_map.get(label, 0) for label in x_labels_set]  # type: ignore
+            y_values_for_x_labels.append(y_values)
+
+        # Group the bars around the labels (grouped bar chart)
+        import numpy as np
+
+        num_series = len(y_values_for_x_labels)
+        num_labels = len(x_labels_set)
+        x = np.arange(num_labels)
+        width = 0.8 / num_series if num_series > 0 else 0.8  # total width for all bars at one x-tick
+
+        plt.figure(figsize=(10, 5))
+        for i, y in enumerate(y_values_for_x_labels):
+            plt.bar(x + i * width, y, width=width, label=data_series_names[i], color=bar_colors[i], edgecolor='grey')
+
+        plt.xticks(x + width * (num_series - 1) / 2, x_labels_set, rotation=45, ha='right')
+
+        # plt.figure(figsize=(10, 5))
+        # for i, y in enumerate(y_values_for_x_labels):
+        #     plt.bar(x_labels_set, y, label=data_series_names[i], color=bar_colors[i], edgecolor='grey')
+
+        # self.set_axis_lables(x_labels)
 
         plt.ylabel(ylabel)
         plt.legend()
-        plt.grid(True)
+        plt.grid(axis='y', color=GRID_COLOR)
         plt.tight_layout()
 
         img_name = f"{uuid.uuid4()}"
         img_buffer = io.BytesIO()
         plt.savefig(img_buffer, format='png')
+        plt.savefig("bar2.png", format='png')
         self.img_cache.add_image(img_name, img_buffer)
 
         return img_name
@@ -291,7 +389,9 @@ class ToolsHandler(T2SQLTools):
                 raise ValueError("Date parameter is required for get_name_day function.")
         elif name == "get_similars":
             fuzz.ratio("this is a test", "this is a test!")
-            return self.similars_cache
+            text = str(args.get("text"))
+            self.similar(text)
+            return "similarity not implemented"
         elif name == "describe_table":
             table_name = args.get("table")
             if table_name:
@@ -303,7 +403,6 @@ class ToolsHandler(T2SQLTools):
             if query is None:
                 raise ValueError("Query parameter is required for execute_query function.")
             result: list[dict] = self.data(query)
-
             return json.dumps(result, indent=2, cls=DateTimeEncoder)
         elif name == "generate_chart":
             x_axis_input = args.get("x_axis")

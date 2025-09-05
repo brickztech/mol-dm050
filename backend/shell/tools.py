@@ -34,18 +34,20 @@ class T2SQLTools(ABC):
         """
 
     @abstractmethod
-    def linechart(self, sql: str, xfield: str, ylabel: str, linelist: list[str]) -> str:
+    def linechart(self, sql: str, xfield: str, ylabel: str, name: str, value: str) -> str:
         """
         Executes the SQL and generates a line chart.
-        xfield: column for x-axis, ylabel: y-axis label, linelist: columns for lines.
+        xfield: column for x-axis, ylabel: y-axis label, name: the name of the line field, value: the name of the value field.
+        xflelf, name and value parameters has to be used to extract values from the SQL result.
         Returns a string (e.g., image path or base64).
         """
 
     @abstractmethod
-    def barchart(self, sql: str, xfield: str, ylabel: str, barlist: list[str]) -> str:
+    def barchart(self, sql: str, xfield: str, ylabel: str, name: str, value: str) -> str:
         """
         Executes the SQL and generates a bar chart.
-        xfield: column for x-axis, ylabel: y-axis label, barlist: columns for bars.
+        xfield: column for x-axis, ylabel: y-axis label, name: the name of the bar field, value: the name of the value field.
+        xflelf, name and value parameters has to be used to extract values from the SQL result.
         Returns a string (e.g., image path or base64).
         """
 

@@ -26,40 +26,14 @@ def inspect_tables_structure(table_name: str | None = None) -> str:
 
 
 class ExecutionContext:
-    def __init__(self, variables: dict, domain_description: str):
+    def __init__(self, variables: dict[str, object], domain_description: str):
         self.variables = variables
         self.domain_description = domain_description
 
     def get_domain_description(self) -> str:
         return self.domain_description
 
-    def test_code(self):
-        users = self.variables["users"]
-        issues = self.variables["issues"]
-        # user7_id = users[users['login'] == 'user7']['id'].iloc[0]
-        # result_table = issues[issues['assigned_to_id'] == user7_id]
-
-        user_id = users[users['login'] == 'user6']['id'].iloc[0]
-        issues_user6 = issues[issues['assigned_to_id'] == user_id]
-        (
-            issues_user6['created_on']
-            .dt.date.value_counts()
-            .sort_index()
-            .reset_index()
-            .rename(columns={'index': 'date', 'created_on': 'issue_count'})
-            .to_csv(sep='\\t', index=False)
-        )
-        result_table = issues_user6[['id', 'subject', 'created_on']]
-        result_table['created_on'] = result_table['created_on'].dt.date
-        result_table = (
-            result_table.groupby('created_on')
-            .agg({'id': 'count'})
-            .rename(columns={'id': 'issue_count'})
-            .reset_index()
-            .rename(columns={'created_on': 'date'})
-        )
-
-    def execute_query(self, query: str) -> list[dict]:
+    def execute_query(self, query: str) -> list[dict[str, str]]:
         """
         Executes the given SQL query and returns the result as a list of dictionaries.
         Each dictionary represents a row with field names as keys.
@@ -68,12 +42,12 @@ class ExecutionContext:
             return []
         try:
             exec("import pandas as pd\n" + query, self.variables)
-            result: DataFrame | None = self.variables.get("result_table", None)
+            result = self.variables.get("result_table", None)
             if result is None:
                 print("No result_table found in the executed query.")
                 return []
             else:
-                return result.to_dict(orient='records')
+                return result.to_dict(orient='records')  # type: ignore
         except Exception as e:
             print(f"Error executing query: {e}")
             return []
@@ -81,11 +55,15 @@ class ExecutionContext:
     def execute(self, code: str, console_out: bool = True) -> str | None:
         # self.test_code()
         exec("import pandas as pd\n" + code, self.variables)
-        result: DataFrame | None = self.variables.get("result_table", None)
+        result = self.variables.get("result_table", None)
+        if result is not None and not isinstance(result, pd.DataFrame) and not isinstance(result, DataFrameGroupBy):
+            return str(result)
         if isinstance(result, pd.DataFrame):
             if not result.empty:
-                headers = [col for col in result.columns]
-                result_text = tabulate(result, headers=headers)
+                headers: list[str] = list(result.columns)
+                # tabulate expects a mapping type; convert DataFrame to a dict of columns
+                result_dict = result.to_dict(orient='list')  # type: ignore
+                result_text = tabulate(result_dict, headers=headers)
                 if console_out:
                     print("Result:\n")
                     # result_html = result.to_html()
@@ -98,8 +76,8 @@ class ExecutionContext:
                 return None
         elif isinstance(result, DataFrameGroupBy):
             if console_out:
-                print(result)
-            return result.obj.to_html()
+                print(result)  # type: ignore
+            return result.obj.to_html()  # type: ignore
         else:
             if console_out:
                 print("result:" + str(result))
@@ -109,12 +87,13 @@ class ExecutionContext:
         var_keys = self.variables.keys()
         description = ""
         for key in var_keys:
-            if isinstance(self.variables[key], pd.DataFrame):
+            variable: object = self.variables[key]
+            if isinstance(variable, pd.DataFrame):
                 description += f"\nDataframe {key} has the following columns: "
-                cols = list(self.variables[key].columns)
+                cols: list[str] = list(variable.columns)
                 for col in cols:
-                    if self.variables[key][col].dtype != "object":
-                        description += f" {col} type is {self.variables[key][col].dtype},"
+                    if variable[col].dtype != "object":  # type: ignore
+                        description += f" {col} type is {str(variable.dtype)},"  # type: ignore
                     else:
                         description += f" {col},"
         return description
@@ -143,13 +122,15 @@ class ExecutionContext:
         #    return False
 
         # Check for duplicate rows
-        if df.duplicated().any():
+        if df.duplicated().any():  # type: ignore
             logging.warning("DataFrame contains duplicate rows.")
             return False
 
         # Check for non-numeric values in numeric columns
-        for col in df.select_dtypes(include=['number']).columns:
-            if not pd.api.types.is_numeric_dtype(df[col]):
+        number_fields_df: DataFrame = df.select_dtypes(include=['number'])  # type: ignore
+        fields: list[str] = list(number_fields_df.columns)
+        for col in fields:
+            if not pd.api.types.is_numeric_dtype(df[col]):  # type: ignore
                 logging.warning(f"Column {col} contains non-numeric values.")
                 return False
 
