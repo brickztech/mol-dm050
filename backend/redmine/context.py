@@ -146,6 +146,38 @@ class RedmineSQLContext(RedmineContext):
             conn.close()
 
 
+class SQLContext(ExecutionContext):
+    def __init__(self, variables: dict):
+        super().__init__(variables, "")
+
+    def open_connection(self) -> psycopg.Connection:
+        con = psycopg.connect(
+            host=os.getenv('PGHOST', 'localhost'),
+            port=os.getenv('PGPORT', '5432'),
+            dbname=os.getenv('PGDATABASE', 'redmine'),
+            user=os.getenv('PGUSER', 'postgres'),
+            password=os.getenv('PGPASSWORD', 'password'),
+        )
+        con.autocommit = True
+        return con
+
+    def execute_query(self, query: str) -> list[dict]:
+        conn = self.open_connection()
+        cursor = conn.cursor()
+        try:
+            cursor.execute(query)  # pyright: ignore[reportArgumentType]
+            result = cursor.fetchall()
+            description = cursor.description
+            if description is None:
+                return []
+            columns = [desc[0] for desc in description]
+            result = [dict(zip(columns, row)) for row in result]
+            return result
+        finally:
+            cursor.close()
+            conn.close()
+
+
 def init_sql_context() -> RedmineSQLContext:
     context = RedmineSQLContext(dict())
     LangUtils.system_instruction_for_query = f"""
@@ -169,6 +201,10 @@ def init_sql_context() -> RedmineSQLContext:
     context.validate()
 
     return context
+
+
+def init_dm050_context() -> SQLContext:
+    return SQLContext(dict())
 
 
 # removed hints

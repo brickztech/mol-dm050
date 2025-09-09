@@ -12,7 +12,7 @@ from openai.types.responses import FunctionToolParam
 from rapidfuzz import fuzz
 
 from langutils.context import ExecutionContext
-from shell.tools import ImgData, T2SQLTools
+from t2sqltools.tools import ImgData, T2SQLTools
 
 from . import COLORS, GRID_COLOR, MAX_VALUES_X_AXIS
 

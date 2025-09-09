@@ -20,8 +20,8 @@ from api.dto import HistoryMessage
 from langutils import img_extract_pattern, python_code_exp
 from langutils.context import ExecutionContext
 from langutils.llm_tools import llm_tools_list_descriptor
-from shell.llm import LLM
-from shell.tools import T2SQLTools
+from t2sqltools import T2SQLTools
+from test_shell.llm import LLM
 
 
 def extract_text_content(content: List[ResponseOutputMessage | ResponseOutputRefusal]) -> str:

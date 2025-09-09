@@ -1,23 +1,25 @@
-import os
 import json
-
-from loguru import logger
 import logging
-
+import os
 import time
 from typing import TypedDict
 
 from fastapi.applications import FastAPI
+from loguru import logger
+from openai import OpenAI
 from starlette.responses import FileResponse, JSONResponse, StreamingResponse
 from starlette.staticfiles import StaticFiles
 from typing_extensions import Generator
 
+import shell.shell as shell
 from api.dto import AuthenticationRequest, AuthenticationResponse, ChatRequest
+from blockz.LLMBlockz import OpenAILikeLLM, RecStrDict
 from langutils.llm_tools import ToolsHandler
 from langutils.open_ai import LangUtils
-from redmine.context import init_context
-from shell.llm import History, TextElement
-from shell_impl import MolShell
+from redmine.context import init_dm050_context
+
+# from shell.llm import History, TextElement
+from shell.shell import TextElement
 
 
 class InterceptHandler(logging.Handler):
@@ -46,7 +48,7 @@ def configure_loguru():
     logging.basicConfig(handlers=[InterceptHandler()], level=logging.INFO)
 
     # Configure loguru file logger
-    sink: str = os.path.join(os.getenv('LOG_DIR', './log'), 'dm050.log') # type: ignore
+    sink: str = os.path.join(os.getenv('LOG_DIR', './log'), 'dm050.log')  # type: ignore
     logger.add(sink, rotation='10 MB', retention=5, enqueue=True, level=logging.DEBUG, backtrace=False, diagnose=False)
 
     # propagate to the root logger
@@ -89,17 +91,18 @@ users: list[UserDict] = [
 ]
 
 
-context = init_context()
-lang_utils = LangUtils(context)
+context = init_dm050_context()
+llm = LangUtils(context)
 tools = ToolsHandler(context)
-history: History = []
-shell = MolShell()
+client = OpenAI()
+# shell = MolShell()
 
 
 @app.get('/api/chat_rq')
-def chat_rq(query: str) -> str:
+def chat_rq(request: ChatRequest) -> str:
+    llm = OpenAILikeLLM(client, "gpt-4.1")
 
-    result, _new_history = shell.request(lang_utils, tools, history, query)
+    result, _new_history = shell.request(llm, tools, [], request.query)
     response = ""
     for item in result:
         if isinstance(item, TextElement):
@@ -126,7 +129,7 @@ def generate_numbers():
         time.sleep(1)  # simulate streaming delay
 
 
-def combine_response(response: Generator[str], history: History):
+def combine_response(response: Generator[str], history: list[RecStrDict]):
     for item in response:
         yield item
     yield "\n===========##}}\n"
@@ -136,7 +139,14 @@ def combine_response(response: Generator[str], history: History):
 @app.post("/api/chat_rq_stream", response_class=StreamingResponse)
 def chat_rq_stream(request: ChatRequest) -> StreamingResponse:
 
-    result, new_history = shell.request(lang_utils, tools, history, request.query)
+    llm = OpenAILikeLLM(client, "gpt-4.1")
+    # Check if shell_history is an empty string
+    if request.shell_history == "":
+        history = []
+    else:
+        history = json.loads(request.shell_history)
+
+    result, new_history = shell.request(llm, tools, history, request.query)
     response = (item.getcontent() for item in result if isinstance(item, TextElement))
     response = combine_response(response, new_history)
 

@@ -19,7 +19,8 @@ class HistoryMessage(BaseModel):
 
 class ChatRequest(BaseModel):
     query: str
-    history: list[HistoryMessage]
+    # history: list[lb.RecStrDict]
+    # history: list[History]
     shell_history: str
 
 

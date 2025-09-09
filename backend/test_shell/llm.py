@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import Iterator, Tuple, TypeAlias
 
-from .tools import T2SQLTools
+from t2sqltools.tools import T2SQLTools
 
 
 class LLM(ABC):

@@ -1,6 +1,6 @@
 import type { Message } from "src/pages/chat";
 
-export async function askQuestionStream(question: string, history: Message[], shell_history: string): Promise<
+export async function askQuestionStream(question: string, history: Message[], shell_history: []): Promise<
   ReadableStreamDefaultReader | undefined
 > {
   const headers = new Headers({ "Cache-Control": "no-cache" });
@@ -10,7 +10,6 @@ export async function askQuestionStream(question: string, history: Message[], sh
         headers,
         body: JSON.stringify({
             query: question,
-            history,
             shell_history
         }),
     });
