@@ -6,20 +6,16 @@ from typing import TypedDict
 
 from fastapi.applications import FastAPI
 from loguru import logger
-from openai import OpenAI
 from starlette.responses import FileResponse, JSONResponse, StreamingResponse
 from starlette.staticfiles import StaticFiles
 from typing_extensions import Generator
 
-import shell.shell as shell
 from api.dto import AuthenticationRequest, AuthenticationResponse, ChatRequest
-from blockz.LLMBlockz import OpenAILikeLLM, RecStrDict
-from langutils.llm_tools import ToolsHandler
-from langutils.open_ai import LangUtils
-from redmine.context import init_dm050_context
+from blockz.LLMBlockz import RecStrDict
+from dm050.setup import DM050Shell
+from shell import TextElement
 
 # from shell.llm import History, TextElement
-from shell.shell import TextElement
 
 
 class InterceptHandler(logging.Handler):
@@ -91,26 +87,6 @@ users: list[UserDict] = [
 ]
 
 
-context = init_dm050_context()
-llm = LangUtils(context)
-tools = ToolsHandler(context)
-client = OpenAI()
-# shell = MolShell()
-
-
-@app.get('/api/chat_rq')
-def chat_rq(request: ChatRequest) -> str:
-    llm = OpenAILikeLLM(client, "gpt-4.1")
-
-    result, _new_history = shell.request(llm, tools, [], request.query)
-    response = ""
-    for item in result:
-        if isinstance(item, TextElement):
-            response += item.getcontent()
-
-    return response
-
-
 @app.post('/api/authenticate', response_model=AuthenticationResponse)
 def authenticate(request: AuthenticationRequest):
     for user in users:
@@ -138,18 +114,10 @@ def combine_response(response: Generator[str], history: list[RecStrDict]):
 
 @app.post("/api/chat_rq_stream", response_class=StreamingResponse)
 def chat_rq_stream(request: ChatRequest) -> StreamingResponse:
-
-    llm = OpenAILikeLLM(client, "gpt-4.1")
-    # Check if shell_history is an empty string
-    if request.shell_history == "":
-        history = []
-    else:
-        history = json.loads(request.shell_history)
-
-    result, new_history = shell.request(llm, tools, history, request.query)
+    shell = DM050Shell()
+    result, new_history = shell.request(request.query, request.shell_history)
     response = (item.getcontent() for item in result if isinstance(item, TextElement))
     response = combine_response(response, new_history)
-
     return StreamingResponse(response, media_type="text/plain")
 
 

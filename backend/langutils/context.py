@@ -1,6 +1,8 @@
 import logging
+import os
 
 import pandas as pd
+import psycopg
 from pandas import DataFrame
 from pandas.core.groupby import DataFrameGroupBy
 from tabulate import tabulate
@@ -135,3 +137,35 @@ class ExecutionContext:
                 return False
 
         return True
+
+
+class SQLContext(ExecutionContext):
+    def __init__(self, variables: dict):
+        super().__init__(variables, "")
+
+    def open_connection(self) -> psycopg.Connection:
+        con = psycopg.connect(
+            host=os.getenv('PGHOST', 'localhost'),
+            port=os.getenv('PGPORT', '5432'),
+            dbname=os.getenv('PGDATABASE', 'redmine'),
+            user=os.getenv('PGUSER', 'postgres'),
+            password=os.getenv('PGPASSWORD', 'password'),
+        )
+        con.autocommit = True
+        return con
+
+    def execute_query(self, query: str) -> list[dict]:
+        conn = self.open_connection()
+        cursor = conn.cursor()
+        try:
+            cursor.execute(query)  # pyright: ignore[reportArgumentType]
+            result = cursor.fetchall()
+            description = cursor.description
+            if description is None:
+                return []
+            columns = [desc[0] for desc in description]
+            result = [dict(zip(columns, row)) for row in result]
+            return result
+        finally:
+            cursor.close()
+            conn.close()

@@ -6,6 +6,7 @@ from datetime import date
 from typing import Annotated, Any
 
 import blockz.LLMBlockz as lb
+from shell import Element, GraphicsElement, TableElement, TextElement
 from t2sqltools import T2SQLTools
 
 
@@ -22,52 +23,6 @@ class WrongAnswer(Exception):
 
 class ShellError(Exception):
     "Raised when the shell feels like giving up"
-
-
-@dataclass
-class Element:
-    pass
-
-
-@dataclass
-class TextElement(Element):
-    """Carrier of literal texts. Anything that can possibly be found in an LLM reply will make it here: Markdown, links etc. so be prepared"""
-
-    _content: str
-
-    def __repr__(self) -> str:
-        return f"TextElement(_content={self._content})"
-
-    def getcontent(self) -> str:
-        return self._content
-
-
-@dataclass
-class GraphicsElement(Element):
-    """Carrier of a graphics element encoded as a legal string. For now this is PNG over base64"""
-
-    _content: str
-    _id: str
-
-    def __repr__(self) -> str:
-        return f"GraphicsElement(_content={self._content}, _id={self._id})"
-
-    def getcontent(self) -> str:
-        return self._content
-
-
-@dataclass
-class TableElement(Element):
-    """Carrier of a table"""
-
-    _content: list[dict[str, str]]
-    _id: str
-
-    def __repr__(self) -> str:
-        return f"""TableElement(_content={self._content}, _id={self._id})"""
-
-    def getcontent(self) -> list[dict[str, str]]:
-        return self._content
 
 
 def textify_elementlist(elist: list[Element]) -> str:

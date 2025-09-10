@@ -19,9 +19,9 @@ from openai.types.responses.response_output_message import Content
 from api.dto import HistoryMessage
 from langutils import img_extract_pattern, python_code_exp
 from langutils.context import ExecutionContext
-from langutils.llm_tools import llm_tools_list_descriptor
 from t2sqltools import T2SQLTools
-from test_shell.llm import LLM
+
+from .tools import llm_tools_list_descriptor
 
 
 def extract_text_content(content: List[ResponseOutputMessage | ResponseOutputRefusal]) -> str:
@@ -96,7 +96,7 @@ def fill_in_img_attachments(text: str, tools_handler: T2SQLTools) -> str:
     return parsed
 
 
-class LangUtils(LLM):
+class LangUtils:
 
     unknown_context_response = "I can not process this from the given context."
     # these will be set only by the main program
