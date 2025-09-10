@@ -1,8 +1,10 @@
+import logging
 import os
 from datetime import datetime
 
 import pandas as pd
 import psycopg
+import tabulate
 
 from langutils.context import ExecutionContext
 
@@ -12,8 +14,8 @@ pd.options.display.max_columns = None
 
 
 class RedmineContext(ExecutionContext):
-    def __init__(self, variables: dict):
-        domain_description = """The database contains the results of time logging for various projects by the project members.
+    def __init__(self, variables: dict[str, object], domain_description: str):
+        self.domain_description = """The database contains the results of time logging for various projects by the project members.
 
         The table 'projects' contains data describing the projects.
         Every row in the table 'projects' corresponds to a single project and every project has one row.
@@ -42,7 +44,6 @@ class RedmineContext(ExecutionContext):
         Every row in the table 'time_entries' has a floating point-valued field called 'hours'. The value of this field is the number of hours - possibly fractional - being logged.
         Every row in the table 'time_entries' has a date-valued field called 'spent_on', having the format YYYY-MM-DD. The value of this field is the date on which the time being logged was spent."""
 
-        super().__init__(variables, domain_description)
         self.variables = variables
 
         current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -89,9 +90,111 @@ class RedmineContext(ExecutionContext):
         first_day_last_month = datetime(today.year, today.month - 1 if today.month > 1 else 12, 1)
         self.variables['first_day_of_last_month'] = first_day_last_month
 
+    def get_domain_description(self) -> str:
+        return self.domain_description
+
+    def execute_query(self, query: str) -> list[dict[str, str]]:
+        """
+        Executes the given SQL query and returns the result as a list of dictionaries.
+        Each dictionary represents a row with field names as keys.
+        """
+        if not query.strip():
+            return []
+        try:
+            exec("import pandas as pd\n" + query, self.variables)
+            result = self.variables.get("result_table", None)
+            if result is None:
+                print("No result_table found in the executed query.")
+                return []
+            else:
+                return result.to_dict(orient='records')  # type: ignore
+        except Exception as e:
+            print(f"Error executing query: {e}")
+            return []
+
+    def execute(self, code: str, console_out: bool = True) -> str | None:
+        # self.test_code()
+        exec("import pandas as pd\n" + code, self.variables)
+        result = self.variables.get("result_table", None)
+        if result is not None and not isinstance(result, pd.DataFrame):
+            return str(result)
+        if isinstance(result, pd.DataFrame):
+            if not result.empty:
+                headers: list[str] = list(result.columns)
+                # tabulate expects a mapping type; convert DataFrame to a dict of columns
+                result_dict = result.to_dict(orient='list')  # type: ignore
+                result_text = tabulate(result_dict, headers=headers)  # type: ignore
+                if console_out:
+                    print("Result:\n")
+                    # result_html = result.to_html()
+                    print(result_text)
+                    # print("Result html:\n", result_html)
+                return result_text
+            else:
+                if console_out:
+                    print("No result.")
+                return None
+        else:
+            if console_out:
+                print("result:" + str(result))
+            return result
+
+    def inspect_tables_structure(self, table_name: str | None = None) -> str:
+        var_keys = self.variables.keys()
+        description = ""
+        for key in var_keys:
+            variable: object = self.variables[key]
+            if isinstance(variable, pd.DataFrame):
+                description += f"\nDataframe {key} has the following columns: "
+                cols: list[str] = list(variable.columns)
+                for col in cols:
+                    if variable[col].dtype != "object":  # type: ignore
+                        description += f" {col} type is {str(variable.dtype)},"  # type: ignore
+                    else:
+                        description += f" {col},"
+        return description
+
+    def validate(self):
+        for key, value in self.variables.items():
+            logging.info(f'Validating {key}')
+            if isinstance(value, pd.DataFrame):
+                if not self.validate_dataframe(value):
+                    logging.info(f"Validation failed for {key} DataFrame.")
+                    return False
+            else:
+                logging.info(f"Variable {key} is not a DataFrame.")
+        return True
+
+    @staticmethod
+    def validate_dataframe(df: pd.DataFrame) -> bool:
+        # Check if the DataFrame is empty
+        if df.empty:
+            logging.warning("DataFrame is empty.")
+            return False
+
+        # Check for NaN values
+        # if df.isnull().values.any():
+        #    print("DataFrame contains NaN values.")
+        #    return False
+
+        # Check for duplicate rows
+        if df.duplicated().any():  # type: ignore
+            logging.warning("DataFrame contains duplicate rows.")
+            return False
+
+        # Check for non-numeric values in numeric columns
+        number_fields_df: pd.DataFrame = df.select_dtypes(include=['number'])  # type: ignore
+        fields: list[str] = list(number_fields_df.columns)
+        for col in fields:
+            if not pd.api.types.is_numeric_dtype(df[col]):  # type: ignore
+                logging.warning(f"Column {col} contains non-numeric values.")
+                return False
+
+        return True
+
 
 def init_context() -> RedmineContext:
-    context = RedmineContext(dict())
+    context = RedmineContext(dict(), "")
     LangUtils.system_instruction_for_query = f"""
         You are a programmer working on reporting tasks.
         The reports all come from a database realized as a collection of pandas dataframes.
@@ -116,8 +219,6 @@ def init_context() -> RedmineContext:
 
 
 class RedmineSQLContext(RedmineContext):
-    def __init__(self, variables: dict):
-        super().__init__(variables)
 
     def open_connection(self) -> psycopg.Connection:
         con = psycopg.connect(
@@ -148,7 +249,7 @@ class RedmineSQLContext(RedmineContext):
 
 
 def init_sql_context() -> RedmineSQLContext:
-    context = RedmineSQLContext(dict())
+    context = RedmineSQLContext(dict(), "")
     LangUtils.system_instruction_for_query = f"""
         You are a programmer working on reporting tasks.
         The reports all come from a postgreSQL database.

@@ -3,10 +3,10 @@ from io import BytesIO
 
 from dotenv.main import load_dotenv
 
-from redmine.context import init_context
+from langutils.llm_tools import ToolsHandler
+from redmine.open_ai import fill_in_img_attachments
 
-from .llm_tools import ToolsHandler
-from .open_ai import fill_in_img_attachments
+from .context import init_context
 
 load_dotenv()
 

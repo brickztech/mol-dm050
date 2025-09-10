@@ -11,7 +11,7 @@ from . import shell as dm050
 
 
 def init_dm050_context() -> SQLContext:
-    return SQLContext(dict())
+    return SQLContext()
 
 
 class DM050Tools(ToolsHandler):
@@ -21,7 +21,7 @@ class DM050Tools(ToolsHandler):
 
 class DM050Shell(ShellWrapper):
     def __init__(self):
-        self.context = SQLContext(dict())
+        self.context = SQLContext()
         self.tools = DM050Tools(self.context)
         self.client = OpenAI()
 
