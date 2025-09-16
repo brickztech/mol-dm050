@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from typing import Any
 
 import blockz.LLMBlockz as lb
-from t2sqltools import T2SQLTools
+from shell import T2SQLTools
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())

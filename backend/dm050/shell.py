@@ -2,7 +2,7 @@ import logging
 from datetime import date
 
 import blockz.LLMBlockz as lb
-from t2sqltools import T2SQLTools
+from shell import T2SQLTools
 
 from . import shellutils as su
 

@@ -10,7 +10,7 @@ from matplotlib.colors import Normalize
 from rapidfuzz import fuzz
 
 from langutils.context import ExecutionContext
-from t2sqltools.tools import ImgData, T2SQLTools
+from shell import ImgData, T2SQLTools
 
 from . import COLORS, GRID_COLOR, MAX_VALUES_X_AXIS
 
