@@ -1,0 +1,99 @@
+DATABASE USAGE INSTRUCTIONS:
+
+TABLE 'stocks':
+Use the 'stocks' table to access daily closing prices of regionally important oil processing enterprises.
+Query the 'stdate' field for date filtering - treat this datetime field as date-only (time components are zero).
+Identify stocks using the 'stname' field containing the stock name.
+Retrieve closing prices from 'stvalue' field, but ignore rows where stvalue is null.
+Check the 'stcurrency' field to determine the currency (HUF, EUR, or PLN) for each stock price.
+
+TABLE 'quotations':
+Use the 'quotations' table to access oil industry product and crude oil price quotations. It has five fields: 'qdate', 'qname', 'qprice', 'qcurrency' and 'quom'. These are all the fields of the table; do not use other field names.
+Filter by date using the 'qdate' field.
+Identify products using the 'qname' field with these mappings:
+- For day-ahead TTF (Title Transfer Facility) LPB: use qname = 'ttf day-ahead'
+- For month-ahead TTF (or possibly 1-month TTF or variants) LPG: use qname = 'ttf month-ahead'
+- For unspecified TTF: perform the requested analysis for both day-ahead TTF and month-ahead TTF
+- For CEGH (Central European Gas Hub): use qname = 'cegh vtp da'
+- For LPG: perform the requested analysis thrice: for day-ahead TTF, for month-ahead TTF and for CEGH.
+- For propane: use qname = 'propane'
+- For butane: use qname = 'butane'
+- For propane-butane: use qname = 'propane-butane'
+- For natural gas: perform the requested analysis for all three of propane, butane and propane-butane.
+- For contracted benzene: use qname = 'benzene c'
+- For spot-traded or -bought benzene: use qname = 'benzene spot'. 
+- For unspecified benzene requests, perform the requested analysis twice: once for benzene contract and once for benzene spot.
+- For contracted ethylene: use qname = 'ethylene c'
+- For spot-traded or -bought benzene: use qname = 'ethylene spot'. 
+- For unspecified ethylene requests, perform the requested analysis twice: once for ethylene contract and once for ethylene spot.
+- For contracted propylene: use qname = 'propylene c'
+- For spot-traded or -bought propylene: use qname = 'propylene spot'
+- For unspecified propylene requests, perform the requested analysis twice: once for propylene contract and once for propylene spot.
+- For contracted butadiene: use qname = 'butadiene c'
+- For high-density polyethylene (also 'hdpe' and variants): use qname = 'hdpe'
+- For low-density polyethylene (also 'ldpe' and variants): use qname = 'ldpe'
+- For unspecified polyethylene requests, perform the requested analysis twice, once for high-density polyethylene and once for low-density polyethylene
+- For Brent/Dated Brent crude: use qname = 'dated brent'
+- For CPC/CPC Blend crude: use qname = 'cif med cpc'
+- For Azeri Ligh crude: use qname = 'cif azeri light'
+- For Urals crude: choose from 'cif med urals' (Mediterranean CIF), 'cif-nwe-urals' (NW Europe CIF) or 'dap india urals' (India DAP)
+When users ask for Urals quotations, always clarify which logistic parity (CIF, DAP) and region (Med for Mediterranean, NWE for Northwest Europe or India) they want unless they specify.
+Remember that all crude oil quotations except Brent represent price differences versus Brent, not absolute prices.
+Extract quotation values from the 'qprice' field.
+Always check the 'qcurrency' field for currency consistency within your query scope:
+- If single currency: state the currency in your response
+- If multiple currencies with USD present: use USD and inform user about other available currencies
+- If multiple currencies without USD: ask user to specify which currency to use
+Always check the 'quom' field for unit-of-measure consistency:
+- If single unit: state the unit in your response  
+- If multiple units: ask user to specify which unit to use
+
+TABLE 'spreads':
+Use the 'spreads' table to access crack spreads of various products. It has five fields: 'spdate', 'spname', 'spvalue', 'spcurrency' and 'spuom'. These are all the fields of the table; do not use other field names.
+Filter by date using the 'spdate' field.
+Identify various crack spreads using the 'spname' field with these mappings:
+- For gasoline: use spname = 'gasoline'
+- For diesel oil: use spname = 'diesel'
+- For naphta: use spname = 'naphta'
+- For jet fuel/kerosene: use spname = 'jet'
+- For gasoil (sometimes spelled as 'gasoil 0.1' or variants thereof): use spname = 'gasoil'
+- For fuel oil with 0.5% sulphur content (or fuel oil 0.5 or other variants): use spname = 'fuel oil 0.5'
+- For fuel oil with 1.0% sulphur content (or fuel oil 1.0 or other variants): use spname = 'fuel oil 1.0'
+- For fuel oil with 3.5% sulphur content (or fuel oil 3.5 or other variants): use spname = 'fuel oil 3.5'
+- For unspecified fuel oil requests, perform the requested analysis thrice, for all three fuel oil types.
+- For high sulphur content vacuum gas oil (or HS VGO or variants): use spname = 'vgo hs'
+- For low sulphur content vacuum gas oil (or LS VGO or variants): use spname = 'vgo ls'
+- For unspecified VGO requests, perform the requested analysis twice, once for HS VGO and once for LS VGO.
+- For butadiene-naphta spread (or sometimes 'butadiene-naphta margin'): use spname = 'but-naph'.
+Extract spread values from the 'spvalue' field.
+Always check the 'spcurrency' field for currency consistency within your query scope:
+- If single currency: state the currency in your response
+- If multiple currencies with USD present: use USD and inform user about other available currencies
+- If multiple currencies without USD: ask user to specify which currency to use
+Always check the 'spuom' field for unit-of-measure consistency:
+- If single unit: state the unit in your response  
+- If multiple units: ask user to specify which unit to use
+
+TABLE 'margins':
+Use the 'margins' table to access various processing margins. It has four fields: 'mdate', 'mname', 'mvalue' and 'mcompany'. These are all the fields of the table; do not use other field names.
+Filter by date using the 'mdate' field.
+Identify various margins using the 'mname' and 'mcompany' fields with these mappings:
+- For IEA Brent margin: use mname = 'IEA Brent' and mcompany = 'NA'
+- For IEA Med Urals margin: use mname = 'IEA Med Urals' and mcompany = 'NA'
+- For unspecified IEA margin requests, perform the requested analysis twice, once for IEA Brent and once for IEA Med Urals
+- For refinery margins of different members or subgroups of the enterprise group: use mname = 'c-ref' and filter by 'mcompany'.
+- For old/Urals refinery margins: use mname = 'c-ref-old' and filter by 'mcompany'.
+- For petrochemical (sometimes: polymer) margins: use mname = 'petchem' and filter by 'mcompany'.
+- For old-style (or without CO2) petrochemical margins: use mname = 'petchem-old' and filter by 'mcompany'.
+- For unspecified margin requests a company name must be present, and in that case check if there exists both a petrochemical and a refinery margin for the company in question, and clarify the request with the user if both margins exist; otherwise just perform the requested processing on the single existing margin.
+Use the 'mcompany' field to identify member companies. Possible values are 'MOL Group', 'MOL', 'INA Rijeka', 'MPC', 'SPC', 'SN' and 'MOL+SN'. For requests referring to 'the group' substitute 'MOL Group'.
+Extract margin values from the 'mvalue' field. The values are expressed in EUR/ton.
+
+TABLE 'calendar':
+Use the 'calendar' table to access pre-computed date attributes instead of calculating them.
+Join on 'day_date_id' as the primary key to get date characteristics.
+Extract year information from the 'year' field.
+Get month numbers from 'month_of_year' (1=January, 2=February, etc.).
+Get month names from 'monthname_of_year' field.
+Determine quarters using 'quarter_of_year' (1=Q1, 2=Q2, etc.) or 'year_quarter' ('2018-Q2' format).
+Identify half-years using 'year_half' field ('2018-H1', '2019-H2' format) - no numeric half-year field exists.

@@ -13,7 +13,7 @@ from typing_extensions import Generator
 from api.dto import AuthenticationRequest, AuthenticationResponse, ChatRequest
 from blockz.LLMBlockz import RecStrDict
 from dm050.setup import DM050Shell
-from shell import TextElement
+from dm050.shellutils import GraphicsElement, TableElement, TextElement
 
 # from shell.llm import History, TextElement
 
@@ -112,12 +112,43 @@ def combine_response(response: Generator[str], history: list[RecStrDict]):
     yield json.dumps(history)
 
 
+def process_result(result) -> Generator[str]:
+    for item in result:
+        match item:
+            case TextElement():
+                # Process TextElement if needed
+                yield item.getcontent()
+            case GraphicsElement():
+                yield "<img src=\"data:image/png;base64," + item.getcontent() + "\">"
+            case TableElement():
+                # Process TableElement if needed
+                yield convert_table_to_html(item.getcontent())
+
+
+def convert_table_to_html(table_data: list[dict[str, str]]) -> str:
+    if not table_data:
+        return "<table></table>"
+    headers = table_data[0].keys()
+    html = "<table><tr>"
+    for header in headers:
+        html += f"<th>{header}</th>"
+    html += "</tr>"
+    for row in table_data:
+        html += "<tr>"
+        for header in headers:
+            html += f"<td>{row[header]}</td>"
+        html += "</tr>"
+    html += "</table>"
+    return html
+
+
 @app.post("/api/chat_rq_stream", response_class=StreamingResponse)
 def chat_rq_stream(request: ChatRequest) -> StreamingResponse:
     shell = DM050Shell()
     result, new_history = shell.request(request.query, request.shell_history)
-    response = (item.getcontent() for item in result if isinstance(item, TextElement))
-    response = combine_response(response, new_history)
+
+    result_gen = process_result(result)
+    response = combine_response(result_gen, new_history)
     return StreamingResponse(response, media_type="text/plain")
 
 
