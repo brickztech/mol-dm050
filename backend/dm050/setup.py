@@ -5,9 +5,10 @@ from openai import OpenAI
 from blockz.LLMBlockz import OpenAILikeLLM, RecStrDict
 from langutils.context import SQLContext
 from langutils.llm_tools import ToolsHandler
-from shell import Element, ShellWrapper
+from shell import ShellWrapper
 
 from . import shell as dm050
+from . import shellutils as su
 
 
 def init_dm050_context() -> SQLContext:
@@ -24,11 +25,10 @@ class DM050Shell(ShellWrapper):
         self.context = SQLContext()
         self.tools = DM050Tools(self.context)
         self.client = OpenAI()
-
         # llm = LangUtils(context)
         self.llm = OpenAILikeLLM(self.client, "gpt-4.1")
 
-    def request(self, req: str, shell_history: str) -> tuple[list[Element], list[RecStrDict]]:
+    def request(self, req: str, shell_history: str) -> tuple[list[su.Element], list[RecStrDict]]:
         if shell_history == "":
             history = []
         else:
