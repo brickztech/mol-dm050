@@ -1,11 +1,11 @@
 import logging
 import os
 from datetime import datetime
+from typing import cast
 
 import pandas as pd
 import psycopg
 import tabulate
-
 from langutils.context import ExecutionContext
 
 from .open_ai import LangUtils
@@ -102,12 +102,12 @@ class RedmineContext(ExecutionContext):
             return []
         try:
             exec("import pandas as pd\n" + query, self.variables)
-            result = self.variables.get("result_table", None)
+            result = cast(pd.DataFrame | None, self.variables.get("result_table", None))
             if result is None:
                 print("No result_table found in the executed query.")
                 return []
             else:
-                return result.to_dict(orient='records')  # type: ignore
+                return result.to_dict(orient='records')  # pyright: ignore[reportReturnType]
         except Exception as e:
             print(f"Error executing query: {e}")
             return []
@@ -122,8 +122,8 @@ class RedmineContext(ExecutionContext):
             if not result.empty:
                 headers: list[str] = list(result.columns)
                 # tabulate expects a mapping type; convert DataFrame to a dict of columns
-                result_dict = result.to_dict(orient='list')  # type: ignore
-                result_text = tabulate(result_dict, headers=headers)  # type: ignore
+                result_dict = result.to_dict(orient='list')
+                result_text = tabulate(result_dict, headers=headers)  # pyright: ignore[reportCallIssue]
                 if console_out:
                     print("Result:\n")
                     # result_html = result.to_html()
@@ -231,7 +231,7 @@ class RedmineSQLContext(RedmineContext):
         con.autocommit = True
         return con
 
-    def execute_query(self, query: str) -> list[dict]:
+    def execute_query(self, query: str) -> list[dict[str, str]]:
         conn = self.open_connection()
         cursor = conn.cursor()
         try:

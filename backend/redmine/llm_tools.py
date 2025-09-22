@@ -5,14 +5,12 @@ import uuid
 from datetime import datetime
 from itertools import groupby
 
+from langutils import COLORS, GRID_COLOR, MAX_VALUES_X_AXIS
+from langutils.context import ExecutionContext
 from matplotlib import pyplot as plt
 from matplotlib.colors import Normalize
 from rapidfuzz import fuzz
-
-from langutils.context import ExecutionContext
 from shell import ImgData, T2SQLTools
-
-from . import COLORS, GRID_COLOR, MAX_VALUES_X_AXIS
 
 
 class ImgCache:
@@ -56,7 +54,7 @@ class ToolsHandler(T2SQLTools):
         else:
             self.similars_cache: list[tuple[str, str, str]] = []
 
-    def similar(self, ref: str, limit: int = 0) -> list[tuple[str, str, str, float]]:
+    def similar(self, ref: str, limit: int = 0) -> list[tuple[str, str, str]]:
         """
         Returns the topN (default 10) most similar (value, table, field) tuples to the given ref
         from all soft-searchable columns in all tables.
@@ -64,7 +62,7 @@ class ToolsHandler(T2SQLTools):
         """
         ratios = [(rec[0], rec[1], rec[2], fuzz.ratio(ref, rec[0])) for rec in self.similars_cache]
         ratios.sort(key=lambda x: x[3], reverse=True)
-        filtered_ratios = [x for x in ratios if x[3] > limit]
+        filtered_ratios = [(x[0], x[1], x[2]) for x in ratios if x[3] > limit]
         return filtered_ratios
 
     def data(self, sql: str) -> list[dict[str, str]]:
@@ -259,7 +257,7 @@ class ToolsHandler(T2SQLTools):
 
         return img_name
 
-    def _generate_chart(self, chart_type: str, x_axis: list, y_axis: list[float], y_axis_label: str, title: str):
+    def _generate_chart(self, chart_type: str, x_axis: list[str], y_axis: list[float], y_axis_label: str, title: str):
         norm = Normalize(min(y_axis), max(y_axis))
         from matplotlib.colors import ListedColormap
 

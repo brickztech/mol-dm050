@@ -1,10 +1,9 @@
 import json
 from datetime import datetime
 
-from openai.types.responses import FunctionToolParam
-
 from langutils.context import ExecutionContext
-from langutils.llm_tools import DateTimeEncoder, ToolsHandler
+from openai.types.responses import FunctionToolParam
+from redmine.llm_tools import DateTimeEncoder, ToolsHandler
 
 llm_tools_list_descriptor: list[FunctionToolParam] = [
     {
@@ -104,10 +103,10 @@ class RedmineToolsHandler(ToolsHandler):
             else:
                 raise ValueError("Table parameter is required for describe_table function.")
         elif name == "execute_query":
-            query: str | None = args.get("query")  # type: ignore
+            query = args.get("query")  # type: ignore
             if query is None:
                 raise ValueError("Query parameter is required for execute_query function.")
-            result: list[dict] = self.data(query)
+            result: list[dict[str, str]] = self.data(str(query))
             return json.dumps(result, indent=2, cls=DateTimeEncoder)
         elif name == "generate_chart":
             x_axis_input = args.get("x_axis")

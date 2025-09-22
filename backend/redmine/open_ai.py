@@ -2,6 +2,9 @@ import base64
 import json
 from typing import Iterator, List, cast
 
+from api.dto import HistoryMessage
+from langutils import img_extract_pattern, python_code_exp
+from langutils.context import ExecutionContext
 from openai import OpenAI
 from openai.types.responses import (
     ResponseFunctionToolCall,
@@ -15,11 +18,7 @@ from openai.types.responses.response_input_item import Message
 from openai.types.responses.response_input_param import FunctionCallOutput
 from openai.types.responses.response_input_text import ResponseInputText
 from openai.types.responses.response_output_message import Content
-
-from api.dto import HistoryMessage
-from langutils import img_extract_pattern, python_code_exp
-from langutils.context import ExecutionContext
-from t2sqltools import T2SQLTools
+from shell import T2SQLTools
 
 from .tools import llm_tools_list_descriptor
 

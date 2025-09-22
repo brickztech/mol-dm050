@@ -17,7 +17,7 @@ quotations as (select distinct
         quotation_dt as qdate,
 		case quotation_element_sid
 			when 35 then 'dated brent'
-			when 36 then 'dated brent'
+			when 36 then 'dated brent tons'
 			when 29 then 'cif med urals'
 			when 30 then 'cif nwe urals'
 			when 31 then 'dap india urals'
@@ -40,7 +40,6 @@ quotations as (select distinct
 			when 117 then 'ldpe'
 			when 119 then 'polypropylene'
 		end as qname,
-        dn_currency_id as qcurrency,
         quote_price as qprice,
         dn_uom as quom
     from [prod_dm050_ds_valuechain_extenv].[t050_01_quotation]
@@ -67,9 +66,8 @@ spreads as (select distinct
 			when 22 then 'vgo hs'
 			when 23 then 'vgo ls'
 			when 109 then 'but-naph'
-		end as sname,
+		end as spname,
         spread_value as spvalue,
-        dn_currency_id as spcurrency,
         dn_uom as spuom
     from [prod_dm050_ds_valuechain_extenv].[t050_02_spread]
 ),
@@ -80,8 +78,8 @@ margins as (select distinct
 			when 10224 then 'c-ref-old'
 			when 20212 then 'IEA Med Urals'
 			when 30212 then 'IEA Brent'
-			when 40217 then 
-				case 
+			when 40217 then
+				case
 					when margin_dt < '2025-01-01' then 'petchem-old'
 					else 'petchem'
 				end
@@ -90,15 +88,4 @@ margins as (select distinct
 		margin_value as mvalue,
 		margin_company_id as mcompany
 	from [prod_dm050_ds_valuechain_extenv].[t050_03_margin]
-),
-calendar as (select 
-        day_date_id,
-        year,
-        month_of_year,
-        monthname_of_year,
-        quarter_of_year,
-        week_of_year,
-        year_quarter,
-        year_half
-    from [prod_dm050_ds_valuechain_extenv].[t050_99_calendar]
 )
