@@ -9,26 +9,32 @@ pd.set_option('display.max_columns', None)
 pd.set_option('display.width', 200)
 
 
-def read_ddl(name: str):
-    content = ""
-    with open(f'redmine/{name}_ddl.sql', 'r') as file:
-        for line in file:
-            content += line.strip()
-    return content
-
-
-def inspect_tables_structure(table_name: str | None = None) -> str:
-    if table_name:
-        return read_ddl(table_name)
-    else:
-        return read_ddl("issues") + "\n" + read_ddl("projects") + "\n" + read_ddl("users") + "\n" + read_ddl("time_entries")
-
-
 class ExecutionContext(ABC):
 
     @abstractmethod
     def execute_query(self, query: str) -> list[dict[str, str]]:
         pass
+
+    def read_ddl(self, name: str):
+        content = ""
+        with open(f'redmine/{name}_ddl.sql', 'r') as file:
+            for line in file:
+                content += line.strip()
+        return content
+
+    def inspect_tables_structure(self, table_name: str | None = None) -> str:
+        if table_name:
+            return self.read_ddl(table_name)
+        else:
+            return (
+                self.read_ddl("issues")
+                + "\n"
+                + self.read_ddl("projects")
+                + "\n"
+                + self.read_ddl("users")
+                + "\n"
+                + self.read_ddl("time_entries")
+            )
 
 
 class SQLContext(ExecutionContext):
@@ -44,7 +50,7 @@ class SQLContext(ExecutionContext):
         con.autocommit = True
         return con
 
-    def execute_query(self, query: str) -> list[dict]:
+    def execute_query(self, query: str) -> list[dict[str, str]]:
         conn = self.open_connection()
         cursor = conn.cursor()
         try:

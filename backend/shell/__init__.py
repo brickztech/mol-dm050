@@ -8,7 +8,7 @@ from blockz.LLMBlockz import History, RecStrDict
 
 @dataclass
 class Element:
-    def getcontent(self) -> str:
+    def getcontent(self) -> str | list[dict[str, str]]:
         raise NotImplementedError()
 
 

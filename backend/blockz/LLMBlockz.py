@@ -1,3 +1,9 @@
+import json
+import logging
+from abc import ABC, abstractmethod
+from collections.abc import Mapping
+from dataclasses import dataclass, replace
+from typing import Annotated, Any, Callable, Iterator, Tuple, TypeAlias, cast, final
 
 from abc import ABC,abstractmethod
 from collections.abc import Mapping
@@ -12,63 +18,64 @@ logger.addHandler(logging.NullHandler())
 incr = "  "
 """As there are many formatted printing functions, this value here acts as the unit indentation"""
 
+
 def remove_comments(text: str) -> str:
     """
     Remove nested comments from text. Comments are delimited by (* and *).
-    
+
     - Handles nested comments by counting open/close pairs
     - Ignores escaped comment starts: backlash then (*
     - Ignores unmatched closing *)
     - Collapses spaces around removed comments
-    
+
     Args:
         text: Input string that may contain comments
-        
+
     Returns:
         String with comments removed and spaces collapsed
     """
     result: list[str] = []
     i: int = 0
-    
+
     while i < len(text):
         # Check for escaped comment start
-        if i < len(text) - 2 and text[i:i+3] == r'\(*':
+        if i < len(text) - 2 and text[i : i + 3] == r'\(*':
             # Add the escaped sequence without the backslash
             result.append('(*')
             i += 3
             continue
-            
+
         # Check for comment start
-        if i < len(text) - 1 and text[i:i+2] == '(*':
+        if i < len(text) - 1 and text[i : i + 2] == '(*':
             # Record if there was a space before the comment
             space_before: bool = len(result) > 0 and result[-1] == ' '
-            
+
             # Find the matching closing *)
             comment_depth: int = 1
             j: int = i + 2
-            
+
             while j < len(text) - 1 and comment_depth > 0:
                 # Check for escaped comment start inside comment
-                if j < len(text) - 2 and text[j:j+3] == r'\(*':
+                if j < len(text) - 2 and text[j : j + 3] == r'\(*':
                     j += 3
                     continue
-                    
+
                 # Check for nested comment start
-                if text[j:j+2] == '(*':
+                if text[j : j + 2] == '(*':
                     comment_depth += 1
                     j += 2
                 # Check for comment end
-                elif text[j:j+2] == '*)':
+                elif text[j : j + 2] == '*)':
                     comment_depth -= 1
                     j += 2
                 else:
                     j += 1
-            
+
             # If we found a matching close, skip the entire comment
             if comment_depth == 0:
                 # Check if there's a space after the comment
                 space_after: bool = j < len(text) and text[j] == ' '
-                
+
                 # Handle space collapsing
                 if space_before and space_after:
                     # Remove the trailing space we added, will add one space
@@ -82,7 +89,7 @@ def remove_comments(text: str) -> str:
                         result.append(' ')
                     if space_after:
                         j += 1  # Skip the space after comment
-                
+
                 i = j
             else:
                 # Unmatched comment start, treat as regular text
@@ -92,8 +99,13 @@ def remove_comments(text: str) -> str:
             # Regular character
             result.append(text[i])
             i += 1
-    
+
     return ''.join(result)
+
+
+RecStrDictValue: TypeAlias = 'str | RecStrDict | list[RecStrDictValue]'
+RecStrDict: TypeAlias = Mapping[str, RecStrDictValue]
+"""Recursive immutable dicts from string to either string or another recursive dictionary. Common type for LLM communications"""
 
 RecStrDictValue: TypeAlias = 'str | RecStrDict | list[RecStrDictValue]'
 RecStrDict: TypeAlias = Mapping[str, RecStrDictValue]
@@ -103,9 +115,11 @@ def as_string(v: RecStrDictValue) -> str:
     assert isinstance(v,str)
     return v
 
-def as_dictstrstr(v: RecStrDictValue) -> Mapping[str,str]:
-    assert isinstance(v,dict) and all(isinstance(k,str) and isinstance(val,str) for k,val in v.items())
-    return cast(Mapping[str,str],v)
+
+def as_dictstrstr(v: RecStrDictValue) -> Mapping[str, str]:
+    assert isinstance(v, dict) and all(isinstance(k, str) and isinstance(val, str) for k, val in v.items())
+    return cast(Mapping[str, str], v)
+
 
 def as_recstrdict(v: RecStrDictValue) -> RecStrDict:
     assert isinstance(v,dict)
@@ -114,6 +128,7 @@ def as_recstrdict(v: RecStrDictValue) -> RecStrDict:
 class Entry:
     """The (abstract) base type of LLM-independent history entries"""
     pass
+
 
 @dataclass
 class UserEntry(Entry):
@@ -144,13 +159,17 @@ class RawEntry(Entry):
 
 ToolFunction: TypeAlias = Callable[[str,Mapping[str,str]],str]
 
+ToolFunction: TypeAlias = Callable[[str, Mapping[str, str]], str]
+
+
 @dataclass
 class SingleToolCall:
     """A single tool call that is the component of a message from the LLM that could possibly ask for multiple tool calls in parallel"""
-    call_id     : Annotated[str,"The identifier of this call."]
-    name        : Annotated[str,"The name of the tool being called."]
-    paramvalues : Annotated[Mapping[str,str],"The parameter values in a string-to-string dictionary."] 
-    
+
+    call_id: Annotated[str, "The identifier of this call."]
+    name: Annotated[str, "The name of the tool being called."]
+    paramvalues: Annotated[Mapping[str, str], "The parameter values in a string-to-string dictionary."]
+
     def __repr__(self) -> str:
         return f"""SingleToolCall(call_id={self.call_id},name={self.name},paramvalues={self.paramvalues})"""
 
@@ -167,10 +186,10 @@ def print_SingleToolCall(indent: str, stcall: SingleToolCall) -> None:
 
 def serialize_SingleToolCall(stcall: SingleToolCall) -> RecStrDict:
     match stcall:
-        case SingleToolCall(call_id=call_id,name=name,paramvalues=paramvalues):
-        # this is where I learned that dict is *invariant* in both type arguments - I expected it to be covariant in the value type, for I'm 
-        # implicitly thinking in immutable structures
-            return {'call_id':call_id,'name': name,'paramvalues':paramvalues}
+        case SingleToolCall(call_id=call_id, name=name, paramvalues=paramvalues):
+            # this is where I learned that dict is *invariant* in both type arguments - I expected it to be covariant in the value type, for I'm
+            # implicitly thinking in immutable structures
+            return {'call_id': call_id, 'name': name, 'paramvalues': paramvalues}
         case _:
             raise TypeError("Invalid type received in serialize_SingleToolCall")
 
@@ -200,6 +219,7 @@ class ToolResultEntry(Entry):
 
     def __repr__(self) -> str:
         return f"ToolResultEntry(call_id={self.call_id},name={self.name},result={self.result})"
+
 
 def _evaluate_singletoolcall(toolfunction: ToolFunction, singletoolcall: SingleToolCall) -> ToolResultEntry:
     """Passes the name and parameters of the call to toolfunction and returns the result"""
@@ -250,7 +270,7 @@ def serialized_History(history : History) -> list[RecStrDict]:
             case ToolResultEntry(call_id=call_id,name=name,result=result):
                 retval.append({"tool": {"call_id":call_id, "name":name, "result":result}})
             case RawEntry(content=content):
-                retval.append({"raw":f"{json.dumps(dict(content))}"})
+                retval.append({"raw": f"{json.dumps(dict(content))}"})
             case _:
                 raise TypeError("Invalid type received in serialize_Entry_list")
     return retval
@@ -324,20 +344,21 @@ def optional(name: str, typ: str, description: str) -> Parameter:
 def print_Parameter(indent: str, parameter: Parameter) -> None:
     """Prints a parameter with an initial indent of 'indent'"""
     match parameter:
-        case Parameter(name=name,typ=typ,description=description,must=must):
+        case Parameter(name=name, typ=typ, description=description, must=must):
             if must:
-                print(indent,f"Mandatory {name} : {typ} -- {description}",sep="")
+                print(indent, f"Mandatory {name} : {typ} -- {description}", sep="")
             else:
-                print(indent,f"Optional  {name} : {typ} -- {description}",sep="")
+                print(indent, f"Optional  {name} : {typ} -- {description}", sep="")
         case _:
             raise TypeError("Invalid type received in print_Parameter")
 
 @dataclass
 class ToolDescription:
     """Full description of a single tool"""
-    description : Annotated[str,"Description of what does the tool do."]
-    paramdecls  : Annotated[list[Parameter],"List of parameter descriptions."]
-    
+
+    description: Annotated[str, "Description of what does the tool do."]
+    paramdecls: Annotated[list[Parameter], "List of parameter descriptions."]
+
     def __repr__(self) -> str:
         return f"ToolDescription(description={self.description},paramdecls={self.paramdecls})"
 
@@ -355,14 +376,17 @@ def tool(description: str, paramdecls: list[Parameter]) -> ToolDescription:
     """Utility function to create a tool description from elements"""
     return ToolDescription(description,paramdecls)
 
-def _valid_call_against_descr(paramlist: list[Parameter], paramvaluedict: Mapping[str,str]) -> bool:
+
+def _valid_call_against_descr(paramlist: list[Parameter], paramvaluedict: Mapping[str, str]) -> bool:
     """Utility to check whether all mandatory parameters are present in an actual parameter list"""
     for formal_param in paramlist:
         if formal_param.must and formal_param.name not in paramvaluedict:
             return False
     return True
 
-ToolDict = Mapping[str,ToolDescription]
+
+ToolDict = Mapping[str, ToolDescription]
+
 
 def valid_tools_against_calls(tooldict: ToolDict, calllist: list[SingleToolCall]) -> bool:
     """Utility to decide if a list of single calls are all valid wrt a tool dictionary."""
@@ -380,46 +404,58 @@ class Query:
     Be careful with these functions, because some of them replace values and others append to history, and this difference is not reflected
     in the naming convention.
     """
-    _history     : Annotated[History,"List of entries forming the discussion history we want to show the LLM, without the initial system instruction."]
-    _systeminstr : Annotated[str,"The system instruction for this query"]
-    _tools       : Annotated[ToolDict,"Tool dictionary to be transferred to the LLM - this is what it can choose from."]
+
+    _history: Annotated[
+        History, "List of entries forming the discussion history we want to show the LLM, without the initial system instruction."
+    ]
+    _systeminstr: Annotated[str, "The system instruction for this query"]
+    _tools: Annotated[ToolDict, "Tool dictionary to be transferred to the LLM - this is what it can choose from."]
 
     @staticmethod
     def empty() -> 'Query':
         """Return an empty Query to be used as the starting block in a builder pattern"""
         return Query([],"",dict())
 
-    def with_user(self,content: str) -> 'Query':
+    def with_user(self, content: str) -> 'Query':
         """APPENDS an user entry to the history"""
-        return replace(self,_history=self._history + [UserEntry(content)])
+        return replace(self, _history=self._history + [UserEntry(content)])
 
     def with_assistant(self,content: str) -> 'Query':
         """APPENDS an user entry to the history"""
-        return replace(self,_history=self._history + [AssistantEntry(content)])
+        return replace(self, _history=self._history + [AssistantEntry(content)])
 
     def with_toolcalls(self, calls : list[SingleToolCall]) -> 'Query':
         """APPENDS a toolcalls message to the history"""
-        return replace(self,_history=self._history + [ToolCallsEntry(calls)])
+        return replace(self, _history=self._history + [ToolCallsEntry(calls)])
 
     def with_toolreply(self, call_id: str, name: str, result: str) -> 'Query':
         """APPENDS a toolreply message to the history"""
-        return replace(self,_history=self._history + [ToolResultEntry(call_id,name,result)])
+        return replace(self, _history=self._history + [ToolResultEntry(call_id, name, result)])
 
     def with_raw(self,content: RecStrDict) -> 'Query':
         """APPENDS a raw message to the history."""
-        return replace(self,_history=self._history + [RawEntry(content)])
+        return replace(self, _history=self._history + [RawEntry(content)])
 
-    def with_history(self,history: History) -> 'Query':
+    def with_history(self, history: History) -> 'Query':
         """REPLACES self._history with the parameter."""
-        return replace(self,_history=history)
+        return replace(self, _history=history)
 
     def with_systeminstr(self,systeminstr: str) -> 'Query':
         """REPLACES the system instruction with the parameter"""
-        return replace(self,_systeminstr=remove_comments(systeminstr))
+        return replace(self, _systeminstr=remove_comments(systeminstr))
 
     def with_tools(self,tools: ToolDict) -> 'Query':
         """REPLACES the tools declaration with the parameter"""
-        return replace(self,_tools=tools)
+        return replace(self, _tools=tools)
+
+    def history(self) -> History:
+        return self._history
+
+    def tools(self) -> ToolDict:
+        return self._tools
+
+    def systeminstr(self) -> str:
+        return self._systeminstr
 
     def history(self) -> History:
         return self._history
@@ -456,26 +492,30 @@ class Query:
 systeminstr={self._systeminstr},
 tools={self._tools})"""
 
+
 def print_Query(indent: str, query: Query) -> None:
     """Prints a query with initial indent 'indent'."""
     match query:
-        case Query(_history=history,_systeminstr=systeminstr,_tools=tools):
-            print(indent,"Tools:",sep="")
-            for name,descr in tools.items():
-                print(indent + incr,f"Tool name: {name}",sep="")
-                print_ToolDescription(indent + 2*incr, descr)
-            print(indent,f"System instruction: {systeminstr}",sep="")
-            print(indent,"History:",sep="")
-            print_History(indent + incr,history)
+        case Query(_history=history, _systeminstr=systeminstr, _tools=tools):
+            print(indent, "Tools:", sep="")
+            for name, descr in tools.items():
+                print(indent + incr, f"Tool name: {name}", sep="")
+                print_ToolDescription(indent + 2 * incr, descr)
+            print(indent, f"System instruction: {systeminstr}", sep="")
+            print(indent, "History:", sep="")
+            print_History(indent + incr, history)
         case _:
             raise TypeError("print_Query_common received invalid type")
 
 ###################################################################
 
+
 @dataclass
 class Reply:
     """The base class of Replies as received from the LLM. Meant to be treated as abstract."""
-    lastquery : Annotated[Query,"The query that led to this reply."]
+
+    lastquery: Annotated[Query, "The query that led to this reply."]
+
 
 @dataclass
 class NonStreamingReply(Reply):
@@ -483,6 +523,7 @@ class NonStreamingReply(Reply):
     These are the classes we receive from non-streaming calls.
     """
     pass
+
 
 @dataclass
 class RootReply(NonStreamingReply):
@@ -501,14 +542,19 @@ class RootReply(NonStreamingReply):
         newhistory: History = self.lastquery.history()
         for historyfilter in historyfilters:
             newhistory = historyfilter(newhistory)
-        return (self.lastquery
-                .with_history(newhistory)
-                .with_user(userinput)
-               )
+        return self.lastquery.with_history(newhistory).with_user(userinput)
+
 
 def drop_toolexchanges(history: History) -> History:
     """Removes the entries related to tool invocation and tool call results from the end of history"""
     return [entry for entry in history if not is_tool_Entry(entry)]
+
+
+def apply_history_filters(history: History, *historyfilters: Callable[[History], History]) -> History:
+    retval = history
+    for historyfilter in historyfilters:
+        retval = historyfilter(retval)
+    return retval
 
 def apply_history_filters(history: History, *historyfilters: Callable[[History],History]) -> History:
     retval = history
@@ -527,7 +573,15 @@ class TextReply(NonStreamingReply):
     def history(self) -> History:
         return self.lastquery.history() + [AssistantEntry(self.text())]
 
-    def newquery(self, userinput: str, *historyfilters: Callable[[History],History]) -> Query:
+    _text: Annotated[str, "The text received from the LLM."]
+
+    def text(self) -> str:
+        return self._text
+
+    def history(self) -> History:
+        return self.lastquery.history() + [AssistantEntry(self.text())]
+
+    def newquery(self, userinput: str, *historyfilters: Callable[[History], History]) -> Query:
         """Creates a new query from the last plain reply by filtering the history and adding an user input.
         By default the tool-related entries (toolcalls and toolresult) are removed from the end of the history, 
         but you can change this behavior by supplying a different historyfilter.
@@ -536,12 +590,12 @@ class TextReply(NonStreamingReply):
         """
         if historyfilters == ():
             historyfilters = (drop_toolexchanges,)
-        logger.debug(f"TextReply.newquery called with userinput={userinput} and historyfilters={[func.__qualname__ for func in historyfilters]}")
-        newhistory: History = apply_history_filters(self.history(),*historyfilters)
-        return (self.lastquery
-                    .with_history(newhistory)
-                    .with_user(userinput)
-               )
+        logger.debug(
+            f"TextReply.newquery called with userinput={userinput} and historyfilters={[func.__qualname__ for func in historyfilters]}"
+        )
+        newhistory: History = apply_history_filters(self.history(), *historyfilters)
+        return self.lastquery.with_history(newhistory).with_user(userinput)
+
 
 @dataclass
 class ToolCallsReply(NonStreamingReply):
@@ -551,7 +605,12 @@ class ToolCallsReply(NonStreamingReply):
     def history(self) -> History:
         return self.lastquery.history() + [ToolCallsEntry(self.calls)]
 
-    def evaluate(self,toolfunction: ToolFunction) -> Query:
+    calls: Annotated[list[SingleToolCall], "The list of single tool calls sent with this message."]
+
+    def history(self) -> History:
+        return self.lastquery.history() + [ToolCallsEntry(self.calls)]
+
+    def evaluate(self, toolfunction: ToolFunction) -> Query:
         """Creates a new Query from the original one that led to this reply by evaluating all the calls and appending the corresponding
         tool result entries to the history. The Query thus built is immediately ready to be sent back to the LLM.
         .evaluate() can be called any number of times, perhaps with different toolfunctions, and it will return Query'es that continue
@@ -559,20 +618,21 @@ class ToolCallsReply(NonStreamingReply):
         evaluation.
         """
         logger.debug(f"ToolCallsReply.evaluate called with toolfunction={toolfunction.__qualname__}")
-        toolresultentries: list[Entry] = [_evaluate_singletoolcall(toolfunction,singletoolcall) for singletoolcall in self.calls]
+        toolresultentries: list[Entry] = [_evaluate_singletoolcall(toolfunction, singletoolcall) for singletoolcall in self.calls]
         return self.lastquery.with_history(self.history() + toolresultentries)
+
 
 def print_NonStreamingReply(indent: str, nonstreamingreply: NonStreamingReply) -> None:
     """Prints a non-streaming reply after an initial indent. (Streaming replies have state, so it is hard to tell what to print about them.)"""
     match nonstreamingreply:
-        case TextReply(lastquery=lastquery,text=text):
-            print(indent,"<TextReply>",sep="")
-            print_Query(indent+incr,lastquery)
-            print(indent+incr,f"Text: {text}",sep="")
-        case ToolCallsReply(lastquery=lastquery,calls=calls):
-            print(indent,"<ToolCallsReply>",sep="")
-            print_Query(indent+incr,lastquery)
-            print(indent+incr,"Current calls:",sep="")
+        case TextReply(lastquery=lastquery, text=text):
+            print(indent, "<TextReply>", sep="")
+            print_Query(indent + incr, lastquery)
+            print(indent + incr, f"Text: {text}", sep="")
+        case ToolCallsReply(lastquery=lastquery, calls=calls):
+            print(indent, "<ToolCallsReply>", sep="")
+            print_Query(indent + incr, lastquery)
+            print(indent + incr, "Current calls:", sep="")
             for singletoolcall in calls:
                 print_SingleToolCall(indent+incr,singletoolcall)
         case _:
@@ -583,26 +643,28 @@ class StreamingReply(Reply):
     """Base class for replies received from streaming completion requests"""
     pass
 
+
 @dataclass
 class StreamingRootReply(StreamingReply):
     def newquery(self, userinput: str, *historyfilters: Callable[[History],History]) -> Query:
         """Creates a query from the original query of the RootReply by filtering its history (doing nothing if historyfilter is not set),
         then adding an user entry and returning the new Query.
         """
-        logger.debug(f"StreamingRootReply.newquery called with userinput={userinput} and historyfilters={[func.__qualname__ for func in historyfilters]}")
-        newhistory: History = apply_history_filters(self.lastquery.history(),*historyfilters)
-        return (self.lastquery
-                .with_history(newhistory)
-                .with_user(userinput)
-               )
+        logger.debug(
+            f"StreamingRootReply.newquery called with userinput={userinput} and historyfilters={[func.__qualname__ for func in historyfilters]}"
+        )
+        newhistory: History = apply_history_filters(self.lastquery.history(), *historyfilters)
+        return self.lastquery.with_history(newhistory).with_user(userinput)
+
 
 class StreamingTextReply(StreamingReply):
     """Final, plain reply received from a streaming completion request"""
-    def __init__(self,lastquery: Query, rootstream: Iterator[str]) -> None:
+
+    def __init__(self, lastquery: Query, rootstream: Iterator[str]) -> None:
         super().__init__(lastquery)
-        self._rootstream:   Annotated[Iterator[str],"The stream of tokens-as-strings that resulted from the call"]  = rootstream
-        self._textlist:     Annotated[list[str],"The list of tokens read from _rootstream so far."]                 = []
-        self._done:         Annotated[bool,"Whether the _rootstream has ended (True) or not (False)"]               = False
+        self._rootstream: Annotated[Iterator[str], "The stream of tokens-as-strings that resulted from the call"] = rootstream
+        self._textlist: Annotated[list[str], "The list of tokens read from _rootstream so far."] = []
+        self._done: Annotated[bool, "Whether the _rootstream has ended (True) or not (False)"] = False
 
     @staticmethod
     def of_text(query: Query, text: str) -> 'StreamingTextReply':
@@ -659,8 +721,8 @@ class StreamingTextReply(StreamingReply):
 
     def history(self) -> History:
         return self.lastquery.history() + [AssistantEntry(self.text())]
-    
-    def newquery(self, userinput: str, *historyfilters: Callable[[History],History]) -> Query:
+
+    def newquery(self, userinput: str, *historyfilters: Callable[[History], History]) -> Query:
         """Creates a Query from the original query that led to this Reply, by filtering history, adding the last reply by the assistant and the
         new user input.
         .newquery() can be called any number of times, possibly with different userinput and/or historyfilter parameters, and it will always return
@@ -668,12 +730,12 @@ class StreamingTextReply(StreamingReply):
         """
         if historyfilters == ():
             historyfilters = (drop_toolexchanges,)
-        logger.debug(f"StreamingTextReply.newquery called with userinput={userinput} and historyfilters={[func.__qualname__ for func in historyfilters]}")
-        newhistory: History = apply_history_filters(self.history(),*historyfilters)
-        return (self.lastquery
-                .with_history(newhistory)
-                .with_user(userinput)
-               )
+        logger.debug(
+            f"StreamingTextReply.newquery called with userinput={userinput} and historyfilters={[func.__qualname__ for func in historyfilters]}"
+        )
+        newhistory: History = apply_history_filters(self.history(), *historyfilters)
+        return self.lastquery.with_history(newhistory).with_user(userinput)
+
 
 class StreamingToolCallsReply(StreamingReply):
     """The type of objects representing tool calls received from a streaming completions request.
@@ -681,9 +743,10 @@ class StreamingToolCallsReply(StreamingReply):
     without waiting for the chunks making up the tool calls to come to an end, such that the user can be informed immediately
     about the reason for the delay.
     """
-    def __init__(self,lastquery: Query, callsbuilder: Callable[[],list[SingleToolCall]]) -> None:
+
+    def __init__(self, lastquery: Query, callsbuilder: Callable[[], list[SingleToolCall]]) -> None:
         super().__init__(lastquery)
-        self._callsbuilder : Annotated[Callable[[],list[SingleToolCall]],"The closure that builds the call list."] = callsbuilder
+        self._callsbuilder: Annotated[Callable[[], list[SingleToolCall]], "The closure that builds the call list."] = callsbuilder
         self._calls: list[SingleToolCall] | None = None
 
     def _get_calls(self) -> list[SingleToolCall]:
@@ -699,7 +762,7 @@ class StreamingToolCallsReply(StreamingReply):
 
     def history(self) -> History:
         return self.lastquery.history() + [ToolCallsEntry(self._get_calls())]
-    
+
     def evaluate(self, toolfunction: ToolFunction) -> Query:
         """Reads the rest of the chunks if not done so earlier, then evaluates the tool calls via the toolfunction and builds the Query
         that can be sent back immediately to the LLM.
@@ -708,15 +771,17 @@ class StreamingToolCallsReply(StreamingReply):
         history of evaluation.
         """
         logger.debug(f"StreamingToolCallsReply.evaluate called with toolfunction={toolfunction.__qualname__}")
-        toolresultentries: list[Entry] = [_evaluate_singletoolcall(toolfunction,singletoolcall) for singletoolcall in self._get_calls()]
+        toolresultentries: list[Entry] = [_evaluate_singletoolcall(toolfunction, singletoolcall) for singletoolcall in self._get_calls()]
         logger.debug(f"calls={self._get_calls()}")
         return self.lastquery.with_history(self.history() + toolresultentries)
 
-def manual_toolfunction(name: str, params: Mapping[str,str]) -> str:
+
+def manual_toolfunction(name: str, params: Mapping[str, str]) -> str:
     """Utility toolfunction meant for debugging. It simply asks for the result of the tool call."""
     return input(f"Evaluate the tool \"{name}\" called on {params}: ")
 
-def sentinel_toolfunction(name: str, params: Mapping[str,str]) -> str:
+
+def sentinel_toolfunction(name: str, params: Mapping[str, str]) -> str:
     """Utility toolfunction meant to serve as a meaningful default. It raises an exception if called."""
     raise LLMBlockzException("No toolfunction provided")
 
@@ -974,14 +1039,18 @@ class OpenAILikeLLM(LLM):
 
     def __init__(self, client: Any, default_model: str, default_temperature : float = 0.7) -> None:
         super().__init__()
-        logger.debug(f"OpenAILikeLLM constructor called with client.base_url={client.base_url}, default_model={default_model} and default_temperature={default_temperature}")
-        self._client: Annotated[Any,"An ollama client"] = client
-        self._default_temperature: Annotated[float,"The temperature to be used if not explicitly supplied"] = default_temperature
-        self._default_model: Annotated[str,"The model to be used if not explicitly supplied"] = default_model
-        self._service_name: Annotated[str,"Service name: openai, azure, ollama, vllm or unknown"] = self._get_service_name(client)
-        self._can_stream: Annotated[bool,"Whether the inner client supports streaming"] = self._service_name in ["openai","azure"]
-        logger.debug(f"OpenAILikeLLM instance created with service={self._service_name}, \
-default_model={default_model},default_temperature={default_temperature}")
+        logger.debug(
+            f"OpenAILikeLLM constructor called with client.base_url={client.base_url}, default_model={default_model} and default_temperature={default_temperature}"
+        )
+        self._client: Annotated[Any, "An ollama client"] = client
+        self._default_temperature: Annotated[float, "The temperature to be used if not explicitly supplied"] = default_temperature
+        self._default_model: Annotated[str, "The model to be used if not explicitly supplied"] = default_model
+        self._service_name: Annotated[str, "Service name: openai, azure, ollama, vllm or unknown"] = self._get_service_name(client)
+        self._can_stream: Annotated[bool, "Whether the inner client supports streaming"] = self._service_name in ["openai", "azure"]
+        logger.debug(
+            f"OpenAILikeLLM instance created with service={self._service_name}, \
+default_model={default_model},default_temperature={default_temperature}"
+        )
 
     def _resolve_named_parameters(self,
                                   temperature: float | None,
@@ -999,33 +1068,35 @@ default_model={default_model},default_temperature={default_temperature}")
         if parameter.description == "":
             return {"type":parameter.typ}
         else:
-            return {"type":parameter.typ,"description": remove_comments(parameter.description)}
+            return {"type": parameter.typ, "description": remove_comments(parameter.description)}
 
-    def _format_tools_of(self,query: Query) -> list[RecStrDict]:
-        return [{"type":"function",
-                     "function":{
-                         "name":toolname,
-                         "description":remove_comments(tooldescr.description),
-                         "parameters":{
-                             **(
-                                 {
-                                 "type":"object",
-                                 "properties": {par.name : self._format_param_properties(par) for par in tooldescr.paramdecls},
-                                 "required": [as_string(par.name) for par in tooldescr.paramdecls if par.must]
-                                 } 
-                                 if tooldescr.paramdecls else 
-                                 {}
-                             ) # Ollama chokes on empty "properties" for some reason.
-                         }
-                     }
-                    }
-                    for toolname,tooldescr in query.tools().items()
-                   ]
+    def _format_tools_of(self, query: Query) -> list[RecStrDict]:
+        return [
+            {
+                "type": "function",
+                "function": {
+                    "name": toolname,
+                    "description": remove_comments(tooldescr.description),
+                    "parameters": {
+                        **(
+                            {
+                                "type": "object",
+                                "properties": {par.name: self._format_param_properties(par) for par in tooldescr.paramdecls},
+                                "required": [as_string(par.name) for par in tooldescr.paramdecls if par.must],
+                            }
+                            if tooldescr.paramdecls
+                            else {}
+                        )  # Ollama chokes on empty "properties" for some reason.
+                    },
+                },
+            }
+            for toolname, tooldescr in query.tools().items()
+        ]
 
     def _format_singletoolcall(self,singletoolcall: SingleToolCall) -> RecStrDict:
         match singletoolcall:
-            case SingleToolCall(call_id=call_id,name=name,paramvalues=paramvalues):
-                return {"id":call_id,"type":"function","function":{"name":name,"arguments":json.dumps(dict(paramvalues))}}
+            case SingleToolCall(call_id=call_id, name=name, paramvalues=paramvalues):
+                return {"id": call_id, "type": "function", "function": {"name": name, "arguments": json.dumps(dict(paramvalues))}}
             case _:
                 raise TypeError("OpenAILLM._format_singletoolcall received a value 'singletoolcall' that is not of type SingleToolCall")
 
@@ -1045,7 +1116,7 @@ default_model={default_model},default_temperature={default_temperature}")
                 raise TypeError("OpenAILLM._format_entry received a value 'entry' that is not of type Entry")
 
     def _format_messages_of(self, query: Query) -> list[RecStrDict]:
-        system_dict: list[RecStrDict] = [{"role":"system","content":query.systeminstr()}]
+        system_dict: list[RecStrDict] = [{"role": "system", "content": query.systeminstr()}]
         history_list: list[RecStrDict] = [self._format_entry(entry) for entry in query.history()]
         combined_list: list[RecStrDict] = system_dict + history_list
         retval: list[RecStrDict] = combined_list
@@ -1073,8 +1144,8 @@ default_model={default_model},default_temperature={default_temperature}")
             content_end = getattr(message_end,"content",None)
             if content_end is None:
                 raise LLMBlockzException("response.message.content is missing")
-            if isinstance(content_end,str):
-                logger.debug("String returned: {content_end}")
+            if isinstance(content_end, str):
+                logger.debug(f"String returned: {content_end}")
                 return content_end
             else:
                 raise LLMBlockzException("response.message.content contains a non-string value")
@@ -1094,7 +1165,7 @@ default_model={default_model},default_temperature={default_temperature}")
                     raise LLMBlockzException("Tool call 'function' attribute has no 'arguments' field")
                 calls.append(SingleToolCall(id_end,name_end,json.loads(arguments_end)))
             logger.debug(f"Tool calls={calls}")
-            if valid_tools_against_calls(query.tools(),calls):
+            if valid_tools_against_calls(query.tools(), calls):
                 logger.debug("Validation successful.")
                 return calls
             else:
@@ -1108,10 +1179,10 @@ default_model={default_model},default_temperature={default_temperature}")
         essence: str | list[SingleToolCall] = self._step(query,temperature,model,**kwargs)
         if isinstance(essence,str):
             logger.debug(f"Final reply is about to be returned from OpenAILikeLLM.step(): {essence}")
-            return TextReply(query,essence)
-        else: # isinstance(essence,list):
+            return TextReply(query, essence)
+        else:  # isinstance(essence,list):
             logger.debug(f"Tool call reply is about to be returned from OpenAILikeLLM.step() with calls={essence}")
-            return ToolCallsReply(query,essence)
+            return ToolCallsReply(query, essence)
 
     def _tokenstream_of(self, chunkstream: Iterator[Any], firstmessage: Any) -> Iterator[str]:
         """Stream of string fragments in the case of a plain reply.
@@ -1181,8 +1252,8 @@ default_model={default_model},default_temperature={default_temperature}")
                 "name" not in call or
                 "argl" not in call):
                 raise LLMBlockzException(f"call in OpenAILLM._toolcalls_of is missing a required field")
-            calls.append(SingleToolCall(call["call_id"],call["name"],json.loads("".join(call["argl"]))))
-        if not valid_tools_against_calls(query.tools(),calls):
+            calls.append(SingleToolCall(call["call_id"], call["name"], json.loads("".join(call["argl"]))))
+        if not valid_tools_against_calls(query.tools(), calls):
             raise LLMBlockzException("LLM returned tool calls that do not match the tool declarations")
         return calls
 
@@ -1214,11 +1285,11 @@ default_model={default_model},default_temperature={default_temperature}")
                 else:
                     raise LLMBlockzException(f"Message stream reached finish_reason = {finish_reason} without any content")
         else:
-            essence: str | list[SingleToolCall] = self._step(query,temperature,model,**kwargs)
-            if isinstance(essence,str):
-                return StreamingTextReply.of_text(query,essence)
-            else: # isinstance(essence,list):
-                return StreamingToolCallsReply.of_calls(query,essence)
+            essence: str | list[SingleToolCall] = self._step(query, temperature, model, **kwargs)
+            if isinstance(essence, str):
+                return StreamingTextReply.of_text(query, essence)
+            else:  # isinstance(essence,list):
+                return StreamingToolCallsReply.of_calls(query, essence)
 
     def answer(self,query: Query, 
                temperature: float | None = None, 
