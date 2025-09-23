@@ -162,10 +162,13 @@ to plot on the y-axis. This should be a numeric field representing the metric be
     ),
 }
 
-with open("prefix.txt") as f:
+import pathlib
+
+current_file_path = pathlib.Path(__file__).resolve().parent
+with open(current_file_path / "prefix.txt") as f:
     prefix = f.read()
 
-with open("imperative-dd.txt") as f:
+with open(current_file_path / "imperative-dd.txt") as f:
     domain_description = f.read()
 
 

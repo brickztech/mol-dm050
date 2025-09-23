@@ -1,10 +1,9 @@
 import json
 
-from openai import OpenAI
-
 from blockz.LLMBlockz import OpenAILikeLLM, RecStrDict
 from langutils.context import SQLContext
 from langutils.llm_tools import ToolsHandler
+from openai import OpenAI
 from shell import ShellWrapper
 
 from . import shell as dm050

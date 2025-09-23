@@ -1,4 +1,5 @@
 import requests
+from loguru import logger
 
 
 def test_api(question: str):
@@ -12,13 +13,12 @@ def test_api(question: str):
     Returns:
         None
     """
+    import json
 
-    question_obj = f"""
-        "query": {question}
-        "shell_history": []
-        """
-
-    url = "http://localhost:/api/chat_rq_stream"
+    # Create a JSON string from the question and shell_history
+    question_obj = json.dumps({"query": question, "shell_history": ""})
+    logger.debug(f"rq: {question_obj}")
+    url = "http://localhost:8000/api/chat_rq_stream"
     response = requests.post(url, json=question_obj)
 
     print(f"Status Code: {response.status_code}")
@@ -28,7 +28,10 @@ def test_api(question: str):
 
 # Example usage:
 if __name__ == "__main__":
-    with open("questions.txt", "r") as f:
+    import pathlib
+
+    current_file_dir = pathlib.Path(__file__).parent.resolve()
+    with open(current_file_dir / "questions.txt", "r") as f:
         for line in f:
             question = line.strip()
             if question:
